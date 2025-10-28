@@ -25,6 +25,8 @@ public:
 
     bool static renderInstances(SDL_Renderer* renderer);
 
+    bool static moveText(int x, int y, std::string id);
+
 };
 
 #endif

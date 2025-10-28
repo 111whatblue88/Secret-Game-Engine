@@ -83,3 +83,20 @@ bool Text::remInstance(std::string id) {
     return false;
 
 }
+
+bool Text::moveText(int x, int y, std::string id) {
+
+    for (size_t i = 0; i < TextInstances.size(); i++) {
+
+        if (TextInstances[i].id != id) {
+            continue;
+        } 
+        TextInstances[i].destination.x = x;
+        TextInstances[i].destination.y = y;
+        return true;
+
+    }
+
+    return false;
+
+}
