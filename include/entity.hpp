@@ -1,8 +1,7 @@
 #ifndef _ENTITY_H
 #define _ENTITY_H
 
-#include "../include/output.h"
-#include "../include/render.h"
+#include "../include/ELOgine.hpp"
 
 #include <string>
 #include <SDL3/SDL.h>

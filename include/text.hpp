@@ -1,7 +1,7 @@
 #ifndef TEXT
 #define TEXT
 
-#include "../include/ELOgine.h"
+#include "../include/ELOgine.hpp"
 
 #include <vector>
 #include <SDL3/SDL.h>

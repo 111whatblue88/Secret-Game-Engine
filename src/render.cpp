@@ -1,5 +1,4 @@
-#include "../include/output.h"
-#include "../include/render.h"
+#include "../include/ELOgine.hpp"
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>

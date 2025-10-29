@@ -1,6 +1,5 @@
 
-#include "../include/input.h"
-#include "../include/output.h"
+#include "../include/ELOgine.hpp"
 
 #include <ctime>
 #include <fstream>

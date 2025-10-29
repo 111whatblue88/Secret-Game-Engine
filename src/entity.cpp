@@ -1,8 +1,5 @@
 
-#include "../include/keys.h"
-#include "../include/render.h"
-#include "../include/output.h"
-#include "../include/entity.h"
+#include "../include/ELOgine.hpp"
 
 #include <SDL3/SDL.h>
 #include <iostream>
