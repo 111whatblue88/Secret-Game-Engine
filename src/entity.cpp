@@ -98,22 +98,49 @@ void Entity::updateDir(dir inDir) {
 
 void Entity::move() {
 
-    switch (currentDir)
-    {
-    case dir::up:
-        pos.y -= speed;
-        break;
-    case dir::down:
-        pos.y += speed;
-        break;
-    case dir::right:
-        pos.x += speed;
-        break;
-    case dir::left:
-        pos.x -= speed;
-        break;
-    case dir::none:
-        break;
+    if (generalCollisionEnabled) {
+
+        switch (currentDir)
+        {
+        case dir::up:
+            if (!(pos.y <= yUpperBounds)) {
+                pos.y -= speed;
+            }
+            break;
+        case dir::down:
+            if (!((pos.y + pos.h) >= yLowerBounds)) {
+                pos.y += speed;
+            }
+            break;
+            // TODO: add general collision checks for these
+        case dir::right:
+            pos.x += speed;
+            break;
+        case dir::left:
+            pos.x -= speed;
+            break;
+        case dir::none:
+            break;
+        }
+
+    } else {
+        switch (currentDir)
+        {
+        case dir::up:
+            pos.y -= speed;
+            break;
+        case dir::down:
+            pos.y += speed;
+            break;
+        case dir::right:
+            pos.x += speed;
+            break;
+        case dir::left:
+            pos.x -= speed;
+            break;
+        case dir::none:
+            break;
+        }
     }
 
     if (gravityEnabled) {

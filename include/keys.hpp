@@ -20,6 +20,8 @@ public:
     static keyState aKey;
     static keyState sKey;
     static keyState dKey;
+    static keyState iKey;
+    static keyState kKey;
     static keyState spaceKey;
 
 };
