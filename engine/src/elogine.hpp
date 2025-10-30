@@ -1,6 +1,8 @@
 #ifndef _ELOGINE_HPP
 #define _ELOGINE_HPP
 
+#include "terminal/input.hpp"
+#include "terminal/output.hpp"
 #include "rendering/render.hpp"
 #include "utils/utils.hpp"
 
@@ -17,7 +19,7 @@ namespace elo {
 
         bool m_quit;
 
-        renderContext m_mainContext;
+        RenderContext m_mainContext;
 
         bool run();
 
