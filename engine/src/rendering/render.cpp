@@ -5,8 +5,8 @@
 
 namespace elo {
 
-    renderContext::renderContext(std::string inName, float inWidth, float inHeight)
-        : M_WINDOW_WIDTH(inWidth), M_WINDOW_HEIGHT(inHeight)
+    RenderContext::RenderContext(std::string inName, float inWidth, float inHeight, int inTargetFPS)
+        : M_WINDOW_WIDTH(inWidth), M_WINDOW_HEIGHT(inHeight), targetFPS(inTargetFPS)
     {
         // add in logging for errors when console systems are done
 
@@ -26,7 +26,7 @@ namespace elo {
         }
     }
 
-    renderContext::~renderContext() {
+    RenderContext::~RenderContext() {
 
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);

@@ -6,9 +6,9 @@
 
 namespace elo {
 
-    elogine::elogine(std::string name, float width, float height)
-        : m_quit(false), m_mainContext(name, width, height)
-    {
+    elogine::elogine(std::string name, float width, float height, int targetFPS)
+        : m_quit(false), m_mainContext(name, width, height, targetFPS)
+        {
 
         if (SDL_WasInit(SDL_INIT_VIDEO) == SDL_INIT_STATUS_UNINITIALIZED) {
             if (!SDL_Init(SDL_INIT_VIDEO)) {
