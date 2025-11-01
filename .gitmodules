@@ -4,3 +4,9 @@
 [submodule "vendored/SDL/src_ttf"]
 	path = vendored/SDL/src_ttf
 	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "engine/vendored/SDL/src"]
+	path = engine/vendored/SDL/src
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "engine/vendored/SDL/src_ttf"]
+	path = engine/vendored/SDL/src_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
