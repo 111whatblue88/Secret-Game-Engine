@@ -1,1 +1,6 @@
 projects/** 
+
+vendered/SDL/src/** 
+vendered/SDL/src_ttf/** 
+
+build/**

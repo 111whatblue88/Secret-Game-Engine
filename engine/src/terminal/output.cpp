@@ -31,8 +31,9 @@ namespace elo {
                 break;
             }
 
-
         }
+
+        return "ERROR IN COLORSTRING";
 
     }
 
