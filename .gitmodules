@@ -1,0 +1,6 @@
+[submodule "vendored/SDL/src"]
+	path = vendored/SDL/src
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "vendored/SDL/src_ttf"]
+	path = vendored/SDL/src_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
