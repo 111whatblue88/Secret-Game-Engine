@@ -31,11 +31,9 @@ namespace elo {
 
 --main elogine class that handles a lot of the dirty work
 
-maybe in a namespace "elo"
-
 namespace elo {
 
-    class elo {
+    class elogine {
 
         bool m_quit;
 
@@ -77,6 +75,72 @@ namespace elo {
 
 }
 
+RENDERING SYSTEM
+
+bool render() {
+
+  clear screen 
+
+  
+  for (loop stuff) {
+  
+  if (entity->rendEnabled) {
+  
+    entity->renderingComp->render(); 
+
+  }
+
+  }
+
+  present screen  
+    
+}
+
+ECS 
+
+namespace elo {
+
+class entity {
+
+  int x, int y;
+
+  //rendering
+  bool rendEnabled
+  renderingComp rendComp;
+
+  
+
+
+}
+
+class renderingComp {
+
+  public:
+  void changeImage(std::string imagePath); <- this destroys the old one and creates a new texture with the given image
+  SDL_Struct imageLocation;
+  private:
+  friend class elogine
+  void render(sdl renderer); <- this just renders the texture at imageLocation
+  sdl_texture texture;
+
+};
+
+
+-- in the elogine class:
+
+class elogine {
+
+  std::vector<std::unique_ptr<entity>> entityVector; <- use unique pointers here
+
+  void addEntity(std::unique_ptr<entity>) {
+
+  entityVector.push_back(std::move(entity)) 
+  
+
+
+  }
+
+}
 
 
 

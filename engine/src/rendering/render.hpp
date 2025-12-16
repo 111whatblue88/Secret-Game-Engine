@@ -7,13 +7,11 @@
 namespace elo {
     struct RenderContext {
 
-        RenderContext(std::string inName, float inWidth, float inHeight, int inTargetFPS);
+        RenderContext(std::string inName, float inWidth, float inHeight);
         ~RenderContext();
 
         const float M_WINDOW_WIDTH;
         const float M_WINDOW_HEIGHT;
-
-        int targetFPS;
 
         SDL_Window* m_window;
         SDL_Renderer* m_renderer;
