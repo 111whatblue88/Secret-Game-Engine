@@ -1,51 +1,35 @@
+#include "input.hpp" 
 
-#include "../elogine.hpp"
-
-#include <sstream>
 #include <iostream>
-#include <vector>
+#include <sstream>
 #include <string>
+#include <strstream>
+#include <vector>
 
-namespace elo {
+using namespace elogine::terminal;
 
-    std::string TermInput::getInput() {
+std::string Input::getInput(std::string prompt) {
 
-        std::string ans;
+  std::string output;
 
-        std::cout << "waiting for input: ";
-        std::getline(std::cin, ans);
+  std::cout << prompt << " ";
+  std::getline(std::cin, output);
 
-        return ans;
-
-    }
-
-    std::string TermInput::getInput(std::string inString) {
-
-        std::string ans;
-
-        std::cout << inString;
-        std::getline(std::cin, ans);
-
-        return ans;
-
-    }
-
-    std::vector<std::string> TermInput::tokenize(std::string inString) {
-
-
-        std::vector<std::string> tokens;
-        std::string token;
-
-        std::stringstream stream(inString);
-
-        while (stream >> token) {
-            tokens.push_back(token);
-        }
-
-        return tokens;
-
-    }
+  return output;
 
 }
 
+std::vector<std::string> Input::tokenize(std::string input) {
 
+  std::vector<std::string> tokens;
+  std::string token;
+
+  std::stringstream stream(input);
+
+  while (stream >> token) {
+    tokens.push_back(token);
+  }
+
+  return tokens;
+
+}

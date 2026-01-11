@@ -1,55 +1,51 @@
 #ifndef _ELOGINE_HPP
 #define _ELOGINE_HPP
 
-#include "rendering/render.hpp"
+#include "ecs/ecs.hpp"
+#include "rendering/renderSys.hpp"
 #include "terminal/input.hpp"
 #include "terminal/output.hpp"
-#include "utils/utils.hpp"
-#include "entity/entity.hpp"
 
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3/SDL.h>
-#include <memory>
-#include <string>
-#include <vector>
-
-namespace elo {
-
-class elogine {
-friend class RenderingComp;
-public:
-
-  elogine(std::string name, float width, float height);
-  ~elogine();
-
-  bool run();
-
-  // FPS getter and setter
-  void setTargetFPS(int inTargetFPS);
-  int TargetFPS();
-
-  void addEntity(std::unique_ptr<Entity> inEntity);
-
-private:
-
-  //main stuff
-  bool m_quit;
-  RenderContext m_mainContext;
-
-  bool render();
 
 
-  int targetFPS;
-  float deltaTime;
+namespace engine {
+namespace core {
 
-  //entity related
-  std::vector<std::unique_ptr<Entity>> entityVector;
+  class Elogine {
+  public:
+    Elogine(std::string windowName, int width, int height);
+    ~Elogine();
 
+    bool run();
+    void earlyExit();
 
+    int targetFPS();
+    void setTargetFPS(int FPS);
 
-};
+    float deltaTime();
 
-} // namespace elo
+    const int m_WINDOWWIDTH;
+    const int m_WINDOWHEIGHT;
+
+    render::RenderSys renderSys;
+    ecs::EntitySys entitySys;
+
+  private:
+
+    bool running;
+
+    int m_targetFPS;
+    float m_deltaTime;
+
+    bool update();
+
+  };
+
+}
+}
+
 
 #endif

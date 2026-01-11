@@ -1,8 +1,9 @@
 
 #include "elogine.hpp"
-#include "entity/entity.hpp"
 
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_init.h>
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
@@ -11,88 +12,100 @@
 #include <memory>
 #include <string>
 #include <format>
+#include <algorithm>
 
-namespace elo {
+namespace engine {
+namespace core {
 
-elogine::elogine(std::string name, float width, float height)
-    : m_quit(false), m_mainContext(name, width, height) {
-
-  if (SDL_WasInit(SDL_INIT_VIDEO) == SDL_INIT_STATUS_UNINITIALIZED) {
-    if (!SDL_Init(SDL_INIT_VIDEO)){
-      TermOutput::SDLError("error initializing SDL");
+  Elogine::Elogine(std::string windowName, int width, int height) 
+    :m_WINDOWWIDTH(width), m_WINDOWHEIGHT(height), m_targetFPS(60), renderSys(windowName, width, height), running(true) {
+    //log the engine starting
+    if (!SDL_WasInit(SDL_INIT_VIDEO)) {
+      if (SDL_Init(SDL_INIT_VIDEO)) {
+        //log error and exit
+      } 
     }
-  }
-
-  if (TTF_WasInit() <= 0) {
-    if (!TTF_Init()) {
-      TermOutput::SDLError("error initializing SDL TTF");
-    }
-  }
-}
-
-elogine::~elogine() {
-  SDL_Quit();
-  TTF_Quit();
-}
-
-bool elogine::run() {
-
-  SDL_Event event;
-
-  Uint32 lastFrametime = SDL_GetTicks();
-
-  while (!m_quit) {
-
-    // TODO: lmao everything. Add systems for input, rendering, and a system to 
-    // allow hooking into the engines features
-
-    Uint64 currentFrametime = SDL_GetTicks();
-    deltaTime = (currentFrametime-lastFrametime)/1000.0f;
-    lastFrametime = currentFrametime; 
-
-
-    // input
-    while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_EVENT_QUIT) {
-        m_quit = true;
+    if (TTF_WasInit() == 0) {
+      if (!TTF_Init()) {
+        //log error and exit
       }
     }
 
-    // update
-
-    // render
-    render();
-
-
-    Uint32 frametime = SDL_GetTicks() - currentFrametime;
-    if (frametime<1000/targetFPS) {
-      SDL_Delay((1000/targetFPS)-frametime);
-    }
-
   }
 
-  return true;
-}
-
-int elogine::TargetFPS() {return targetFPS;}
-void elogine::setTargetFPS(int inTargetFPS) {targetFPS=inTargetFPS;}
-
-void elogine::addEntity(std::unique_ptr<Entity> inEntity) {entityVector.push_back(std::move(inEntity));}
-
-bool elogine::render() {
-
-  SDL_SetRenderDrawColor(m_mainContext.m_renderer, 0, 0, 0, 255);
-  SDL_RenderClear(m_mainContext.m_renderer);
-
-  // go through and render any entities with renderer enabled
-  for (size_t i=0; i<entityVector.size(); i++) {
-    if (entityVector[i]->rendEnabled) {
-      entityVector[i]->rendComp.render(m_mainContext.m_renderer);
-    }
+  Elogine::~Elogine() {
+    SDL_Quit();
+    TTF_Quit();
+    //log the engine quitting
   }
 
-  SDL_RenderPresent(m_mainContext.m_renderer);
-  return true;
+  bool Elogine::run() {
+
+    SDL_Event testevent;
+
+    uint32_t lastFrametime;
+
+    //main loop
+    while (running) {
+
+      Uint64 currentFrametime = SDL_GetTicks();
+      m_deltaTime = (currentFrametime-lastFrametime)/1000.0f;
+      lastFrametime = currentFrametime; 
+
+      //temp input 
+      while (SDL_PollEvent(&testevent)) {
+        if (testevent.type == SDL_EVENT_QUIT) {
+          running = false;
+        }
+      }
+      //input
+      update();
+      renderSys.render(*this);
+
+
+      Uint32 frametime = SDL_GetTicks() - currentFrametime;
+      if (frametime<1000/m_targetFPS) {
+        SDL_Delay((1000/m_targetFPS)-frametime);
+      }
+
+    } 
+
+    return true;
+  }
+
+  void Elogine::earlyExit() {
+    running = false;
+    //log early exit
+  }
+
+  int Elogine::targetFPS() {return m_targetFPS;}
+  void Elogine::setTargetFPS(int FPS) {m_targetFPS=FPS;}
+  float Elogine::deltaTime() {return m_deltaTime;}
+
+  bool Elogine::update() {
+
+
+    return true;
+  }
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 } // namespace elo

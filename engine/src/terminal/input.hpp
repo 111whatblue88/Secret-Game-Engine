@@ -1,22 +1,18 @@
 #ifndef _INPUT_HPP
-#define _INPUT_HPP
+ 
+  #include <string>
+  #include <vector>
 
-#include <string>
-#include <vector>
+  namespace elogine {
+  namespace terminal {
+  class Input {
+  public:
 
-namespace elo {
+    static std::string getInput(std::string prompt);
+    static std::vector<std::string> tokenize(std::string input);
 
-    class TermInput {
-    public:
+  };
+  }
+  }
 
-        static std::string getInput();
-        static std::string getInput(std::string inString);
-
-        static std::vector<std::string> tokenize(std::string inString);
-
-    };
-
-}
-
-
-#endif
+#endif 
