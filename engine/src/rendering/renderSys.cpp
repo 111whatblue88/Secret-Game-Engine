@@ -34,13 +34,13 @@ namespace render {
     SDL_DestroyWindow(m_window);
   }
 
-  SDL_Texture RenderSys::textureFromImage(core::Elogine &engine, std::string imgLocation) {
+  SDL_Texture* RenderSys::textureFromImage(core::Elogine &engine, std::string imgLocation) {
     SDL_Texture* texture = IMG_LoadTexture(engine.renderSys.m_renderer, imgLocation.c_str());
     if (!texture) {
       //load fallback
       std::cout << SDL_GetError() << "\n";
     }
-    return *texture;
+    return texture;
 
   }
 

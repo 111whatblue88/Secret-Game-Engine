@@ -14,7 +14,7 @@ namespace render {
   friend class core::Elogine;
   public:
     
-    static SDL_Texture textureFromImage(core::Elogine& engine, std::string imgLocation);
+    static SDL_Texture* textureFromImage(core::Elogine& engine, std::string imgLocation);
 
   private:
 
