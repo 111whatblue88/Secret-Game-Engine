@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.2)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-project(testgame)
+project(template)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/vendored/SDL/src)
