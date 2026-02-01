@@ -9,6 +9,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3/SDL.h>
+#include <functional>
 
 
 namespace engine {
@@ -21,6 +22,8 @@ namespace core {
 
     bool run();
     void earlyExit();
+
+    std::function<void()> Update;
 
     int targetFPS();
     void setTargetFPS(int FPS);

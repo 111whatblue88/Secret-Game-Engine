@@ -83,7 +83,8 @@ namespace core {
   float Elogine::deltaTime() {return m_deltaTime;}
 
   bool Elogine::update() {
-
+    
+    Update();
 
     return true;
   }

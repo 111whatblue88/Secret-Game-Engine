@@ -2,88 +2,81 @@
 #define _ECS_HPP
 
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
-#include <string>
 #include <cstdint>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
 namespace engine {
 namespace render {
-  class RenderSys;
+class RenderSys;
 }
 namespace core {
-  class Elogine;
+class Elogine;
 }
 namespace ecs {
 
-  struct Vector2 {
-    int x, y;
-  };
+struct Vector2 {
+  int x, y;
+};
 
-  //transform component
-  struct Transform {
-    Transform(Vector2 position, float rotation, Vector2 size);
-    Vector2 position;
-    float rotation;
-    Vector2 size;
-  };
+// transform component
+struct Transform {
+  Transform(Vector2 position, float rotation, float height, float width);
+  Vector2 position;
+  float rotation;
+  float height;
+  float width;
+};
 
-  class TransformComponent {
-  public:
+class TransformComponent {
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, Transform transformInit);
+  Transform &get(uint32_t entityID);
+  bool const has(uint32_t entityID);
 
-    void remove(uint32_t entityID);
-    void add (uint32_t entityID, Transform transformInit);
-    Transform& get(uint32_t entityID);
-    bool const has(uint32_t entityID);
+private:
+  std::unordered_map<uint32_t, Transform> entityList;
+};
 
-  private:
-    std::unordered_map<uint32_t, Transform> entityList;
-  };
+struct Renderer {
+  Renderer(SDL_Texture *texture, SDL_FRect uv, int layer);
+  SDL_Texture *texture;
+  SDL_FRect uv;
+  int layer;
+};
 
-  struct Renderer {
-    Renderer(SDL_Texture* texture, SDL_FRect uv, int layer);
-    SDL_Texture* texture;
-    SDL_FRect uv;
-    int layer;
-  };
+class RendererComponent {
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, Renderer rendererInit);
+  Renderer &get(uint32_t entityID);
+  bool const has(uint32_t entityID);
 
-  class RendererComponent {
-  public:
+private:
+  std::unordered_map<uint32_t, Renderer> entityList;
+};
 
-    void remove(uint32_t entityID);
-    void add (uint32_t entityID, Renderer rendererInit);
-    Renderer& get(uint32_t entityID);
-    bool const has(uint32_t entityID);
-
-  private:
-    std::unordered_map<uint32_t, Renderer> entityList;
-  };
-
-  class EntitySys {
+class EntitySys {
   friend class core::Elogine;
   friend class render::RenderSys;
-  public:
 
-    uint32_t createEntity(Transform initTransform);
-    void removeEntity(uint32_t entityID);
+public:
+  uint32_t createEntity(Transform initTransform);
+  void removeEntity(uint32_t entityID);
 
-    size_t const findEntity(uint32_t entityID);
+  size_t const findEntity(uint32_t entityID);
 
-    TransformComponent transformComponent;
-    RendererComponent rendererComponent;
+  TransformComponent transformComponent;
+  RendererComponent rendererComponent;
 
-  private:
+private:
+  std::vector<uint32_t> validEntities;
+  uint32_t entityCount;
+};
 
-    std::vector<uint32_t> validEntities;
-    uint32_t entityCount;
-
-  };
-
-}
-}
+} // namespace ecs
+} // namespace engine
 
 #endif
-
-
-
-

@@ -18,7 +18,7 @@ namespace render {
       } 
     }
 
-    m_window = SDL_CreateWindow(windowName.c_str(), 1600, 1000, 0);
+    m_window = SDL_CreateWindow(windowName.c_str(), width, height, 0);
     if (!m_window) {
       //log window and crash
     }
@@ -37,6 +37,7 @@ namespace render {
   SDL_Texture* RenderSys::textureFromImage(core::Elogine &engine, std::string imgLocation) {
     SDL_Texture* texture = IMG_LoadTexture(engine.renderSys.m_renderer, imgLocation.c_str());
     if (!texture) {
+      std::cout << "testerro";
       //load fallback
       std::cout << SDL_GetError() << "\n";
     }
@@ -54,9 +55,18 @@ namespace render {
         if (engine.entitySys.rendererComponent.has(engine.entitySys.validEntities[i])) {
           ecs::Renderer renderComp = engine.entitySys.rendererComponent.get(engine.entitySys.validEntities[i]);
           ecs::Transform transformComp = engine.entitySys.transformComponent.get(engine.entitySys.validEntities[i]);
-          SDL_FRect destination = {(float)transformComp.position.x, 
-            (float)transformComp.position.y, (float)transformComp.size.x, (float)transformComp.size.y};
-          SDL_RenderTexture(m_renderer, renderComp.texture, NULL, &destination);
+          SDL_FRect destination = {
+            (float)transformComp.position.x, 
+            (float)transformComp.position.y, 
+            (float)transformComp.width, 
+            (float)transformComp.height
+          };
+          SDL_RenderTexture(
+              m_renderer, 
+              renderComp.texture, 
+              &renderComp.uv, 
+              &destination
+          );
         }
 
 
