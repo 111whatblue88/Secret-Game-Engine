@@ -16,7 +16,14 @@ namespace engine {
 namespace core {
 
   class Elogine {
-  public:
+    struct Options {
+      Options();
+      int m_targetFPS;  
+    };
+    public:
+
+    Options engineOptions;
+
     Elogine(std::string windowName, int width, int height);
     ~Elogine();
 
@@ -24,9 +31,6 @@ namespace core {
     void earlyExit();
 
     std::function<void()> Update;
-
-    int targetFPS();
-    void setTargetFPS(int FPS);
 
     float deltaTime();
 
@@ -39,10 +43,7 @@ namespace core {
   private:
 
     bool running;
-
-    int m_targetFPS;
     float m_deltaTime;
-
     bool update();
 
   };

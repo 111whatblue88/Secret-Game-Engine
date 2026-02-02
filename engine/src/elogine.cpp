@@ -17,8 +17,7 @@ namespace engine {
 namespace core {
 
   Elogine::Elogine(std::string windowName, int width, int height) 
-    :m_WINDOWWIDTH(width), m_WINDOWHEIGHT(height), m_targetFPS(60), renderSys(windowName, width, height), running(true) {
-    //log the engine starting
+    :m_WINDOWWIDTH(width), m_WINDOWHEIGHT(height), renderSys(windowName, width, height), running(true) {
     if (!SDL_WasInit(SDL_INIT_VIDEO)) {
       if (SDL_Init(SDL_INIT_VIDEO)) {
         elogine::terminal::Output::log(
@@ -90,8 +89,8 @@ namespace core {
 
 
       Uint32 frametime = SDL_GetTicks() - currentFrametime;
-      if (frametime<1000/m_targetFPS) {
-        SDL_Delay((1000/m_targetFPS)-frametime);
+      if (frametime<1000/ engineOptions.m_targetFPS) {
+        SDL_Delay((1000/engineOptions.m_targetFPS)-frametime);
       }
 
     } 
@@ -110,8 +109,6 @@ namespace core {
     );
   }
 
-  int Elogine::targetFPS() {return m_targetFPS;}
-  void Elogine::setTargetFPS(int FPS) {m_targetFPS=FPS;}
   float Elogine::deltaTime() {return m_deltaTime;}
 
   bool Elogine::update() {
@@ -122,23 +119,11 @@ namespace core {
   }
 
 
+  Elogine::Options::Options() {
+    m_targetFPS=60;
+
+  }  
 
 
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-} // namespace elo
+} //namespace core
+} // namespace elogine
