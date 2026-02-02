@@ -13,18 +13,36 @@ namespace render {
   RenderSys::RenderSys(std::string windowName, const int width, const int height) {
     
     if (!SDL_WasInit(SDL_INIT_VIDEO)) {
-      if (SDL_Init(SDL_INIT_VIDEO)) {
-        //log error and exit
+      if (!SDL_Init(SDL_INIT_VIDEO)) {
+        elogine::terminal::Output::log(
+            elogine::terminal::Output::colorString(
+              "SDL init error", 
+              elogine::terminal::Output::Color::red
+            ),
+            elogine::terminal::Output::LogLevel::normal
+        );
       } 
     }
 
     m_window = SDL_CreateWindow(windowName.c_str(), width, height, 0);
     if (!m_window) {
-      //log window and crash
+        elogine::terminal::Output::log(
+            elogine::terminal::Output::colorString(
+              "window creation error", 
+              elogine::terminal::Output::Color::red
+            ),
+            elogine::terminal::Output::LogLevel::error
+        );
     }
     m_renderer = SDL_CreateRenderer(m_window, NULL);
     if (!m_renderer) {
-      //log renderer and crash
+        elogine::terminal::Output::log(
+            elogine::terminal::Output::colorString(
+              "rendere rcreation error", 
+              elogine::terminal::Output::Color::red
+            ),
+            elogine::terminal::Output::LogLevel::error
+        );
     }
 
   }
@@ -37,9 +55,32 @@ namespace render {
   SDL_Texture* RenderSys::textureFromImage(core::Elogine &engine, std::string imgLocation) {
     SDL_Texture* texture = IMG_LoadTexture(engine.renderSys.m_renderer, imgLocation.c_str());
     if (!texture) {
-      std::cout << "testerro";
-      //load fallback
+      elogine::terminal::Output::log(
+          elogine::terminal::Output::colorString(
+            "error loading image", 
+            elogine::terminal::Output::Color::red
+          ),
+          elogine::terminal::Output::LogLevel::error
+      );
       std::cout << SDL_GetError() << "\n";
+      elogine::terminal::Output::log(
+          "loading fallback...",
+          elogine::terminal::Output::LogLevel::error
+      );
+      SDL_Texture* texture = IMG_LoadTexture(
+          engine.renderSys.m_renderer, 
+          "../engine/assets/fallbacks/textures/default.png");
+      if (!texture) {
+        elogine::terminal::Output::log(
+            elogine::terminal::Output::colorString(
+              "fallback failed to load!", 
+              elogine::terminal::Output::Color::red
+            ),
+            elogine::terminal::Output::LogLevel::error
+        );
+        std::cout << SDL_GetError() << "\n";
+      }
+
     }
     return texture;
 

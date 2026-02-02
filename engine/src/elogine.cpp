@@ -1,4 +1,3 @@
-
 #include "elogine.hpp"
 
 #include <SDL3/SDL.h>
@@ -22,12 +21,24 @@ namespace core {
     //log the engine starting
     if (!SDL_WasInit(SDL_INIT_VIDEO)) {
       if (SDL_Init(SDL_INIT_VIDEO)) {
-        //log error and exit
+        elogine::terminal::Output::log(
+            elogine::terminal::Output::colorString(
+              "SDL init error", 
+              elogine::terminal::Output::Color::green
+            ),
+            elogine::terminal::Output::LogLevel::normal
+        );
       } 
     }
     if (TTF_WasInit() == 0) {
       if (!TTF_Init()) {
-        //log error and exit
+        elogine::terminal::Output::log(
+            elogine::terminal::Output::colorString(
+              "TTF init error", 
+              elogine::terminal::Output::Color::green
+            ),
+            elogine::terminal::Output::LogLevel::normal
+        );
       }
     }
 
@@ -36,10 +47,25 @@ namespace core {
   Elogine::~Elogine() {
     SDL_Quit();
     TTF_Quit();
-    //log the engine quitting
+    elogine::terminal::Output::log(
+        elogine::terminal::Output::colorString(
+          "elogine exiting", 
+          elogine::terminal::Output::Color::green
+        ),
+        elogine::terminal::Output::LogLevel::normal
+    );
   }
 
   bool Elogine::run() {
+
+
+    elogine::terminal::Output::log(
+        elogine::terminal::Output::colorString(
+          "elogine started", 
+          elogine::terminal::Output::Color::green
+        ),
+        elogine::terminal::Output::LogLevel::normal
+    );
 
     SDL_Event testevent;
 
@@ -75,7 +101,13 @@ namespace core {
 
   void Elogine::earlyExit() {
     running = false;
-    //log early exit
+    elogine::terminal::Output::log(
+        elogine::terminal::Output::colorString(
+          "exiting early...", 
+          elogine::terminal::Output::Color::white 
+        ),
+        elogine::terminal::Output::LogLevel::normal
+    );
   }
 
   int Elogine::targetFPS() {return m_targetFPS;}
