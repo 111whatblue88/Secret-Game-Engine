@@ -2,6 +2,8 @@
 #define _ECS_HPP
 
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include <SDL3/SDL_pixels.h>
+#include <SDL3/SDL_rect.h>
 #include <cstdint>
 #include <string>
 #include <unordered_map>
@@ -76,6 +78,39 @@ private:
   std::unordered_map<uint32_t, TextRenderer> entityList;
 };
 
+// SDLSquare
+struct SDLSquare{
+  SDLSquare(SDL_FRect offset, SDL_Color color);
+  SDL_Color color;
+  SDL_FRect offset;
+};
+
+class SDLSquareComponent{
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, SDLSquare SDLSOInit);
+  SDLSquare& get(uint32_t entityID);
+  bool const has(uint32_t entityID);
+private:
+  std::unordered_map<uint32_t, SDLSquare> entityList;
+};
+
+// SDLSquareOutline
+struct SDLSquareOutline{
+  SDLSquareOutline(SDL_FRect offset, SDL_Color color);
+  SDL_Color color;
+  SDL_FRect offset;
+};
+
+class SDLSquareOutlineComponent{
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, SDLSquareOutline SDLSOInit);
+  SDLSquareOutline& get(uint32_t entityID);
+  bool const has(uint32_t entityID);
+private:
+  std::unordered_map<uint32_t, SDLSquareOutline> entityList;
+};
 
 class EntitySys {
   friend class core::Elogine;
@@ -87,9 +122,13 @@ public:
 
   size_t const findEntity(uint32_t entityID);
 
-  TextRendererComponent textRendererComponent;
   TransformComponent transformComponent;
+
+  TextRendererComponent textRendererComponent;
   RendererComponent rendererComponent;
+
+  SDLSquareComponent sdlSquareComponent;
+  SDLSquareOutlineComponent sdlSquareOutlineComponent;
 
 private:
   std::vector<uint32_t> validEntities;

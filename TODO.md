@@ -175,7 +175,7 @@ if (inpussys.key.a == inputsys.keystate::held)
 
 NEXT:
 
-Add a textrendering component, sdlprimitive component, and some kind of collision system/component
+and some kind of collision system/component
 add a physicsBody component, add a player controller component
 
 

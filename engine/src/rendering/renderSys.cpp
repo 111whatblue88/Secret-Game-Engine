@@ -3,6 +3,8 @@
 #include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 
 #include <SDL3/SDL_error.h>
+#include <SDL3/SDL_oldnames.h>
+#include <SDL3/SDL_rect.h>
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
@@ -141,7 +143,7 @@ namespace render {
       }
 
     }); 
-    // render images
+    // for image rendering
     for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
         if (engine.entitySys.rendererComponent.has(engine.entitySys.validEntities[i])) {
           ecs::Renderer renderComp = engine.entitySys.rendererComponent.get(engine.entitySys.validEntities[i]);
@@ -159,9 +161,12 @@ namespace render {
               &destination
           );
         }
-    }    
+    }
+    // for text rendering
     for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
         if (engine.entitySys.textRendererComponent.has(engine.entitySys.validEntities[i])) {
+
+
           ecs::TextRenderer textRenderComp = engine.entitySys.textRendererComponent.get(engine.entitySys.validEntities[i]);
           ecs::Transform transformComp = engine.entitySys.transformComponent.get(engine.entitySys.validEntities[i]);
           SDL_FRect destination = {
@@ -176,6 +181,46 @@ namespace render {
               NULL, 
               &destination
           );
+        }
+    }    
+    // for SDL square rendering
+    for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
+        if (engine.entitySys.sdlSquareComponent.has(engine.entitySys.validEntities[i])) {
+          ecs::SDLSquare squareComp = engine.entitySys.sdlSquareComponent.get(engine.entitySys.validEntities[i]);
+          ecs::Transform transformComp = engine.entitySys.transformComponent.get(engine.entitySys.validEntities[i]);
+          SDL_FRect destination = {
+            transformComp.position.x += squareComp.offset.x, 
+            transformComp.position.y += squareComp.offset.y, 
+            transformComp.width += squareComp.offset.w, 
+            transformComp.height += squareComp.offset.h, 
+          };
+          SDL_SetRenderDrawColor(m_renderer, 
+              squareComp.color.r, 
+              squareComp.color.g, 
+              squareComp.color.b, 
+              squareComp.color.a
+          );
+          SDL_RenderFillRect(m_renderer, &destination); 
+        }
+    }    
+    // for SDL square w outline rendering
+    for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
+        if (engine.entitySys.sdlSquareOutlineComponent.has(engine.entitySys.validEntities[i])) {
+          ecs::SDLSquareOutline squareComp = engine.entitySys.sdlSquareOutlineComponent.get(engine.entitySys.validEntities[i]);
+          ecs::Transform transformComp = engine.entitySys.transformComponent.get(engine.entitySys.validEntities[i]);
+          SDL_FRect destination = {
+            transformComp.position.x += squareComp.offset.x, 
+            transformComp.position.y += squareComp.offset.y, 
+            transformComp.width += squareComp.offset.w, 
+            transformComp.height += squareComp.offset.h, 
+          };
+          SDL_SetRenderDrawColor(m_renderer, 
+              squareComp.color.r, 
+              squareComp.color.g, 
+              squareComp.color.b, 
+              squareComp.color.a
+          );
+          SDL_RenderRect(m_renderer, &destination); 
         }
     }    
 

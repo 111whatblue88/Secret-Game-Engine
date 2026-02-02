@@ -1,6 +1,8 @@
 #include "ecs.hpp"
 #include "../elogine.hpp"
 
+#include <SDL3/SDL_oldnames.h>
+#include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <algorithm>
@@ -99,6 +101,49 @@ bool const TextRendererComponent::has(uint32_t entityID) {
   }
 }
 
+// SDLSquare
+SDLSquare::SDLSquare(SDL_FRect offset, SDL_Color color) {
+  this->color = color;
+  this->offset = offset; 
+}
+void SDLSquareComponent::add(uint32_t entityID, SDLSquare SDLSInit) {
+  entityList.emplace(entityID, SDLSInit);
+}
+void SDLSquareComponent::remove(uint32_t entityID) {
+  entityList.erase(entityID);
+}
+SDLSquare& SDLSquareComponent::get(uint32_t entityID) {
+  return entityList.at(entityID);
+};
+bool const SDLSquareComponent::has(uint32_t entityID) {
+  if (entityList.contains(entityID)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// SDLSquareOutline
+SDLSquareOutline::SDLSquareOutline(SDL_FRect offset, SDL_Color color) {
+  this->color = color;
+  this->offset = offset; 
+}
+void SDLSquareOutlineComponent::add(uint32_t entityID, SDLSquareOutline SDLSInit) {
+  entityList.emplace(entityID, SDLSInit);
+}
+void SDLSquareOutlineComponent::remove(uint32_t entityID) {
+  entityList.erase(entityID);
+}
+SDLSquareOutline& SDLSquareOutlineComponent::get(uint32_t entityID) {
+  return entityList.at(entityID);
+};
+bool const SDLSquareOutlineComponent::has(uint32_t entityID) {
+  if (entityList.contains(entityID)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 } // namespace ecs
 } // namespace engine
