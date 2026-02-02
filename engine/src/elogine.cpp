@@ -8,6 +8,7 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <format>
@@ -68,27 +69,23 @@ namespace core {
 
     SDL_Event testevent;
 
-    uint32_t lastFrametime;
+    uint64_t lastFrametime = SDL_GetTicks();
 
     //main loop
-    while (running) {
+    while (!inputSys.quit) {
 
-      Uint64 currentFrametime = SDL_GetTicks();
+      uint64_t currentFrametime = SDL_GetTicks();
       m_deltaTime = (currentFrametime-lastFrametime)/1000.0f;
       lastFrametime = currentFrametime; 
 
-      //temp input 
-      while (SDL_PollEvent(&testevent)) {
-        if (testevent.type == SDL_EVENT_QUIT) {
-          running = false;
-        }
-      }
-      //input
+      inputSys.Input();
+
       update();
+
       renderSys.render(*this);
 
 
-      Uint32 frametime = SDL_GetTicks() - currentFrametime;
+      uint32_t frametime = SDL_GetTicks() - currentFrametime;
       if (frametime<1000/ engineOptions.m_targetFPS) {
         SDL_Delay((1000/engineOptions.m_targetFPS)-frametime);
       }

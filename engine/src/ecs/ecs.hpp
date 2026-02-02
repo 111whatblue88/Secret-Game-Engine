@@ -17,7 +17,7 @@ class Elogine;
 namespace ecs {
 
 struct Vector2 {
-  int x, y;
+  float x, y;
 };
 
 // transform component

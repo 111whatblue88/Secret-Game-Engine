@@ -2,10 +2,13 @@
 #include "../elogine.hpp"
 #include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 
+#include <algorithm>
+#include <cstdint>
 #include <iostream>
 #include <SDL3/SDL_render.h>
 #include <SDL3_image/SDL_image.h>
 #include <iterator>
+#include <sys/types.h>
 
 namespace engine {
 namespace render {
@@ -90,6 +93,30 @@ namespace render {
 
     SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
     SDL_RenderClear(m_renderer);
+
+    std::sort(engine.entitySys.validEntities.begin(), engine.entitySys.validEntities.end(),
+      [&](uint32_t a, uint32_t b) {
+    
+      if (!engine.entitySys.rendererComponent.has(a)) {
+        return b > a;
+      } else if (!engine.entitySys.rendererComponent.has(b)) {
+        return a > b;
+      } else if (
+        !engine.entitySys.rendererComponent.has(b) && !engine.entitySys.rendererComponent.has(a)
+      ) {
+        return a == b;
+      }
+
+      ecs::Renderer& Ent1 = engine.entitySys.rendererComponent.get(a);
+      ecs::Renderer& Ent2 = engine.entitySys.rendererComponent.get(b);
+
+      if (Ent1.layer > Ent2.layer) {
+        return a > b;
+      } else {
+        return b > a;
+      }
+
+    }); 
 
     for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
 

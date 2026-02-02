@@ -5,6 +5,7 @@
 #include "rendering/renderSys.hpp"
 #include "terminal/input.hpp"
 #include "terminal/output.hpp"
+#include "keyboard/keyboard.hpp"
 
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -22,8 +23,6 @@ namespace core {
     };
     public:
 
-    Options engineOptions;
-
     Elogine(std::string windowName, int width, int height);
     ~Elogine();
 
@@ -37,6 +36,8 @@ namespace core {
     const int m_WINDOWWIDTH;
     const int m_WINDOWHEIGHT;
 
+    Options engineOptions;
+    input::InputSys inputSys;
     render::RenderSys renderSys;
     ecs::EntitySys entitySys;
 

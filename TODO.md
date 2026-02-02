@@ -142,6 +142,33 @@ class elogine {
 
 }
 
+KEYBOARD INPUT 
 
+namespace INPUT {
+
+class InputSys {
+public:
+
+  Input()
+
+  enum class KeyState {
+    down, up, none, held
+  }
+
+  
+
+private:
+
+  struct keys {
+    keystate keya 
+    keystate keyb 
+    etc
+  }
+
+}
+
+}
+
+if (inpussys.key.a == inputsys.keystate::held)
 
 
