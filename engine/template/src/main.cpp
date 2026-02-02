@@ -7,6 +7,10 @@ int main() {
   core::Elogine engine("engineTest", 1600, 1000);
   engine.setTargetFPS(120);
 
+  engine.Update = []() {
+
+  }
+
   engine.run();
 
 }
