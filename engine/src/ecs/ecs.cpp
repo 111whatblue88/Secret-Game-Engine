@@ -1,6 +1,8 @@
 #include "ecs.hpp"
 #include "../elogine.hpp"
 
+#include <SDL3/SDL_render.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
@@ -63,7 +65,6 @@ Renderer::Renderer(SDL_Texture *texture, SDL_FRect uv, int layer) {
   this->uv = uv;
   this->layer = layer;
 }
-
 void RendererComponent::add(uint32_t entityID, Renderer rendererInit) {
   entityList.emplace(entityID, rendererInit);
 }
@@ -80,6 +81,24 @@ bool const RendererComponent::has(uint32_t entityID) {
     return false;
   }
 }
+
+void TextRendererComponent::add(uint32_t entityID, TextRenderer rendererInit) {
+  entityList.emplace(entityID, rendererInit);
+}
+void TextRendererComponent::remove(uint32_t entityID) {
+  entityList.erase(entityID);
+}
+TextRenderer& TextRendererComponent::get(uint32_t entityID) {
+  return entityList.at(entityID);
+};
+bool const TextRendererComponent::has(uint32_t entityID) {
+  if (entityList.contains(entityID)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 } // namespace ecs
 } // namespace engine

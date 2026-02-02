@@ -2,6 +2,7 @@
 #include "../elogine.hpp"
 #include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 
+#include <SDL3/SDL_error.h>
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
@@ -50,6 +51,29 @@ namespace render {
 
   }
 
+  SDL_Texture* RenderSys::textureFromFont(core::Elogine& engine, ecs::TextRenderer textRenderer) {
+
+    TTF_Font* font = TTF_OpenFont(textRenderer.fontFileLocation.c_str(), textRenderer.size);
+    if (!font) {
+
+    }
+    SDL_Surface* surface = TTF_RenderText_Solid(
+        font, 
+        textRenderer.text.c_str(), 
+        0,
+        textRenderer.textFG
+    );
+    if (!surface) {
+
+    }
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(engine.renderSys.m_renderer, surface);
+    if (!texture) {
+
+    }
+    std::cout << SDL_GetError() << "\n";
+    return texture;
+
+  }
   RenderSys::~RenderSys() {
     SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
@@ -117,9 +141,8 @@ namespace render {
       }
 
     }); 
-
+    // render images
     for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
-
         if (engine.entitySys.rendererComponent.has(engine.entitySys.validEntities[i])) {
           ecs::Renderer renderComp = engine.entitySys.rendererComponent.get(engine.entitySys.validEntities[i]);
           ecs::Transform transformComp = engine.entitySys.transformComponent.get(engine.entitySys.validEntities[i]);
@@ -136,9 +159,24 @@ namespace render {
               &destination
           );
         }
-
-
-
+    }    
+    for (size_t i = 0; i < engine.entitySys.validEntities.size(); i++) {
+        if (engine.entitySys.textRendererComponent.has(engine.entitySys.validEntities[i])) {
+          ecs::TextRenderer textRenderComp = engine.entitySys.textRendererComponent.get(engine.entitySys.validEntities[i]);
+          ecs::Transform transformComp = engine.entitySys.transformComponent.get(engine.entitySys.validEntities[i]);
+          SDL_FRect destination = {
+            (float)transformComp.position.x, 
+            (float)transformComp.position.y, 
+            (float)transformComp.width, 
+            (float)transformComp.height
+          };
+          SDL_RenderTexture(
+              m_renderer, 
+              textRenderComp.texture, 
+              NULL, 
+              &destination
+          );
+        }
     }    
 
 
@@ -146,6 +184,7 @@ namespace render {
 
     return true;
   }
+
 
 
 

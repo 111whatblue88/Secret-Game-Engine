@@ -5,7 +5,11 @@
 #include <string>
 
 namespace engine {
+namespace ecs {
+  struct TextRenderer;
+}
 namespace core {
+  
 class Elogine;
 }
 namespace render {
@@ -15,6 +19,7 @@ namespace render {
   public:
     
     static SDL_Texture* textureFromImage(core::Elogine& engine, std::string imgLocation);
+    static SDL_Texture* textureFromFont(core::Elogine& engine, ecs::TextRenderer textRenderer);
 
   private:
 
