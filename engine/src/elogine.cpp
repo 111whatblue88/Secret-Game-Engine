@@ -1,4 +1,5 @@
 #include "elogine.hpp"
+#include "ecs/ecs.hpp"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_events.h>
@@ -8,7 +9,10 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <cerrno>
+#include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <memory>
 #include <string>
 #include <format>
@@ -109,7 +113,38 @@ namespace core {
   float Elogine::deltaTime() {return m_deltaTime;}
 
   bool Elogine::update() {
-    
+  
+    for (size_t i = 0; i < entitySys.validEntities.size(); i++) {
+      if (entitySys.colliderComponent.has(entitySys.validEntities[i])) {
+        ecs::Collider objCol1 = entitySys.colliderComponent.get(entitySys.validEntities[i]);
+        ecs::Transform objTra1 = entitySys.transformComponent.get(entitySys.validEntities[i]);
+        for (size_t t = 0; t < entitySys.validEntities.size(); t++) {
+          if ( i == t) {continue;}
+          if (entitySys.colliderComponent.has(entitySys.validEntities[t])) {
+            ecs::Collider objCol2 = entitySys.colliderComponent.get(entitySys.validEntities[t]);
+            ecs::Transform objTra2 = entitySys.transformComponent.get(entitySys.validEntities[t]);
+            if(objTra1.position.x < objTra2.position.x + objTra2.width &&
+                objTra1.position.x + objTra1.width > objTra2.position.x &&
+                objTra1.position.y < objTra2.position.y + objTra2.height &&
+                objTra1.position.y + objTra1.height > objTra2.position.y
+            ) {
+                // set up rigibody checks and corrections here
+                
+                
+              if (objCol1.isTrigger) {
+                objCol1.onTrigger();
+                continue;
+              }
+              if (objCol2.isTrigger) {
+                objCol2.onTrigger();
+                continue;
+              }
+            }
+          }
+        }
+      }
+    }    
+
     Update();
 
     return true;

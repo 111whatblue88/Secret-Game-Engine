@@ -1,8 +1,8 @@
 #ifndef _ECS_HPP
 #define _ECS_HPP
 
-#include "../../vendored/SDL/src/include/SDL3/SDL.h"
-#include <SDL3/SDL_pixels.h>
+#include <functional>
+#include <SDL3/SDL.h>
 #include <SDL3/SDL_rect.h>
 #include <cstdint>
 #include <string>
@@ -112,6 +112,27 @@ private:
   std::unordered_map<uint32_t, SDLSquareOutline> entityList;
 };
 
+// Collider
+struct Collider{
+  Collider(SDL_FRect offset);
+  SDL_FRect offset;
+
+  bool isTrigger;
+  std::function<void()> onTrigger;
+};
+
+class ColliderComponent{
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, Collider SDLSOInit);
+  Collider& get(uint32_t entityID);
+  bool const has(uint32_t entityID);
+private:
+  std::unordered_map<uint32_t, Collider> entityList;
+};
+
+
+// main class
 class EntitySys {
   friend class core::Elogine;
   friend class render::RenderSys;
@@ -129,6 +150,8 @@ public:
 
   SDLSquareComponent sdlSquareComponent;
   SDLSquareOutlineComponent sdlSquareOutlineComponent;
+
+  ColliderComponent colliderComponent;
 
 private:
   std::vector<uint32_t> validEntities;

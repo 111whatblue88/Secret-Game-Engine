@@ -145,5 +145,35 @@ bool const SDLSquareOutlineComponent::has(uint32_t entityID) {
   }
 }
 
+// Collider
+Collider::Collider(SDL_FRect offset) {
+  this->offset = offset; 
+  this->onTrigger = []() {
+
+  };
+}
+void ColliderComponent::add(uint32_t entityID, Collider ColliderInit) {
+  entityList.emplace(entityID, ColliderInit);
+}
+void ColliderComponent::remove(uint32_t entityID) {
+  entityList.erase(entityID);
+}
+Collider& ColliderComponent::get(uint32_t entityID) {
+  return entityList.at(entityID);
+};
+bool const ColliderComponent::has(uint32_t entityID) {
+  if (entityList.contains(entityID)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+
+
+
+
+
 } // namespace ecs
 } // namespace engine

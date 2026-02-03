@@ -175,9 +175,8 @@ if (inpussys.key.a == inputsys.keystate::held)
 
 NEXT:
 
-and some kind of collision system/component
-add a physicsBody component, add a player controller component
-
+add a rigidBody component, add a player controller component
+make sure to add the rigidbody update in the collision detection 
 
 
 

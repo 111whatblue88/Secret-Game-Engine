@@ -214,6 +214,7 @@ namespace render {
             transformComp.width += squareComp.offset.w, 
             transformComp.height += squareComp.offset.h, 
           };
+
           SDL_SetRenderDrawColor(m_renderer, 
               squareComp.color.r, 
               squareComp.color.g, 
