@@ -22,7 +22,7 @@ namespace engine {
 namespace core {
 
   Elogine::Elogine(std::string windowName, int width, int height) 
-    :m_WINDOWWIDTH(width), m_WINDOWHEIGHT(height), renderSys(windowName, width, height), running(true) {
+    :m_WINDOWWIDTH(width), m_WINDOWHEIGHT(height), renderSys(windowName, width, height), running(true), entitySys(40) {
     if (!SDL_WasInit(SDL_INIT_VIDEO)) {
       if (SDL_Init(SDL_INIT_VIDEO)) {
         elogine::terminal::Output::log(
@@ -113,7 +113,35 @@ namespace core {
   float Elogine::deltaTime() {return m_deltaTime;}
 
   bool Elogine::update() {
-  
+
+    for (size_t i = 0; i < entitySys.validEntities.size(); i++) {
+        if (entitySys.rigidBodyComponent.has(entitySys.validEntities[i])) {
+          ecs::RigidBody& rb = entitySys.rigidBodyComponent.get(entitySys.validEntities[i]);
+          ecs::Transform& t = entitySys.transformComponent.get(entitySys.validEntities[i]);
+
+          if (rb.gravityEnabled) {
+            rb.acc.y += 20 * deltaTime();
+          }
+
+          rb.vel.x += rb.acc.x * deltaTime();
+          rb.vel.y += rb.acc.y * deltaTime();
+
+          rb.vel.x = rb.vel.x*0.9;
+          rb.vel.y = rb.vel.y*0.9;
+
+          if (rb.vel.x > entitySys.rigidBodyComponent.entityMaxSpeed) {
+            rb.vel.x = entitySys.rigidBodyComponent.entityMaxSpeed;
+          }
+          if (rb.vel.y > entitySys.rigidBodyComponent.entityMaxSpeed) {
+            rb.vel.y = entitySys.rigidBodyComponent.entityMaxSpeed;
+          }
+
+          t.position.x += rb.vel.x;
+          t.position.y += rb.vel.y;
+
+
+        }
+    }    
     for (size_t i = 0; i < entitySys.validEntities.size(); i++) {
       if (entitySys.colliderComponent.has(entitySys.validEntities[i])) {
         ecs::Collider objCol1 = entitySys.colliderComponent.get(entitySys.validEntities[i]);
@@ -128,9 +156,7 @@ namespace core {
                 objTra1.position.y < objTra2.position.y + objTra2.height &&
                 objTra1.position.y + objTra1.height > objTra2.position.y
             ) {
-                // set up rigibody checks and corrections here
-                
-                
+
               if (objCol1.isTrigger) {
                 objCol1.onTrigger();
                 continue;
@@ -138,6 +164,61 @@ namespace core {
               if (objCol2.isTrigger) {
                 objCol2.onTrigger();
                 continue;
+              }
+              if (entitySys.rigidBodyComponent.has(entitySys.validEntities[i])) {
+                ecs::RigidBody& objRig1 =  entitySys.rigidBodyComponent.get(entitySys.validEntities[i]);
+
+                if (entitySys.playerCtrlComponent.has(entitySys.validEntities[i])) {
+                  if (objTra1.position.x+objTra1.width >= objTra2.position.x &&
+                  objTra1.position.x < objTra2.position.x){
+                    if (!(objRig1.vel.x <= 0)) {
+                      objRig1.addForce(ecs::Vector2(-(objRig1.vel.x), 0));
+                    }
+                  }
+                  if (objTra1.position.x <= objTra2.position.x+objTra2.width && 
+                  objTra2.position.x < objTra1.position.x){
+                    if (!(objRig1.vel.x >= 0)) {
+                      objRig1.addForce(ecs::Vector2(-(objRig1.vel.x), 0));
+                    }
+                  }
+                  if (objTra1.position.y+objTra1.height >= objTra2.position.y &&
+                  objTra2.position.y+objTra2.height > objTra1.position.y) {
+                    if (!(objRig1.vel.y <= 0)) {
+                      objRig1.addForce(ecs::Vector2(0, -(objRig1.vel.y)));
+                    }
+                  }
+                  if (objTra1.position.y <= objTra2.position.y+objTra2.height &&
+                  objTra2.position.y < objTra1.position.y+objTra1.height){
+                    if (!(objRig1.vel.y >= 0)) {
+                      objRig1.addForce(ecs::Vector2(0, -(objRig1.vel.y)));
+                    }
+                  }
+                } else {
+                  if (objTra1.position.x+objTra1.width >= objTra2.position.x &&
+                  objTra1.position.x < objTra2.position.x){
+                    if (!(objRig1.vel.x <= 0)) {
+                      objRig1.addForce(ecs::Vector2(-(objRig1.vel.x)*2, 0));
+                    }
+                  }
+                  if (objTra1.position.x <= objTra2.position.x+objTra2.width && 
+                  objTra2.position.x < objTra1.position.x){
+                    if (!(objRig1.vel.x >= 0)) {
+                      objRig1.addForce(ecs::Vector2(-(objRig1.vel.x)*2, 0));
+                    }
+                  }
+                  if (objTra1.position.y+objTra1.height >= objTra2.position.y &&
+                  objTra2.position.y+objTra2.height > objTra1.position.y) {
+                    if (!(objRig1.vel.y <= 0)) {
+                      objRig1.addForce(ecs::Vector2(0, -(objRig1.vel.y)*2));
+                    }
+                  }
+                  if (objTra1.position.y <= objTra2.position.y+objTra2.height &&
+                  objTra2.position.y < objTra1.position.y+objTra1.height){
+                    if (!(objRig1.vel.y >= 0)) {
+                      objRig1.addForce(ecs::Vector2(0, -(objRig1.vel.y)*2));
+                    }
+                  }
+                }
               }
             }
           }

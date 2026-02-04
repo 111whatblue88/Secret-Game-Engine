@@ -169,10 +169,55 @@ bool const ColliderComponent::has(uint32_t entityID) {
   }
 }
 
+// RigidBody
 
+RigidBody::RigidBody() {
 
+}
+void RigidBodyComponent::add(uint32_t entityID, RigidBody rigidInit) {
+  entityList.emplace(entityID, rigidInit);
+}
+void RigidBodyComponent::remove(uint32_t entityID) {
+  entityList.erase(entityID);
+}
+RigidBody& RigidBodyComponent::get(uint32_t entityID) {
+  return entityList.at(entityID);
+};
+bool const RigidBodyComponent::has(uint32_t entityID) {
+  if (entityList.contains(entityID)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
+void RigidBody::addForce(Vector2 f) {
+  vel.x += f.x; 
+  vel.y += f.y; 
+}
 
+// Player Controller
+
+void PlayerCtrlComponent::add(uint32_t entityID, PlayerCtrl ctrlInit) {
+  entityList.emplace(entityID, ctrlInit);
+}
+void PlayerCtrlComponent::remove(uint32_t entityID) {
+  entityList.erase(entityID);
+}
+PlayerCtrl& PlayerCtrlComponent::get(uint32_t entityID) {
+  return entityList.at(entityID);
+};
+bool const PlayerCtrlComponent::has(uint32_t entityID) {
+  if (entityList.contains(entityID)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+EntitySys::EntitySys(float s) {
+  rigidBodyComponent.entityMaxSpeed=s;
+}
 
 
 } // namespace ecs

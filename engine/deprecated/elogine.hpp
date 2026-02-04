@@ -1,6 +1,7 @@
 #ifndef _ELOGINE_HPP
 #define _ELOGINE_HPP
 
+#include "math/math.hpp"
 #include "ecs/ecs.hpp"
 #include "rendering/renderSys.hpp"
 #include "terminal/input.hpp"

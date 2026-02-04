@@ -131,13 +131,55 @@ private:
   std::unordered_map<uint32_t, Collider> entityList;
 };
 
+// RigidBody
+struct RigidBody{
+  RigidBody();
+
+  bool gravityEnabled;
+
+  Vector2 vel;
+  Vector2 acc;
+  float mass;
+
+  void addForce(Vector2 f);
+
+};
+
+class RigidBodyComponent{
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, RigidBody SDLSOInit);
+  RigidBody& get(uint32_t entityID);
+  bool const has(uint32_t entityID);
+  float entityMaxSpeed;
+private:
+  std::unordered_map<uint32_t, RigidBody> entityList;
+};
+
+// PlayerController
+struct PlayerCtrl{
+
+};
+
+class PlayerCtrlComponent{
+public:
+  void remove(uint32_t entityID);
+  void add(uint32_t entityID, PlayerCtrl SDLSOInit);
+  PlayerCtrl& get(uint32_t entityID);
+  bool const has(uint32_t entityID);
+
+private:
+  std::unordered_map<uint32_t, PlayerCtrl> entityList;
+};
+
 
 // main class
 class EntitySys {
   friend class core::Elogine;
   friend class render::RenderSys;
-
 public:
+  EntitySys(float s);
+
   uint32_t createEntity(Transform initTransform);
   void removeEntity(uint32_t entityID);
 
@@ -152,6 +194,9 @@ public:
   SDLSquareOutlineComponent sdlSquareOutlineComponent;
 
   ColliderComponent colliderComponent;
+  RigidBodyComponent rigidBodyComponent;
+  PlayerCtrlComponent playerCtrlComponent;
+  
 
 private:
   std::vector<uint32_t> validEntities;

@@ -86,9 +86,6 @@ void InputSys::resetKey(InputSys::KeyState& key) {
 
 };
 
-InputSys::InputSys() {
-  quit = false;
-}
 
 }
 }

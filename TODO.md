@@ -1,182 +1,153 @@
 
---struct for important SDL stuff, like windows and whatnot
+
 
 namespace elo {
 
-    struct renderContext {
+struct Vector2 {
 
-        renderContext(std::string inName, float inWidth, float inHeight)
-            : M_WINDOW_WIDTH(inWidth), M_WINDOW_HEIGHT(inHeight)
-        {
-            m_window = SDL_CreateWindow(inName, M_WINDOW_WIDTH, M_WINDOW_HEIGHT);
-            m_renderer = SDL_CreateRenderer(m_window);
-        }
+  float x;
+  float y;
 
-        const float M_WINDOW_WIDTH;
-        const float M_WINDOW_HEIGHT;
-
-        SDL_Window* m_window;
-        SDL_Renderer* m_renderer;
-
-        ~renderContext() {
-            SDL_DestroyRenderer(m_renderer);
-            SDL_DestroyWindow(m_window);
-        }
-
-    }
+  symbol functions,
+  like for vector2+vector2
 
 
 }
 
-
---main elogine class that handles a lot of the dirty work
-
-namespace elo {
-
-    class elogine {
-
-        bool m_quit;
-
-        renderContext mainContext;
-
-        elo(std::string windowName, float width, float height)
-            : m_quit(false)
-        {
-
-            SDL_init(); do checks for if it ran correctly
-            TTF_init();
-
-            renderContext mainContext(windowName, width, height); 
-
-        }
-
-        bool run { this is what you would call to start the game loop
-
-            while !(m_quit) { 
-
-                start frame counter
-
-                input check
-
-                update game objects
-
-                render
-
-                delay with frame counter logic
-
-            }
-
-            return true;
-
-        }
-
-
-    } the amount of brakets will go down as these will be defined in different files
+struct Color {
+  
+  int r
+  int g
+  int b
 
 }
 
-RENDERING SYSTEM
+namespace core {
 
-bool render() {
 
-  clear screen 
 
-  
-  for (loop stuff) {
-  
-  if (entity->rendEnabled) {
-  
-    entity->renderingComp->render(); 
+static class Engine {
+
+  struct EngineOptions {
+
 
   }
-
-  }
-
-  present screen  
-    
-}
-
-ECS 
-
-namespace elo {
-
-class entity {
-
-  int x, int y;
-
-  //rendering
-  bool rendEnabled
-  renderingComp rendComp;
-
-  
-
-
-}
-
-class renderingComp {
 
   public:
-  void changeImage(std::string imagePath); <- this destroys the old one and creates a new texture with the given image
-  SDL_Struct imageLocation;
+
+  static bool update;
+
+  static engineOptions m_options;
+
+  static bool run(); 
+  
+
+}
+}
+
+namespace rend {
+
+class Renderer {
+  
+  m_renderer
+  m_window
+
+  public:
+
+  Renderer(windowname, width, height)
+
+  bool renderSquare(Vector2, height, width)
+  bool RenderSquareFill()
+
+  bool renderLine()
+
+  bool renderClear()
+
+  bool setRenderColor()
+
+  bool renderText()
+
+}
+
+static class RenderSys {
+
+  public:
+
+  static Renderer m_renderer;
+
+  staic Render(Engine& engine);
+
+} 
+
+}
+
+namespace ecs {
+
+per component:
+struct Transform {
+  Vector2 m_pos;
+  m_width
+  m_height
+  m_radius
+}
+
+static class TransformComponent {
+  public:
+  add()
+  rem()
+  get()
+  has()
+
   private:
-  friend class elogine
-  void render(sdl renderer); <- this just renders the texture at imageLocation
-  sdl_texture texture;
 
-};
+  std::map entityList
 
+}
 
--- in the elogine class:
+static class ECS {
+  public:
+  addEntity();
+  remEntity()
+  findEntity()
 
-class elogine {
+  private:
 
-  std::vector<std::unique_ptr<entity>> entityVector; <- use unique pointers here
+  std::vector m_validEntities;
+  uint32 m_entityCount
 
-  void addEntity(std::unique_ptr<entity>) {
+}
+}
 
-  entityVector.push_back(std::move(entity)) 
+namespace math {
+
+  vector math
+  static dot()
+
+}
+
+namespace input {
   
-
-
-  }
+  static class InputSys
 
 }
 
-KEYBOARD INPUT 
 
-namespace INPUT {
 
-class InputSys {
-public:
 
-  Input()
 
-  enum class KeyState {
-    down, up, none, held
-  }
 
-  
 
-private:
 
-  struct keys {
-    keystate keya 
-    keystate keyb 
-    etc
-  }
+
 
 }
-
-}
-
-if (inpussys.key.a == inputsys.keystate::held)
-
-
-
-NEXT:
 
 add a rigidBody component, add a player controller component
 make sure to add the rigidbody update in the collision detection 
+
+
+
+
 
 
 
