@@ -2,6 +2,7 @@
 #include "rend/rend.hpp"
 #include "input/input.hpp"
 
+#include <iostream>
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -25,12 +26,15 @@ public:
   static void earlyExit(std::string msg);
   static bool run();
 
-  
+  static float deltaTime();
+
   static void wait(int ms);
 
 
 
 private:
+
+  static float m_deltaTime;
 
 };
 

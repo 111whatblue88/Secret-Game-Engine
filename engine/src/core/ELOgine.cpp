@@ -1,6 +1,8 @@
 #include "../ELOgine.hpp"
 
+#include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
+#include <cstdint>
 #include <functional>
 #include <string>
 
@@ -13,6 +15,12 @@ Engine::EngineOptions Engine::options = {
 
 std::function<void()> Engine::update = []() {
 
+};
+
+float Engine::m_deltaTime = 0;
+
+float Engine::deltaTime() {
+  return m_deltaTime;
 };
 
 void Engine::wait(int ms) {
@@ -49,17 +57,25 @@ bool Engine::run() {
     }
   }
 
+  uint32_t lastFrameTime = SDL_GetTicks();
 
   while (!input::InputSys::quit) {
 
+    uint32_t currentFrameTime = SDL_GetTicks();
+    m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
+    lastFrameTime = currentFrameTime;
 
-  elo::input::InputSys::Input();
+    elo::input::InputSys::Input();
 
-  update();
+    update();
 
-  rend::RenderSys::render(); 
-
-
+    rend::RenderSys::render(); 
+    
+    uint32_t frametime = SDL_GetTicks() - currentFrameTime;
+    if (frametime<1000/ options.fpsCap) {
+      SDL_Delay((1000/options.fpsCap)-frametime);
+    }
+    
   }
 
   // log exit
