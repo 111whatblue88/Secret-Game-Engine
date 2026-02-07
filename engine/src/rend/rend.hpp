@@ -3,6 +3,7 @@
 
 #include "../general/general.hpp"
 
+#include <SDL3/SDL_rect.h>
 #include <vector>
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -24,8 +25,11 @@ class Renderer {
 
   void renderBox(Vector2 pos, float width, float height, Color color);
   void renderBoxFill(Vector2 pos, float width, float height, Color color);
-
   
+  SDL_Texture* textureFromImage(std::string location);
+ 
+  void renderTexture(SDL_Texture* texture, SDL_FRect uv, int layer, SDL_FRect location);
+  void renderTexture(SDL_Texture* texture, int layer, SDL_FRect location);
 
   private:
 
@@ -40,6 +44,8 @@ public:
     BOXFILL,
     BOX,
     SETDRAWCOLOR,
+    TEXTURE,
+    FULLTEXTURE,
   };
 
   struct RenderCall {
@@ -48,6 +54,10 @@ public:
     float width;
     float height;
     Color color;
+
+    SDL_Texture* texture;
+    SDL_FRect uv;
+    int layer;
   };
 
 

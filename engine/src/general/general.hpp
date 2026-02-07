@@ -9,6 +9,7 @@ struct Vector2 {
   float x;
   float y;
 
+  Vector2();
   Vector2(float x, float y);
 
   Vector2 operator+(Vector2 other);
@@ -24,7 +25,7 @@ struct Color {
   int b;
   
   Color(int r, int g, int b);
-
+  Color();
 };
 }
 

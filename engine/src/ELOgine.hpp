@@ -1,6 +1,7 @@
 #include "general/general.hpp"
 #include "rend/rend.hpp"
 #include "input/input.hpp"
+#include "ecs/ecs.hpp"
 
 #include <iostream>
 #include <SDL3/SDL.h>
@@ -29,8 +30,6 @@ public:
   static float deltaTime();
 
   static void wait(int ms);
-
-
 
 private:
 

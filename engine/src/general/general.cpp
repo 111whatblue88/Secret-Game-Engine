@@ -3,6 +3,9 @@
 
 using namespace elo;
 
+Vector2::Vector2() {
+
+}
 Vector2::Vector2(float x, float y) {
   this->x=x;
   this->y=y;
@@ -25,4 +28,7 @@ Color::Color(int r, int g, int b) {
   this->r=r;
   this->g=g;
   this->b=b;
+}
+Color::Color() {
+
 }
