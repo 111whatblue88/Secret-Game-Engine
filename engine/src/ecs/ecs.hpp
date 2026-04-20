@@ -3,6 +3,7 @@
 
 #include "../general/general.hpp"
 
+#include <functional>
 #include <string>
 #include <SDL3/SDL.h>
 #include <vector>
@@ -11,6 +12,16 @@
 
 namespace elo {
 namespace ecs {
+
+// attempting templates - not usable
+
+template <typename T> class component {
+
+};
+
+uint32_t createEntity();
+
+
 
 // Transform
 class Transform {
@@ -25,7 +36,6 @@ class Transform {
 class TransformComponent {
   public:
   static void add(uint32_t entity, Transform transform);
-  static void rem(uint32_t entity);
   static Transform& get(uint32_t entity); 
   static const bool has(uint32_t entity);
 
@@ -33,6 +43,7 @@ class TransformComponent {
   static std::unordered_map<uint32_t, Transform> entityList; 
 };
 
+// img renderer
 class ImgRenderer{
   public:
   ImgRenderer(std::string location, SDL_FRect uv, int layer);
@@ -52,6 +63,27 @@ class ImgRendererComp{
 
   private:
   static std::unordered_map<uint32_t, ImgRenderer> entityList; 
+};
+
+// text renderer
+class TextRenderer{
+  public:
+  TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer);
+  bool editText(std::string fontLocation, std::string text, int size, Color color);
+  SDL_Texture* texture;
+  int layer;
+};
+class TextRendererComp{
+  public:
+  static void add(uint32_t entity, TextRenderer tr);
+  static void rem(uint32_t entity);
+  static TextRenderer& get(uint32_t entity); 
+  static const bool has(uint32_t entity);
+
+  static std::unordered_map<uint32_t, TextRenderer> getEntityList();
+
+  private:
+  static std::unordered_map<uint32_t, TextRenderer> entityList; 
 };
 
 // PrimitiveRendering
@@ -77,6 +109,55 @@ class PrimitiveRendererComponent{
 
   private:
   static std::unordered_map<uint32_t, PrimitiveRenderer> entityList; 
+};
+
+// physicsBody
+class PhysicsBody{
+  public:
+  Vector2 velocity;
+
+  void addForce(Vector2 force);
+};
+class PhysicsBodyComponent{
+  public:
+  static void add(uint32_t entity, PhysicsBody bc);
+  static void rem(uint32_t entity);
+  static PhysicsBody& get(uint32_t entity); 
+  static const bool has(uint32_t entity);
+
+  static std::unordered_map<uint32_t, PhysicsBody> getEntityList();
+
+  private:
+  static std::unordered_map<uint32_t, PhysicsBody> entityList; 
+};
+
+// basicCollider
+class BasicCollider{
+  public:
+  enum class Collidertype {
+    boxCollider,
+    circleCollider
+  };
+  Collidertype type;
+  bool renderCollider;
+
+  std::function<void()> onCollision;
+
+  BasicCollider(Collidertype type, bool renderCollider);
+};
+class BasicColliderComponent{
+  public:
+  static void add(uint32_t entity, BasicCollider bc);
+  static void rem(uint32_t entity);
+  static BasicCollider& get(uint32_t entity); 
+  static const bool has(uint32_t entity);
+
+  static std::unordered_map<uint32_t, BasicCollider> getEntityList();
+
+  static bool isColliding(uint32_t e1, uint32_t e2);
+
+  private:
+  static std::unordered_map<uint32_t, BasicCollider> entityList; 
 };
 
 class EntitySys {

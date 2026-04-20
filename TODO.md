@@ -1,154 +1,32 @@
+current way of creating entities:
+{
+  ID entityID = ecs::EntitySys.createEntity(ecs::TranformComponent(
+    Vector2(20,20), 20, 20
+  ))
 
-
-
-namespace elo {
-
-struct Vector2 {
-
-  float x;
-  float y;
-
-  symbol functions,
-  like for vector2+vector2
-
+  auto& entityPB ecs::PhysicsBodyComponent.add(entityID, ecs::PhysicsBody())
 
 }
 
-struct Color {
-  
-  int r
-  int g
-  int b
+it would be better if it was something like: 
+
+{
+  using namespace ecs;
+  ID entityID = entitySys.createEntity(component<transform>())
+  auto& textComponents = entitySys.addComponents(entityID, // returns a vector<component&>  
+    component<textRenderer>(Vector2(20,20), "location.ttf", 24, "hello #1"),
+    component<textRenderer>(Vector2(20,40), "location.ttf", 24, "hello #2"),
+    component<textRenderer>(Vector2(20,60), "location.ttf", 24, "hello #3"),
+    component<textRenderer>(Vector2(20,80), "location.ttf", 24, "hello #4")
+  )
+  // and then to edit one of the text components 
+
+  textComponents[3].updateText("hello!")
 
 }
 
-namespace core {
+template <typename t> component
 
-
-
-static class Engine {
-
-  struct EngineOptions {
-
-
-  }
-
-  public:
-
-  static bool update;
-
-  static engineOptions m_options;
-
-  static bool run(); 
-  
-
-}
-}
-
-namespace rend {
-
-class Renderer {
-  
-  m_renderer
-  m_window
-
-  public:
-
-  Renderer(windowname, width, height)
-
-  bool renderSquare(Vector2, height, width)
-  bool RenderSquareFill()
-
-  bool renderLine()
-
-  bool renderClear()
-
-  bool setRenderColor()
-
-  bool renderText()
-
-}
-
-static class RenderSys {
-
-  public:
-
-  static Renderer m_renderer;
-
-  staic Render(Engine& engine);
-
-} 
-
-}
-
-namespace ecs {
-
-per component:
-struct Transform {
-  Vector2 m_pos;
-  m_width
-  m_height
-  m_radius
-}
-
-static class TransformComponent {
-  public:
-  add()
-  rem()
-  get()
-  has()
-
-  private:
-
-  std::map entityList
-
-}
-
-static class ECS {
-  public:
-  addEntity();
-  remEntity()
-  findEntity()
-
-  private:
-
-  std::vector m_validEntities;
-  uint32 m_entityCount
-
-}
-}
-
-namespace math {
-
-  vector math
-  static dot()
-
-}
-
-namespace input {
-  
-  static class InputSys
-
-}
-
-
-
-
-
-
-
-
-
-
-}
-
-add a rigidBody component, add a player controller component
-make sure to add the rigidbody update in the collision detection 
-
-
-
-
-
-
+vector<map<id, vector<component>>
 
 

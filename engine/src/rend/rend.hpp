@@ -4,6 +4,7 @@
 #include "../general/general.hpp"
 
 #include <SDL3/SDL_rect.h>
+#include <SDL3/SDL_render.h>
 #include <vector>
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -23,13 +24,20 @@ class Renderer {
 
   void setRenderColor(Color color);
 
+  void renderPoints(SDL_FPoint* p, int c);
+  void renderGeometry(SDL_Vertex* v, int numverticies, int* indecies, int numindices);
+
   void renderBox(Vector2 pos, float width, float height, Color color);
   void renderBoxFill(Vector2 pos, float width, float height, Color color);
-  
+
+  void renderCircle(Vector2 pos, float radius, Color color);
+  void renderCircleFill(Vector2 pos, float radius, Color color);
+
   SDL_Texture* textureFromImage(std::string location);
- 
+  SDL_Texture* textureFromFont(std::string location, int fontSize, Color color, std::string text);
+
   void renderTexture(SDL_Texture* texture, SDL_FRect uv, int layer, SDL_FRect location);
-  void renderTexture(SDL_Texture* texture, int layer, SDL_FRect location);
+  void renderTextureFull(SDL_Texture* texture, int layer, SDL_FRect location);
 
   private:
 
@@ -41,11 +49,15 @@ class RenderSys {
 public:
 
   enum class CallType {
-    BOXFILL,
-    BOX,
+    RBOXFILL,
+    RBOX,
+    RCIRCLE,
+    RCIRCLEFILL,
     SETDRAWCOLOR,
-    TEXTURE,
-    FULLTEXTURE,
+    RTEXTURE,
+    RFULLTEXTURE,
+    RGEOMETRY,
+    RPOINTS,
   };
 
   struct RenderCall {
@@ -53,11 +65,22 @@ public:
     elo::Vector2 pos;
     float width;
     float height;
+    float radius;
     Color color;
+
 
     SDL_Texture* texture;
     SDL_FRect uv;
     int layer;
+
+    SDL_Vertex* verticies;
+    int numVerticies;
+    int* indices;
+    int numIndices;
+    
+    SDL_FPoint* points;
+    int numPoints;
+
   };
 
 

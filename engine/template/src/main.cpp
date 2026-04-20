@@ -1,16 +1,21 @@
-#include "../engine/src/elogine.hpp"
+#include "../engine/src/ELOgine.hpp"
 
 int main() {
- 
-  using namespace engine;
 
-  core::Elogine engine("engineTest", 1600, 1000);
-  engine.setTargetFPS(120);
+  using namespace elo;
+  using ID = uint32_t;
 
-  engine.Update = []() {
+  core::Engine::init(1600, 1000, "testgame");
+  core::Engine::options.fpsCap = 60;
 
-  }
+  // Update - Called every frame
+  core::Engine::update = [&]() {
 
-  engine.run();
+  };
+
+  core::Engine::run();
 
 }
+
+
+
