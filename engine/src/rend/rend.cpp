@@ -8,8 +8,10 @@
 
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <string>
+#include <sys/types.h>
 #include <unordered_map>
 
 namespace elo {
@@ -180,7 +182,6 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
       0, 
       SDL_Color{Uint8(color.r),Uint8(color.g),Uint8(color.b), 255
   });
-  
     
   return SDL_CreateTextureFromSurface(m_renderer, surface);
 
@@ -207,110 +208,42 @@ Renderer RenderSys::m_renderer = Renderer();
 
 std::vector<RenderSys::RenderCall> RenderSys::CallList = std::vector<RenderSys::RenderCall>();
 
+using namespace ecs;
+
 bool RenderSys::render() {
 
   m_renderer.setRenderColor(Color{0,0,0});
   m_renderer.renderClear();
 
   // render components components
-  std::vector<uint32_t> entityList = ecs::EntitySys::getEntityList();
-  for (size_t i = 0; i < entityList.size(); i++) {
-    ecs::Transform& TComp = ecs::TransformComponent::get(entityList[i]);
+  auto TList = EntitySys::TransformComp.getComponentList();
 
-    if (ecs::ImgRendererComp::has(entityList[i])) {
-      ecs::ImgRenderer& IRComp = ecs::ImgRendererComp::get(entityList[i]);
-      if (SDL_RectEmptyFloat(&IRComp.uv)) {
-        CallList.push_back(RenderCall{
-          CallType::RTEXTURE,
-          TComp.pos,
-          TComp.width,
-          TComp.width,
-          0,
-          Color{0,0,0},
-          IRComp.texture,
-          IRComp.uv,
-          IRComp.layer
-        }); 
-      } else {
-        CallList.push_back(RenderCall{
-          CallType::RFULLTEXTURE,
-          TComp.pos,
-          TComp.width,
-          TComp.width,
-          0,
-          Color{0,0,0},
-          IRComp.texture,
-          IRComp.uv,
-          IRComp.layer
-        }); 
-      }
-    }
-   
-    if (ecs::ImgRendererComp::has(entityList[i])) {
-      ecs::TextRenderer& TRComp = ecs::TextRendererComp::get(entityList[i]);
-        CallList.push_back(RenderCall{
-          CallType::RFULLTEXTURE,
-          TComp.pos,
-          TComp.width,
-          TComp.width,
-          0,
-          Color{0,0,0},
-          TRComp.texture,
-          float(TRComp.layer)
-        }
-      ); 
-    }
+  for (uint32_t entity : ecs::EntitySys::getEntityList()) {
+    auto TRList = EntitySys::TextRendererComp.getComponentList();
+    for (auto& [entity, inner] : TRList) {
+      auto T = TList[entity].begin();
+      for (auto& [componentID, component] : inner) {
 
-    if (ecs::PrimitiveRendererComponent::has(entityList[i])) {
-      ecs::PrimitiveRenderer& PRComp = ecs::PrimitiveRendererComponent::get(entityList[i]);
-      switch (PRComp.type) {
-        case ecs::PrimitiveRenderer::PrimitiveType::square: {
-          CallList.push_back(RenderCall{
-            CallType::RBOX,
-            TComp.pos,
-            TComp.width,
-            TComp.height,
-            0,
-            PRComp.color
+        if (component.inheritTransform) {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RFULLTEXTURE, Vector2(T->second.pos.x,T->second.pos.y),
+            T->second.width,T->second.height,0,Color(0,0,0),
+            component.texture,0,0,0,0,component.layer
           });
-          break;
-        }
-        case ecs::PrimitiveRenderer::PrimitiveType::sqaureFill: {
-          CallList.push_back(RenderCall{
-            CallType::RBOXFILL,
-            TComp.pos,
-            TComp.width,
-            TComp.height,
-            0,
-            PRComp.color
+        } else {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RFULLTEXTURE, Vector2(component.transform.pos.x,component.transform.pos.y),
+            component.transform.width,component.transform.width,0,Color(0,0,0),
+            component.texture,0,0,0,0,component.layer
           });
-          break;
-        }
-        case ecs::PrimitiveRenderer::PrimitiveType::circle: {
-          CallList.push_back(RenderCall{
-            CallType::RCIRCLE,
-            TComp.pos,
-            0,
-            0,
-            TComp.radius,
-            PRComp.color,
-          });
-          break;
-        }
-        case ecs::PrimitiveRenderer::PrimitiveType::circleFill: {
-          CallList.push_back(RenderCall{
-            CallType::RCIRCLEFILL,
-            TComp.pos,
-            0,
-            0,
-            TComp.radius,
-            PRComp.color,
-          });
-          break;
         }
       }
-    }
-  } 
+    } 
+  }
+
+
+
+
 
   // proccess callbacks
   for (size_t i = 0; i < CallList.size(); i++) {
