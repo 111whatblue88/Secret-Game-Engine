@@ -7,7 +7,7 @@ echo "starting make script..."
 make
 wait
 echo "copying shared libraries..."
-mkdir lib
+mkdir -p lib
 cp ../../../build/ELOgine/lib/* ./lib
 cp ../../../engine/vendored/SDL/src/build/* ./lib
 cp ../../../engine/vendored/SDL/src_ttf/build/* ./lib

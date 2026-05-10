@@ -15,10 +15,10 @@ wait
 make 
 wait
 
-cd .. 
+cd ../..
 
 echo "building SDL3_TTF"
-cd engine/vendored/SDL/src_ttf
+cd src_ttf
 mkdir -p build
 cd build
 cmake ..
@@ -26,10 +26,10 @@ wait
 make 
 wait
 
-cd .. 
+cd ../.. 
 
 echo "building SDL3_IMAGE"
-cd engine/vendored/SDL/src_image
+cd src_image
 mkdir -p build
 cd build
 cmake ..
