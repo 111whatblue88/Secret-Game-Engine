@@ -84,7 +84,6 @@ class TextRenderer{
   bool editText(std::string fontLocation, std::string text, int size, Color color);
   SDL_Texture* texture;
   int layer;
-
   bool inheritTransform;
   Transform transform;
 
@@ -97,27 +96,18 @@ class TextRenderer{
 template <typename T>
 class ComponentList {
   private:
-  std::unordered_map<uint32_t, std::unordered_map<uint32_t, T>> validComponents = {};
+  std::unordered_map<uint32_t, T> validComponents = {};
   uint32_t count = 0; 
   public:
 
-
-  template<typename... C>
-  std::vector<T*> add(uint32_t e, C... components) {
+  T& add(uint32_t e, T component) {
     count++;
-    std::vector<T*> list;
-    auto add = [&](auto component) {
-      auto& inner = validComponents[e];
-      auto [it, inserted] = inner.emplace(count, component);
-      list.push_back(&it->second);
-    };
-    (add(components), ...);
-    return list;
+    validComponents.emplace(e, component);
+    return validComponents.at(e);
   }
 
-
-  T& get(uint32_t e, uint32_t component) {
-    return validComponents[e][component];
+  T& get(uint32_t e) {
+    return validComponents[e];
   }
   void remove(uint32_t entity, uint32_t component) {
     validComponents[entity].erase(component);
@@ -129,7 +119,7 @@ class ComponentList {
     return false;
   }
 
-  std::unordered_map<uint32_t, std::unordered_map<uint32_t, T>> getComponentList() {
+  std::unordered_map<uint32_t, T>& getComponentList() {
     return validComponents;
   }
   uint32_t getComponentCount() {

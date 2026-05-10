@@ -6,7 +6,6 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 
-#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
@@ -156,6 +155,7 @@ void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
 SDL_Texture* Renderer::textureFromImage(std::string location) {
   SDL_Texture* texture = IMG_LoadTexture(m_renderer, location.c_str());
   if (!texture) {
+    //TODO log texture fallback
     SDL_Texture* texture = IMG_LoadTexture(
         m_renderer, 
         "../engine/assets/fallbacks/textures/default.png");
@@ -170,8 +170,8 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
   
   TTF_Font* font = TTF_OpenFont(fontLocation.c_str(), fontSize);
   if (!font) {
-    // add logging for fallback font being loaded
-    font = TTF_OpenFont("../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    //TODO add logging for fallback font being loaded
+    font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     if (!font) {
     }
   }
@@ -182,7 +182,7 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
       0, 
       SDL_Color{Uint8(color.r),Uint8(color.g),Uint8(color.b), 255
   });
-    
+
   return SDL_CreateTextureFromSurface(m_renderer, surface);
 
 }
@@ -216,29 +216,31 @@ bool RenderSys::render() {
   m_renderer.renderClear();
 
   // render components components
-  auto TList = EntitySys::TransformComp.getComponentList();
+  //
+  // I am redoing this entire section, and even after the redo it will be a mess
+  // This will make no sense. I am sorry
+  // I will try to document what each line does
+  //
+  // Fetches the list of all component lists
+  auto TList = ecs::EntitySys::TransformComp.getComponentList();
+  auto TRList = ecs::EntitySys::TextRendererComp.getComponentList();
+  // loops through every entity (because all valid entities have transform components)
+  // The "T" variable is the current entities Trnasform component
+  for (auto const& T : TList) {
 
-  for (uint32_t entity : ecs::EntitySys::getEntityList()) {
-    auto TRList = EntitySys::TextRendererComp.getComponentList();
-    for (auto& [entity, inner] : TRList) {
-      auto T = TList[entity].begin();
-      for (auto& [componentID, component] : inner) {
-
-        if (component.inheritTransform) {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RFULLTEXTURE, Vector2(T->second.pos.x,T->second.pos.y),
-            T->second.width,T->second.height,0,Color(0,0,0),
-            component.texture,0,0,0,0,component.layer
-          });
-        } else {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RFULLTEXTURE, Vector2(component.transform.pos.x,component.transform.pos.y),
-            component.transform.width,component.transform.width,0,Color(0,0,0),
-            component.texture,0,0,0,0,component.layer
-          });
-        }
-      }
-    } 
+    // loop through every TextRenderer component, "TR", and render its text via sending
+    // a render call
+    for (auto const& TR : TRList) {
+      // render call to render TR's texture which is the text
+      rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+        rend::RenderSys::CallType::RFULLTEXTURE,
+        Vector2(T.second.pos.x,T.second.pos.y), 
+        T.second.width,T.second.height,0,
+        Color(0,0,0),
+        TR.second.texture,0,0,0,0,
+        TR.second.layer
+      });
+    }
   }
 
 
