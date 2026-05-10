@@ -1,32 +1,7 @@
-current way of creating entities:
-{
-  ID entityID = ecs::EntitySys.createEntity(ecs::TranformComponent(
-    Vector2(20,20), 20, 20
-  ))
+1. add a engine info file, like "engineInfo.json", that would contain variables like "engineVer", or 
+"debugEnabled"
+2. Also add debug versions of certain source files
+3. Switch build system to premake
 
-  auto& entityPB ecs::PhysicsBodyComponent.add(entityID, ecs::PhysicsBody())
-
-}
-
-it would be better if it was something like: 
-
-{
-  using namespace ecs;
-  ID entityID = entitySys.createEntity(component<transform>())
-  auto& textComponents = entitySys.addComponents(entityID, // returns a vector<component&>  
-    component<textRenderer>(Vector2(20,20), "location.ttf", 24, "hello #1"),
-    component<textRenderer>(Vector2(20,40), "location.ttf", 24, "hello #2"),
-    component<textRenderer>(Vector2(20,60), "location.ttf", 24, "hello #3"),
-    component<textRenderer>(Vector2(20,80), "location.ttf", 24, "hello #4")
-  )
-  // and then to edit one of the text components 
-
-  textComponents[3].updateText("hello!")
-
-}
-
-template <typename t> component
-
-vector<map<id, vector<component>>
 
 
