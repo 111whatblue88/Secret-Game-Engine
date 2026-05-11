@@ -2,6 +2,7 @@
 #include "rend/rend.hpp"
 #include "input/input.hpp"
 #include "ecs/ecs.hpp"
+#include "math/math.hpp"
 
 #include <iostream>
 #include <SDL3/SDL.h>

@@ -32,6 +32,10 @@ float vectorCross(Vector2 a, Vector2 b) {
   return a.x * b.y - a.y * b.x;
 }
 
+float vectorSlope(Vector2 a, Vector2 b) {
+  return (b.y - a.y)/(b.x - a.x);
+}
+
 
 
 }

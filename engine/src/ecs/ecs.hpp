@@ -27,17 +27,22 @@ class ImgRenderer{
   SDL_FRect uv;
   int layer;
 };
+
 // PrimitiveRendering
 class PrimitiveRenderer{
   public:
   enum class PrimitiveType {
-    square, sqaureFill,
-    circle, circleFill
+    square, squareFill,
+    circle, circleFill,
+    line
   };
   PrimitiveType type;
   Color color;
 
+  Vector2 LineTypeSecondPoint;
+
   PrimitiveRenderer(PrimitiveType type, Color color);
+  PrimitiveRenderer(PrimitiveType type, Color color, Vector2 vec);
 };
 // physicsBody
 class PhysicsBody{
@@ -46,6 +51,7 @@ class PhysicsBody{
 
   void addForce(Vector2 force);
 };
+
 // basicCollider
 class BasicCollider{
   public:
@@ -138,6 +144,7 @@ class EntitySys {
 
   static ComponentList<Transform> TransformComp;
   static ComponentList<TextRenderer> TextRendererComp;
+  static ComponentList<PrimitiveRenderer> PrimitiveRendererComp;
 
   static std::vector<uint32_t> getEntityList();
   //static std::vector<uint32_t> getEntityComponentList();

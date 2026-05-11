@@ -3,9 +3,6 @@
 
 #include "../general/general.hpp"
 
-#include <vector>
-#include <cmath>
-
 namespace elo{
 namespace math {
   
@@ -16,7 +13,8 @@ namespace math {
 
   float vectorDot(Vector2 a, Vector2 b);
   float vectorCross(Vector2 a, Vector2 b);
-
+  
+  float vectorSlope(Vector2 a, Vector2 b);
 }
 }
 

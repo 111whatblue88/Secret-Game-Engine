@@ -33,6 +33,8 @@ class Renderer {
   void renderCircle(Vector2 pos, float radius, Color color);
   void renderCircleFill(Vector2 pos, float radius, Color color);
 
+  void renderLine(Vector2 pos1, Vector2 pos2, Color color);
+
   SDL_Texture* textureFromImage(std::string location);
   SDL_Texture* textureFromFont(std::string location, int fontSize, Color color, std::string text);
 
@@ -53,6 +55,7 @@ public:
     RBOX,
     RCIRCLE,
     RCIRCLEFILL,
+    RLINE,
     SETDRAWCOLOR,
     RTEXTURE,
     RFULLTEXTURE,
@@ -80,6 +83,8 @@ public:
     
     SDL_FPoint* points;
     int numPoints;
+
+    Vector2 pos2;
 
   };
 

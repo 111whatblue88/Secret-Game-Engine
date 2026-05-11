@@ -13,6 +13,7 @@ using namespace ecs;
 
 ecs::ComponentList<Transform> EntitySys::TransformComp = ecs::ComponentList<Transform>();
 ecs::ComponentList<TextRenderer> EntitySys::TextRendererComp = ecs::ComponentList<TextRenderer>();
+ecs::ComponentList<PrimitiveRenderer> EntitySys::PrimitiveRendererComp= ecs::ComponentList<PrimitiveRenderer>();
 
 std::vector<uint32_t> EntitySys::validEntities = std::vector<uint32_t>();
 uint32_t EntitySys::m_entityCount = 0;
@@ -98,6 +99,12 @@ PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color) {
   this->type=type;
   this->color=color;
 };
+PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color, Vector2 vec) {
+  this->type=type;
+  this->LineTypeSecondPoint=vec;
+  this->color=color;
+}
+
 
 // PhysicsBody
 void PhysicsBody::PhysicsBody::addForce(Vector2 force) {

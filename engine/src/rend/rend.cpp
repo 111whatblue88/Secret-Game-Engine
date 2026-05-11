@@ -64,6 +64,10 @@ void Renderer::renderBoxFill(Vector2 pos, float width, float height, Color color
   SDL_FRect rect = {pos.x, pos.y, width, height};
   SDL_RenderFillRect(m_renderer, &rect);
 }
+void Renderer::renderLine(Vector2 pos1, Vector2 pos2, Color color) {
+  setRenderColor(color);
+  SDL_RenderLine(m_renderer, pos1.x, pos1.y, pos2.x, pos2.y);
+}
 void Renderer::renderCircle(Vector2 pos, float radius, Color color) {
   setRenderColor(color);
 
@@ -224,6 +228,7 @@ bool RenderSys::render() {
   // Fetches the list of all component lists
   auto TList = ecs::EntitySys::TransformComp.getComponentList();
   auto TRList = ecs::EntitySys::TextRendererComp.getComponentList();
+  auto PRList = ecs::EntitySys::PrimitiveRendererComp.getComponentList();
   // loops through every entity (because all valid entities have transform components)
   // The "T" variable is the current entities Trnasform component
   for (auto const& T : TList) {
@@ -241,6 +246,62 @@ bool RenderSys::render() {
         TR.second.layer
       });
     }
+    // same thing but for Primitive Renderers
+    for (auto const& PR : PRList) {
+      switch (PR.second.type) {
+        case PrimitiveRenderer::PrimitiveType::squareFill: {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RBOXFILL,
+            Vector2(T.second.pos.x,T.second.pos.y), 
+            T.second.width,T.second.height,0,
+            PR.second.color
+          });
+          break;
+        }
+        case PrimitiveRenderer::PrimitiveType::square: {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RBOX,
+            Vector2(T.second.pos.x,T.second.pos.y), 
+            T.second.width,T.second.height,0,
+            PR.second.color
+          });
+          break;
+        }
+        case PrimitiveRenderer::PrimitiveType::circle: {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RCIRCLE,
+            Vector2(T.second.pos.x,T.second.pos.y), 
+            0,0,T.second.radius,
+            PR.second.color
+          });
+          break;
+        }
+        case PrimitiveRenderer::PrimitiveType::circleFill: {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RCIRCLEFILL,
+            Vector2(T.second.pos.x,T.second.pos.y), 
+            0,0,T.second.radius,
+            PR.second.color
+          });
+          break;
+        }
+        case PrimitiveRenderer::PrimitiveType::line: {
+          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+            rend::RenderSys::CallType::RLINE,
+            Vector2(T.second.pos.x,T.second.pos.y), 
+            0,0,0,
+            PR.second.color,0,0,0,0,
+            0,0,0,0,0,
+            0,0, 0, PR.second.LineTypeSecondPoint
+          });
+          break;
+        }
+      }
+    }
+
+
+
+
   }
 
 
@@ -296,6 +357,13 @@ bool RenderSys::render() {
             CallList[i].width,
             CallList[i].height
           }
+        );
+      break;
+      case CallType::RLINE:
+        m_renderer.renderLine(
+          CallList[i].pos,
+          CallList[i].pos2,
+          CallList[i].color
         );
       break;
       case CallType::RFULLTEXTURE:
