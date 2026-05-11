@@ -14,6 +14,7 @@ using namespace ecs;
 ecs::ComponentList<Transform> EntitySys::TransformComp = ecs::ComponentList<Transform>();
 ecs::ComponentList<TextRenderer> EntitySys::TextRendererComp = ecs::ComponentList<TextRenderer>();
 ecs::ComponentList<PrimitiveRenderer> EntitySys::PrimitiveRendererComp= ecs::ComponentList<PrimitiveRenderer>();
+ecs::ComponentList<ImgRenderer> EntitySys::ImgRendererComp= ecs::ComponentList<ImgRenderer>();
 
 std::vector<uint32_t> EntitySys::validEntities = std::vector<uint32_t>();
 uint32_t EntitySys::m_entityCount = 0;
@@ -52,6 +53,7 @@ ImgRenderer::ImgRenderer(std::string location, SDL_FRect uv, int layer) {
 ImgRenderer::ImgRenderer(std::string location, int layer) {
   texture = rend::RenderSys::m_renderer.textureFromImage(location);
   this->layer=layer;
+  this->uv={0,0,0,0};
 };
 
 // Text Renderer 

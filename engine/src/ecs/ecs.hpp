@@ -145,6 +145,7 @@ class EntitySys {
   static ComponentList<Transform> TransformComp;
   static ComponentList<TextRenderer> TextRendererComp;
   static ComponentList<PrimitiveRenderer> PrimitiveRendererComp;
+  static ComponentList<ImgRenderer> ImgRendererComp;
 
   static std::vector<uint32_t> getEntityList();
   //static std::vector<uint32_t> getEntityComponentList();

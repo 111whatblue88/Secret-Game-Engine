@@ -159,10 +159,12 @@ void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
 SDL_Texture* Renderer::textureFromImage(std::string location) {
   SDL_Texture* texture = IMG_LoadTexture(m_renderer, location.c_str());
   if (!texture) {
-    //TODO log texture fallback
+    //TODO: log texture fallback
     SDL_Texture* texture = IMG_LoadTexture(
         m_renderer, 
-        "../engine/assets/fallbacks/textures/default.png");
+        "../../../engine/assets/fallbacks/textures/default.png");
+        //TODO: fix below
+        // the texture goes through here, but doesnt render for some reason
     if (!texture) {
     }
 
@@ -174,7 +176,7 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
   
   TTF_Font* font = TTF_OpenFont(fontLocation.c_str(), fontSize);
   if (!font) {
-    //TODO add logging for fallback font being loaded
+    //TODO: add logging for fallback font being loaded
     font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     if (!font) {
     }
@@ -229,6 +231,7 @@ bool RenderSys::render() {
   auto TList = ecs::EntitySys::TransformComp.getComponentList();
   auto TRList = ecs::EntitySys::TextRendererComp.getComponentList();
   auto PRList = ecs::EntitySys::PrimitiveRendererComp.getComponentList();
+  auto IRList= ecs::EntitySys::ImgRendererComp.getComponentList();
   // loops through every entity (because all valid entities have transform components)
   // The "T" variable is the current entities Trnasform component
   for (auto const& T : TList) {
@@ -246,6 +249,30 @@ bool RenderSys::render() {
         TR.second.layer
       });
     }
+
+    for (auto const& IR : IRList) {
+      // render call to render TR's texture which is the text
+      if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.h || IR.second.uv.w) {
+        rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+          rend::RenderSys::CallType::RTEXTURE,
+          Vector2(T.second.pos.x,T.second.pos.y), 
+          T.second.width,T.second.height,0,
+          Color(0,0,0),
+          IR.second.texture, IR.second.uv,
+          IR.second.layer
+        });
+      } else {
+        rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
+          rend::RenderSys::CallType::RFULLTEXTURE,
+          Vector2(T.second.pos.x,T.second.pos.y), 
+          T.second.width,T.second.height,0,
+          Color(0,0,0),
+          IR.second.texture,0,0,0,0,
+          IR.second.layer
+        });
+      }
+    }
+
     // same thing but for Primitive Renderers
     for (auto const& PR : PRList) {
       switch (PR.second.type) {
@@ -298,14 +325,7 @@ bool RenderSys::render() {
         }
       }
     }
-
-
-
-
   }
-
-
-
 
 
   // proccess callbacks
