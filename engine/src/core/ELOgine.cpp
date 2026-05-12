@@ -13,9 +13,7 @@ Engine::EngineOptions Engine::options = {
   60
 };
 
-std::function<void()> Engine::update = []() {
-
-};
+std::function<void()> Engine::update = []() {};
 
 float Engine::m_deltaTime = 0;
 
@@ -67,6 +65,7 @@ bool Engine::run() {
 
     elo::input::InputSys::Input();
 
+    ecs::EntitySys::updateComponents();
     update();
 
     rend::RenderSys::render(); 

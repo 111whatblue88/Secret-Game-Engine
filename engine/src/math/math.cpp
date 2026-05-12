@@ -1,4 +1,5 @@
 
+#include "math.hpp"
 #include "../ELOgine.hpp"
 
 #include <cmath>
@@ -35,6 +36,20 @@ float vectorCross(Vector2 a, Vector2 b) {
 float vectorSlope(Vector2 a, Vector2 b) {
   return (b.y - a.y)/(b.x - a.x);
 }
+
+bool boxOnBoxColliding(Vector2 boxPos1, int boxWidth1, int boxHeight1, Vector2 boxPos2, int boxWidth2, int boxHeight2) {
+  if (
+    boxPos1.x < boxPos2.x + boxWidth2 &&
+    boxPos1.x + boxWidth1 > boxPos2.x && 
+    boxPos1.y < boxPos2.y + boxHeight2 &&
+    boxPos1.y + boxHeight1 > boxPos2.y
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 
 

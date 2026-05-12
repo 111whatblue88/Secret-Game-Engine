@@ -16,8 +16,6 @@
 namespace elo {
 namespace ecs {
 
-// attempting templates - not usable
-
 // img renderer
 class ImgRenderer{
   public:
@@ -48,8 +46,10 @@ class PrimitiveRenderer{
 class PhysicsBody{
   public:
   Vector2 velocity;
+  bool isStatic;
 
   void addForce(Vector2 force);
+  PhysicsBody();
 };
 
 // basicCollider
@@ -57,14 +57,17 @@ class BasicCollider{
   public:
   enum class Collidertype {
     boxCollider,
-    circleCollider
+    circleCollider,
+    lineCollider
   };
   Collidertype type;
   bool renderCollider;
 
   std::function<void()> onCollision;
 
+  BasicCollider(Collidertype type);
   BasicCollider(Collidertype type, bool renderCollider);
+  BasicCollider();
 };
 
 // Transform
@@ -72,6 +75,7 @@ class Transform {
   public:
   Transform(Vector2 pos, float width, float height);
   Transform(Vector2 pos, float radius);
+  Transform();
   Vector2 pos;
   float height;
   float width;
@@ -142,10 +146,14 @@ class EntitySys {
   template <typename T>
   static T& addComponent(uint32_t e, T component);
 
+  static bool updateComponents();
+
   static ComponentList<Transform> TransformComp;
   static ComponentList<TextRenderer> TextRendererComp;
   static ComponentList<PrimitiveRenderer> PrimitiveRendererComp;
   static ComponentList<ImgRenderer> ImgRendererComp;
+  static ComponentList<BasicCollider> BasicColliderComp;
+  static ComponentList<PhysicsBody> PhysicsBodyComp;
 
   static std::vector<uint32_t> getEntityList();
   //static std::vector<uint32_t> getEntityComponentList();
