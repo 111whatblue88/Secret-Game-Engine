@@ -1,7 +1,7 @@
 # HUGE 
 ## Huge Unused Game-Engine
 
-Huge is a small game engine I'm developing, it very bad and very broken
+Huge is a small game engine I'm developing, it's very bad and very broken
 
 ## Building
 ### MacOS/Windows
@@ -20,7 +20,7 @@ To build a project go in the /PROJECTFOLDER/buildScripts and run either build.sh
 ## Documentation
 I have not made documentation for this project yet, you are on your own. 
 
-### extra info
+### Extra Info
 You might be thinking "why is there so many .sh files?". Well eventually everything that is 
 currently managed by shell files will be managed by the hugeCLI, which will be a small CLI program which
 manages small automation engine tasks, like project management and compilation.
