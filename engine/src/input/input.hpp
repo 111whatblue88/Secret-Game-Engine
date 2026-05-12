@@ -2,7 +2,7 @@
 #define _INPUT_HPP
 
 #include <SDL3/SDL_events.h>
-namespace elo {
+namespace huge {
 namespace input {
 
   class InputSys {

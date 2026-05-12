@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <unordered_map>
 
-namespace elo {
+namespace huge {
 namespace ecs {
 
 // img renderer

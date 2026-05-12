@@ -1,10 +1,10 @@
-#include "../ELOgine.hpp"
+#include "../HUGE.hpp"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_oldnames.h>
 
 
-namespace elo {
+namespace huge {
 namespace input {
 
 bool InputSys::quit = false;

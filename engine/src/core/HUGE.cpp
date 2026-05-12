@@ -1,4 +1,4 @@
-#include "../ELOgine.hpp"
+#include "../HUGE.hpp"
 
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
@@ -6,7 +6,7 @@
 #include <functional>
 #include <string>
 
-namespace elo {
+namespace huge {
 namespace core {
 
 Engine::EngineOptions Engine::options = {
@@ -63,7 +63,7 @@ bool Engine::run() {
     m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
     lastFrameTime = currentFrameTime;
 
-    elo::input::InputSys::Input();
+    huge::input::InputSys::Input();
 
     ecs::EntitySys::updateComponents();
     update();

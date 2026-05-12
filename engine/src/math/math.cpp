@@ -1,11 +1,11 @@
 
 #include "math.hpp"
-#include "../ELOgine.hpp"
+#include "../HUGE.hpp"
 
 #include <cmath>
 #include <vector>
 
-namespace elo {
+namespace huge {
 namespace math {
 
 float vectorLength(Vector2 a) {

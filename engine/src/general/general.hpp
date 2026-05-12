@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace elo {
+namespace huge {
 struct Vector2 {
   
   float x;

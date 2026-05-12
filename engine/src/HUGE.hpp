@@ -11,7 +11,7 @@
 #include <string>
 #include <functional>
 
-namespace elo {
+namespace huge {
 namespace core {
 
 class Engine {

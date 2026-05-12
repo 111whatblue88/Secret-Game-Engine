@@ -10,7 +10,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 
-namespace elo {
+namespace huge {
 namespace rend {
 
 
@@ -65,7 +65,7 @@ public:
 
   struct RenderCall {
     CallType type; 
-    elo::Vector2 pos;
+    huge::Vector2 pos;
     float width;
     float height;
     float radius;

@@ -1,5 +1,5 @@
 #include "ecs.hpp"
-#include "../ELOgine.hpp"
+#include "../HUGE.hpp"
 #include <SDL3/SDL_pixels.h>
 #include <algorithm>
 #include <cstdint>
@@ -8,7 +8,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 
-using namespace elo;
+using namespace huge;
 using namespace ecs;
 
 ecs::ComponentList<Transform> EntitySys::TransformComp = ecs::ComponentList<Transform>();

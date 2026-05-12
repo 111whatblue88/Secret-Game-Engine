@@ -1,8 +1,8 @@
-#include "../../../engine/src/ELOgine.hpp"
+#include "../../../engine/src/HUGE.hpp"
 
 int main() {
 
-  using namespace elo;
+  using namespace huge;
   using ID = uint32_t;
 
   core::Engine::init(1600, 1000, "testgame");

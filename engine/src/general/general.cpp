@@ -1,7 +1,7 @@
 
 #include "general.hpp"
 
-using namespace elo;
+using namespace huge;
 
 Vector2::Vector2() {
 

@@ -1,4 +1,4 @@
-#include "../ELOgine.hpp"
+#include "../HUGE.hpp"
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_pixels.h>
@@ -13,7 +13,7 @@
 #include <sys/types.h>
 #include <unordered_map>
 
-namespace elo {
+namespace huge {
 namespace rend {
 
 bool Renderer::init(int width, int height, std::string name) {

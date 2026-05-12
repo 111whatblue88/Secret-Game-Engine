@@ -3,7 +3,7 @@
 
 #include "../general/general.hpp"
 
-namespace elo{
+namespace huge{
 namespace math {
   
   float vectorLength(Vector2 a);
