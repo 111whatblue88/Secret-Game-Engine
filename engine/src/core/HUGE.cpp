@@ -65,7 +65,7 @@ bool Engine::run() {
 
     huge::input::InputSys::Input();
 
-    ecs::EntitySys::updateComponents();
+    ecs::EntitySys::update();
     update();
 
     rend::RenderSys::render(); 

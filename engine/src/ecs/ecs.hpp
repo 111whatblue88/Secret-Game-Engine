@@ -4,6 +4,7 @@
 #include "../general/general.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <functional>
 #include <string>
 #include <iostream>
@@ -16,6 +17,7 @@
 namespace huge {
 namespace ecs {
 
+/*
 // img renderer
 class ImgRenderer{
   public:
@@ -103,63 +105,138 @@ class TextRenderer{
 
 };
 
-template <typename T>
-class ComponentList {
-  private:
-  std::unordered_map<uint32_t, T> validComponents = {};
-  uint32_t count = 0; 
+*/
+// PrimitiveRendering
+class PrimitiveRenderer{
+public:
+  enum class PrimitiveType {
+    square, squareFill,
+    circle, circleFill,
+    line
+  };
+  PrimitiveRenderer(PrimitiveType type, Color color);
+  PrimitiveRenderer(PrimitiveType type, Color color, Vector2 vec);
+  PrimitiveRenderer(std::string name, PrimitiveType type, Color color);
+  PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 vec);
+  PrimitiveRenderer();
+  PrimitiveType type;
+  Color color;
+
+  Vector2 LineTypeSecondPoint;
+
+  std::string const GetName();
+  bool SetName(std::string name);
+private:
+  std::string name;
+};
+
+// img renderer
+class ImgRenderer{
+public:
+  ImgRenderer(std::string location, SDL_FRect uv, int layer);
+  ImgRenderer(std::string location, int layer);
+  ImgRenderer(std::string name, std::string location, SDL_FRect uv, int layer);
+  ImgRenderer(std::string name,std::string location, int layer);
+  ImgRenderer();
+  SDL_Texture* texture;
+  SDL_FRect uv;
+  int layer;
+
+  std::string const GetName();
+  bool SetName(std::string name);
+private:
+  std::string name;
+};
+
+// Transform
+class Transform {
   public:
+  Transform(Vector2 pos, float width, float height);
+  Transform(Vector2 pos, float radius);
+  Transform();
+  Vector2 pos;
+  float height;
+  float width;
+  float radius;
 
-  T& add(uint32_t e, T component) {
-    count++;
-    validComponents.emplace(e, component);
-    return validComponents.at(e);
-  }
+};
 
-  T& get(uint32_t e) {
-    return validComponents[e];
-  }
-  void remove(uint32_t entity, uint32_t component) {
-    validComponents[entity].erase(component);
-  }
-  bool has(uint32_t e) {
-    if (validComponents.count(e)) {
-      return true;
-    } 
-    return false;
-  }
+class Entity {
+private:
+  std::string name;
 
-  std::unordered_map<uint32_t, T>& getComponentList() {
-    return validComponents;
-  }
-  uint32_t getComponentCount() {
-    return count;
-  }
+  template<typename T>
+  class Component {
+  private:
+    uint32_t m_componentCount = 0;
+    std::unordered_map<uint32_t, T> m_components = {};
+  public:
+    // they told me templates were hell, i didnt believe them
+    const std::unordered_map<uint32_t, T> getComponentList() {
+      return m_components;
+    }
+    T& get(std::string name) {
+      for (auto C : m_components) {
+        if (C.second.GetName() == name) {
+          return C.second; 
+        }
+      }
+      return nullptr;
+    }
+    T& get(uint32_t ID) {
+      return m_components[ID];
+    }
+    bool has() {
+      if (m_components.empty()) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    void add(T component) {
+      m_componentCount++;
+      m_components.emplace(m_componentCount, component);
+    }
+    void remove(std::string name) {
+      for (auto C : m_components) {
+        if (C.second.GetName() == name) {
+          m_components.erase(C.first);
+        }
+      }
+    }
+    void remove(uint32_t ID) {
+      m_components.erase(ID);
+    }
 
+  };
+
+public:
+  bool SetName(std::string);
+  std::string const GetName();
+  
+  Transform TransformComp;
+  Component<ImgRenderer> ImgRendererComp;
+  Component<PrimitiveRenderer> PrimitiveRendererComp;
+
+
+  Entity();
+  Entity(class Transform transform);
+  Entity(std::string name, class Transform transform);
 
 };
 
 class EntitySys {
   public:
 
-  static uint32_t createEntity(Transform transform); 
-  template <typename T>
-  static T& addComponent(uint32_t e, T component);
+  static Entity& CreateEntity(Transform transform); 
 
-  static bool updateComponents();
+  static bool update();
 
-  static ComponentList<Transform> TransformComp;
-  static ComponentList<TextRenderer> TextRendererComp;
-  static ComponentList<PrimitiveRenderer> PrimitiveRendererComp;
-  static ComponentList<ImgRenderer> ImgRendererComp;
-  static ComponentList<BasicCollider> BasicColliderComp;
-  static ComponentList<PhysicsBody> PhysicsBodyComp;
-
-  static std::vector<uint32_t> getEntityList();
+  static std::unordered_map<uint32_t, Entity>& GetEntityList();
   //static std::vector<uint32_t> getEntityComponentList();
 
   private:
-  static std::vector<uint32_t> validEntities;
+  static std::unordered_map<uint32_t, Entity> m_entityList;
   static uint32_t m_entityCount;
   
 };

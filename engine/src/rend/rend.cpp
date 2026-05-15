@@ -160,6 +160,7 @@ void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
 SDL_Texture* Renderer::textureFromImage(std::string location) {
   SDL_Texture* texture = IMG_LoadTexture(m_renderer, location.c_str());
   if (!texture) {
+    std::cout << SDL_GetError() << "\n";
     //TODO: log texture fallback
     SDL_Texture* texture = IMG_LoadTexture(
         m_renderer, 
@@ -169,6 +170,9 @@ SDL_Texture* Renderer::textureFromImage(std::string location) {
     if (!texture) {
     }
 
+  }
+  if (!texture) {
+    std::cout << "no texture!2\n";
   }
   return texture;
 }
@@ -222,101 +226,92 @@ bool RenderSys::render() {
   m_renderer.setRenderColor(Color{0,0,0});
   m_renderer.renderClear();
 
-  // render components components
-  //
-  // I am redoing this entire section, and even after the redo it will be a mess
-  // This will make no sense. I am sorry
-  // I will try to document what each line does
-  //
-  // Fetches the list of all component lists
-  auto TList = ecs::EntitySys::TransformComp.getComponentList();
-  auto TRList = ecs::EntitySys::TextRendererComp.getComponentList();
-  auto PRList = ecs::EntitySys::PrimitiveRendererComp.getComponentList();
-  auto IRList= ecs::EntitySys::ImgRendererComp.getComponentList();
-  // loops through every entity (because all valid entities have transform components)
-  // The "T" variable is the current entities Trnasform component
-  for (auto const& T : TList) {
+  //TODO: render entity component here
 
-    // loop through every TextRenderer component, "TR", and render its text via sending
-    // a render call
-    for (auto const& TR : TRList) {
-      // render call to render TR's texture which is the text
-      rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-        RenderSys::CallType::RFULLTEXTURE,
-        PositionalData{T.second.pos},
-        SizeData{T.second.width,T.second.height},
-        RenderingData{Color(0,0,0),TR.second.texture}
-      });
-    }
+  auto& EList = EntitySys::GetEntityList();
 
-    for (auto const& IR : IRList) {
-      if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.h || IR.second.uv.w) {
-        rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-          rend::RenderSys::CallType::RTEXTURE,
-          PositionalData{T.second.pos},
-          SizeData{T.second.width,T.second.height},
-          RenderingData{Color(0,0,0),IR.second.texture,IR.second.uv}
-        });
-      } else {
-        rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-          rend::RenderSys::CallType::RFULLTEXTURE,
-          PositionalData{T.second.pos},
-          SizeData{T.second.width,T.second.height},
-          RenderingData{Color(0,0,0),IR.second.texture}
-        });
+  for (auto E : EList) {
+
+
+    // img renderer
+    if (E.second.ImgRendererComp.has()) {
+      for (auto IR : E.second.ImgRendererComp.getComponentList()) {
+        if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.w || IR.second.uv.h) {
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RTEXTURE,
+            PositionalData{E.second.TransformComp.pos},
+            SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+            RenderingData{Color(0,0,0),IR.second.texture, IR.second.uv,0}
+          });
+        } else {
+          if (!IR.second.texture) {
+            std::cout << "goddamnit\n";
+          }
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RFULLTEXTURE,
+            PositionalData{E.second.TransformComp.pos},
+            SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+            RenderingData{Color(0,0,0),IR.second.texture, 0,0,0,0,0}
+          });
+        }
       }
     }
 
-    // same thing but for Primitive Renderers
-    for (auto const& PR : PRList) {
-      switch (PR.second.type) {
-        case PrimitiveRenderer::PrimitiveType::squareFill: {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RBOXFILL,
-            PositionalData{T.second.pos},
-            SizeData{T.second.width,T.second.height},
-            RenderingData{PR.second.color}
-          });
-          break;
+    // primitve renderer
+    if (E.second.PrimitiveRendererComp.has()) {
+      for (auto PR : E.second.PrimitiveRendererComp.getComponentList()) {
+        switch (PR.second.type) {
+          case ecs::PrimitiveRenderer::PrimitiveType::square: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RBOX,
+              PositionalData{E.second.TransformComp.pos},
+              SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+              RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::squareFill: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RBOXFILL,
+              PositionalData{E.second.TransformComp.pos},
+              SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+              RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::circle: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RCIRCLE,
+              PositionalData{E.second.TransformComp.pos},
+              SizeData{E.second.TransformComp.radius},
+              RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::circleFill: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RCIRCLEFILL,
+              PositionalData{E.second.TransformComp.pos},
+              SizeData{E.second.TransformComp.radius},
+              RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::line: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RLINE,
+              PositionalData{E.second.TransformComp.pos, PR.second.LineTypeSecondPoint},
+              SizeData{},
+              RenderingData{PR.second.color}
+            });
+            break;
+          }
         }
-        case PrimitiveRenderer::PrimitiveType::square: {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RBOX,
-            PositionalData{T.second.pos},
-            SizeData{T.second.width,T.second.height},
-            RenderingData{PR.second.color}
-          });
-          break;
-        }
-        case PrimitiveRenderer::PrimitiveType::circle: {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RCIRCLE,
-            PositionalData{T.second.pos},
-            SizeData{0,0,T.second.radius},
-            RenderingData{PR.second.color}
-          });
-          break;
-        }
-        case PrimitiveRenderer::PrimitiveType::circleFill: {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RCIRCLEFILL,
-            PositionalData{T.second.pos},
-            SizeData{0,0,T.second.radius},
-            RenderingData{PR.second.color}
-          });
-          break;
-        }
-        case PrimitiveRenderer::PrimitiveType::line: {
-          rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-            rend::RenderSys::CallType::RLINE,
-            PositionalData{T.second.pos,PR.second.LineTypeSecondPoint},
-            SizeData{},
-            RenderingData{PR.second.color},
-          });
-          break;
-        }
-      }
+      }      
     }
+
+
+
   }
 
 
