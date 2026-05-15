@@ -5,10 +5,12 @@
 
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
+#include <unordered_map>
 #include <vector>
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
+#include <map>
 
 namespace huge {
 namespace rend {
@@ -63,29 +65,35 @@ public:
     RPOINTS,
   };
 
-  struct RenderCall {
-    CallType type; 
+  struct PositionalData {
     huge::Vector2 pos;
+    Vector2 pos2;
+  };
+  struct SizeData {
     float width;
     float height;
     float radius;
+  };
+  struct RenderingData {
     Color color;
-
-
     SDL_Texture* texture;
     SDL_FRect uv;
     int layer;
-
+  };
+  struct GeometryData {
     SDL_Vertex* verticies;
     int numVerticies;
     int* indices;
     int numIndices;
-    
     SDL_FPoint* points;
     int numPoints;
-
-    Vector2 pos2;
-
+  };
+  struct RenderCall {
+    CallType type; 
+    PositionalData PD;
+    SizeData SD;
+    RenderingData RD;
+    GeometryData GD;
   };
 
 

@@ -8,7 +8,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
+//#include <iostream>
 #include <string>
 #include <sys/types.h>
 #include <unordered_map>
@@ -16,7 +16,8 @@
 namespace huge {
 namespace rend {
 
-bool Renderer::init(int width, int height, std::string name) {
+
+ bool Renderer::init(int width, int height, std::string name) {
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
       return false;
@@ -241,34 +242,27 @@ bool RenderSys::render() {
     for (auto const& TR : TRList) {
       // render call to render TR's texture which is the text
       rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
-        rend::RenderSys::CallType::RFULLTEXTURE,
-        Vector2(T.second.pos.x,T.second.pos.y), 
-        T.second.width,T.second.height,0,
-        Color(0,0,0),
-        TR.second.texture,0,0,0,0,
-        TR.second.layer
+        RenderSys::CallType::RFULLTEXTURE,
+        PositionalData{T.second.pos},
+        SizeData{T.second.width,T.second.height},
+        RenderingData{Color(0,0,0),TR.second.texture}
       });
     }
 
     for (auto const& IR : IRList) {
-      // render call to render TR's texture which is the text
       if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.h || IR.second.uv.w) {
         rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
           rend::RenderSys::CallType::RTEXTURE,
-          Vector2(T.second.pos.x,T.second.pos.y), 
-          T.second.width,T.second.height,0,
-          Color(0,0,0),
-          IR.second.texture, IR.second.uv,
-          IR.second.layer
+          PositionalData{T.second.pos},
+          SizeData{T.second.width,T.second.height},
+          RenderingData{Color(0,0,0),IR.second.texture,IR.second.uv}
         });
       } else {
         rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
           rend::RenderSys::CallType::RFULLTEXTURE,
-          Vector2(T.second.pos.x,T.second.pos.y), 
-          T.second.width,T.second.height,0,
-          Color(0,0,0),
-          IR.second.texture,0,0,0,0,
-          IR.second.layer
+          PositionalData{T.second.pos},
+          SizeData{T.second.width,T.second.height},
+          RenderingData{Color(0,0,0),IR.second.texture}
         });
       }
     }
@@ -279,47 +273,45 @@ bool RenderSys::render() {
         case PrimitiveRenderer::PrimitiveType::squareFill: {
           rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
             rend::RenderSys::CallType::RBOXFILL,
-            Vector2(T.second.pos.x,T.second.pos.y), 
-            T.second.width,T.second.height,0,
-            PR.second.color
+            PositionalData{T.second.pos},
+            SizeData{T.second.width,T.second.height},
+            RenderingData{PR.second.color}
           });
           break;
         }
         case PrimitiveRenderer::PrimitiveType::square: {
           rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
             rend::RenderSys::CallType::RBOX,
-            Vector2(T.second.pos.x,T.second.pos.y), 
-            T.second.width,T.second.height,0,
-            PR.second.color
+            PositionalData{T.second.pos},
+            SizeData{T.second.width,T.second.height},
+            RenderingData{PR.second.color}
           });
           break;
         }
         case PrimitiveRenderer::PrimitiveType::circle: {
           rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
             rend::RenderSys::CallType::RCIRCLE,
-            Vector2(T.second.pos.x,T.second.pos.y), 
-            0,0,T.second.radius,
-            PR.second.color
+            PositionalData{T.second.pos},
+            SizeData{0,0,T.second.radius},
+            RenderingData{PR.second.color}
           });
           break;
         }
         case PrimitiveRenderer::PrimitiveType::circleFill: {
           rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
             rend::RenderSys::CallType::RCIRCLEFILL,
-            Vector2(T.second.pos.x,T.second.pos.y), 
-            0,0,T.second.radius,
-            PR.second.color
+            PositionalData{T.second.pos},
+            SizeData{0,0,T.second.radius},
+            RenderingData{PR.second.color}
           });
           break;
         }
         case PrimitiveRenderer::PrimitiveType::line: {
           rend::RenderSys::CallList.push_back(rend::RenderSys::RenderCall{
             rend::RenderSys::CallType::RLINE,
-            Vector2(T.second.pos.x,T.second.pos.y), 
-            0,0,0,
-            PR.second.color,0,0,0,0,
-            0,0,0,0,0,
-            0,0, 0, PR.second.LineTypeSecondPoint
+            PositionalData{T.second.pos,PR.second.LineTypeSecondPoint},
+            SizeData{},
+            RenderingData{PR.second.color},
           });
           break;
         }
@@ -335,80 +327,80 @@ bool RenderSys::render() {
       
       case CallType::RBOX:
         m_renderer.renderBox(
-          CallList[i].pos, 
-          CallList[i].width, 
-          CallList[i].height, 
-          CallList[i].color
+          CallList[i].PD.pos,
+          CallList[i].SD.width,
+          CallList[i].SD.height,
+          CallList[i].RD.color
         );
         break;
       case CallType::RBOXFILL:
         m_renderer.renderBoxFill(
-          CallList[i].pos, 
-          CallList[i].width, 
-          CallList[i].height, 
-          CallList[i].color
+          CallList[i].PD.pos,
+          CallList[i].SD.width,
+          CallList[i].SD.height,
+          CallList[i].RD.color
         );
         break;
       case CallType::RCIRCLE:
         m_renderer.renderCircle(
-            CallList[i].pos,
-            CallList[i].radius,
-            CallList[i].color
+          CallList[i].PD.pos,
+          CallList[i].SD.radius,
+          CallList[i].RD.color
         );
         break;
       case CallType::RCIRCLEFILL:
         m_renderer.renderCircleFill(
-            CallList[i].pos,
-            CallList[i].radius,
-            CallList[i].color
+          CallList[i].PD.pos,
+          CallList[i].SD.radius,
+          CallList[i].RD.color
         );
         break;
       case CallType::SETDRAWCOLOR:
-        m_renderer.setRenderColor(CallList[i].color);
+        m_renderer.setRenderColor(CallList[i].RD.color);
         break;
       case CallType::RTEXTURE:
         m_renderer.renderTexture(
-          CallList[i].texture,
-          CallList[i].uv,
-          CallList[i].layer,
+          CallList[i].RD.texture,
+          CallList[i].RD.uv,
+          CallList[i].RD.layer,
           SDL_FRect{
-            CallList[i].pos.x,
-            CallList[i].pos.y,
-            CallList[i].width,
-            CallList[i].height
+            CallList[i].PD.pos.x,
+            CallList[i].PD.pos.y,
+            CallList[i].SD.width,
+            CallList[i].SD.height,
           }
         );
       break;
       case CallType::RLINE:
         m_renderer.renderLine(
-          CallList[i].pos,
-          CallList[i].pos2,
-          CallList[i].color
+          CallList[i].PD.pos,
+          CallList[i].PD.pos2,
+          CallList[i].RD.color
         );
       break;
       case CallType::RFULLTEXTURE:
         m_renderer.renderTextureFull(
-          CallList[i].texture,
-          CallList[i].layer,
+          CallList[i].RD.texture,
+          CallList[i].RD.layer,
           SDL_FRect{
-            CallList[i].pos.x,
-            CallList[i].pos.y,
-            CallList[i].width,
-            CallList[i].height
+            CallList[i].PD.pos.x,
+            CallList[i].PD.pos.y,
+            CallList[i].SD.width,
+            CallList[i].SD.height,
           }
         );
       break;
       case CallType::RGEOMETRY:
         m_renderer.renderGeometry(
-          CallList[i].verticies, 
-          CallList[i].numVerticies, 
-          CallList[i].indices, 
-          CallList[i].numIndices
+          CallList[i].GD.verticies, 
+          CallList[i].GD.numVerticies, 
+          CallList[i].GD.indices, 
+          CallList[i].GD.numIndices
       );
       case CallType::RPOINTS:
         m_renderer.renderPoints(
-          CallList[i].points,
-          CallList[i].numPoints
+          CallList[i].GD.points,
+          CallList[i].GD.numPoints
       );
     }
   }  
