@@ -254,7 +254,24 @@ std::unordered_map<uint32_t, Entity> EntitySys::m_entityList = {};
 uint32_t EntitySys::m_entityCount = 0;
 Entity& EntitySys::CreateEntity(Transform transform) {
   m_entityCount++;
-  m_entityList.emplace(m_entityCount, Entity(transform));
+  Entity entity = Entity(transform);
+  m_entityList.emplace(m_entityCount, entity);
+  entity.SetName("defaultName");
+  console::COutput::logCustom("ECS", 
+    std::format("Created entity with name \"defaultName\"")
+  );
+
+  return m_entityList[m_entityCount];
+}
+Entity& EntitySys::CreateEntity(std::string name, Transform transform) {
+  m_entityCount++;
+  Entity entity = Entity(transform);
+  m_entityList.emplace(m_entityCount, entity);
+
+  console::COutput::logCustom("ECS", 
+    std::format("Created entity with name \"{}\"", name)
+  );
+
   return m_entityList[m_entityCount];
 }
 std::unordered_map<uint32_t, Entity>& EntitySys::GetEntityList() {
