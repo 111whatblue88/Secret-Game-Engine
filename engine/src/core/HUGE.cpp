@@ -38,7 +38,7 @@ void Engine::earlyExit(std::string msg) {
 };
 
 bool Engine::init(int width, int height, std::string name) {
-  COutput::log("initializing engine...");
+  COutput::log("Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -61,7 +61,7 @@ bool Engine::init(int width, int height, std::string name) {
 
 bool Engine::run() {
 
-  COutput::log("loop started. Fetching engine data...");
+  COutput::log("Loop started. Fetching engine data...");
   std::ifstream f("../../../engine/engineInfo.json");
   json engineInfo = json::parse(f);
   COutput::log(std::string("Name: ")+std::string(engineInfo["releaseName"]));

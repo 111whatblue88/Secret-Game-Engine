@@ -245,7 +245,8 @@ bool RenderSys::render() {
   auto& EList = EntitySys::GetEntityList();
 
   for (auto E : EList) {
-
+    
+    
 
     // img renderer
     if (E.second.ImgRendererComp.has()) {
@@ -270,6 +271,8 @@ bool RenderSys::render() {
         }
       }
     }
+
+    
 
     // primitve renderer
     if (E.second.PrimitiveRendererComp.has()) {

@@ -190,42 +190,75 @@ private:
     uint32_t m_componentCount = 0;
     std::unordered_map<uint32_t, T> m_components = {};
   public:
+
     const std::unordered_map<uint32_t, T>& getComponentList() {
       return m_components;
     }
 
-    T& get(uint32_t id) {
-        return m_components.at(id);
+    void add(T component) {
+      m_componentCount++;
+      m_components.emplace(m_componentCount, component);
     }
-    T& get(const std::string& name) {
+    template<typename... Args>
+    void add(T component, Args... args) {
+      add(args...);
+    }
+
+    void remove(const std::string& name) {
+      for (auto it = m_components.begin(); it != m_components.end();) {
+        if (it->second.GetName() == name) {
+          it = m_components.erase(it);
+        } else {
+          ++it;
+        }
+      }
+    }
+    void remove(const uint32_t& ID) {
+      for (auto it = m_components.begin(); it != m_components.end();) {
+        if (it->first == ID) {
+          it = m_components.erase(it);
+        } else {
+          ++it;
+        }
+      }
     }
 
     bool has() {
-      return !m_components.empty();
+      if (m_components.empty()) {
+        return false;
+      } else {
+        return true;
+      }
     }
 
-    void remove(uint32_t id) {
-        auto it = m_components.find(id);
-
-        if (it == m_components.end()) {
-            return;
+    T& get(const uint32_t& ID) {
+      return m_components.at(ID);
+    }
+    T& get(const std::string& name) {
+      for (auto it = m_components.begin(); it != m_components.end();it++) {
+        if (it->second.GetName() == name) {
+          return get(it->first);
         }
-
-        m_components.erase(it);
+      }
+      // this does NOTHING its just to suppress a warning. Do NOT call this function with an 
+      // invalid component name
+      return m_components.at(1);
     }
 
-
-    void add(T&& component) {
-      uint32_t id = m_componentCount++;
-
-      m_components.emplace(id, std::move(component));
-
+    T& operator[](const uint32_t& ID) {
+      return m_components.at(ID);
+    }
+    T& operator[](const std::string& name) {
+      for (auto it = m_components.begin(); it != m_components.end();it++) {
+        if (it->second.GetName() == name) {
+          return get(it->first);
+        }
+      }
+      // this does NOTHING its just to suppress a warning. Do NOT call this function with an 
+      // invalid component name
+      return m_components.at(1);
     }
 
-    template<typename... Args>
-    void addMany(Args&&... args) {
-        (add(std::forward<Args>(args)), ...);
-    }
 
   };
 
