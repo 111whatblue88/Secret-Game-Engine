@@ -3,7 +3,9 @@
 #include "input/input.hpp"
 #include "ecs/ecs.hpp"
 #include "math/math.hpp"
+#include "console/COutput.hpp"
 
+#include <nlohmann/json.hpp>
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>

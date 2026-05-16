@@ -5,9 +5,13 @@
 #include <cstdint>
 #include <functional>
 #include <string>
+#include <fstream>
 
 namespace huge {
 namespace core {
+
+using json = nlohmann::json;
+using namespace console;
 
 Engine::EngineOptions Engine::options = {
   60
@@ -34,6 +38,21 @@ void Engine::earlyExit(std::string msg) {
 };
 
 bool Engine::init(int width, int height, std::string name) {
+  COutput::log("initializing engine...");
+
+  if (!SDL_WasInit(SDL_INIT_VIDEO)) {
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+      COutput::logError("failed to start SDL");
+      COutput::logError(SDL_GetError());
+    } 
+  }
+  if (TTF_WasInit() == 0) {
+    if (!TTF_Init()) {
+      COutput::logError("failed to start TTF");
+      COutput::logError(SDL_GetError());
+    }
+  }
+
   if (rend::RenderSys::m_renderer.init(width, height, name)) {
     return false;
   }
@@ -42,18 +61,13 @@ bool Engine::init(int width, int height, std::string name) {
 
 bool Engine::run() {
 
-  // log init
+  COutput::log("loop started. Fetching engine data...");
+  std::ifstream f("../../../engine/engineInfo.json");
+  json engineInfo = json::parse(f);
+  COutput::log(std::string("Name: ")+std::string(engineInfo["releaseName"]));
+  COutput::log(std::string("Description: ")+std::string(engineInfo["description"]));
+  COutput::log(std::string("Ver: ")+std::string(engineInfo["ver"]));
 
-  if (!SDL_WasInit(SDL_INIT_VIDEO)) {
-    if (SDL_Init(SDL_INIT_VIDEO)) {
-      //log error 
-    } 
-  }
-  if (TTF_WasInit() == 0) {
-    if (!TTF_Init()) {
-      // log error
-    }
-  }
 
   uint32_t lastFrameTime = SDL_GetTicks();
 

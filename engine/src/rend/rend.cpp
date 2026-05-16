@@ -197,6 +197,20 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
   return SDL_CreateTextureFromSurface(m_renderer, surface);
 
 }
+SDL_Texture* Renderer::textureFromFont(TTF_Font* font, Color color, std::string text) {
+
+  SDL_Surface* surface = TTF_RenderText_Solid(
+      font,
+      text.c_str(), 
+      0, 
+      SDL_Color{Uint8(color.r),Uint8(color.g),Uint8(color.b), 255
+  });
+
+  return SDL_CreateTextureFromSurface(m_renderer, surface);
+
+}
+
+
 
 void Renderer::renderTexture(SDL_Texture* texture, SDL_FRect uv, int layer, SDL_FRect location) {
   SDL_RenderTexture(
@@ -283,7 +297,7 @@ bool RenderSys::render() {
             RenderSys::CallList.push_back(RenderSys::RenderCall{
               RenderSys::CallType::RCIRCLE,
               PositionalData{E.second.TransformComp.pos},
-              SizeData{E.second.TransformComp.radius},
+              SizeData{0,0,E.second.TransformComp.radius},
               RenderingData{PR.second.color}
             });
             break;
@@ -292,7 +306,7 @@ bool RenderSys::render() {
             RenderSys::CallList.push_back(RenderSys::RenderCall{
               RenderSys::CallType::RCIRCLEFILL,
               PositionalData{E.second.TransformComp.pos},
-              SizeData{E.second.TransformComp.radius},
+              SizeData{0,0,E.second.TransformComp.radius},
               RenderingData{PR.second.color}
             });
             break;
@@ -310,6 +324,26 @@ bool RenderSys::render() {
       }      
     }
 
+    // Text Renderer
+    if (E.second.TextRendererComp.has()) {
+      for (auto TR : E.second.TextRendererComp.getComponentList()) {
+        if (TR.second.inheritTransform) {
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RFULLTEXTURE,
+            PositionalData{E.second.TransformComp.pos},
+            SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+            RenderingData{{0,0,0}, TR.second.texture}
+          });
+        } else {
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RFULLTEXTURE,
+            PositionalData{TR.second.transform.pos},
+            SizeData{TR.second.transform.width, TR.second.transform.height},
+            RenderingData{{0,0,0}, TR.second.texture}
+          });
+        }
+      }
+    }
 
 
   }

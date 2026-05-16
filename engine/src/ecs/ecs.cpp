@@ -106,6 +106,122 @@ bool PrimitiveRenderer::SetName(std::string name) {
   return true;
 }
 
+// Text Renderer
+TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer) {
+  this->name="defaultName";
+  this->fontLocation=fontLocation;
+  this->text=text;
+  this->size=size;
+  this->color=color;
+  this->layer=layer;
+
+  this->inheritTransform=true;
+  this->transform={Vector2{0,0},0,0};
+
+  this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
+}
+TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform) {
+  this->name="defaultName";
+  this->fontLocation=fontLocation;
+  this->text=text;
+  this->size=size;
+  this->color=color;
+  this->layer=layer;
+
+  this->inheritTransform=false;
+  this->transform=transform;
+
+  this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
+}
+TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer) {
+  this->name=name;
+  this->fontLocation=fontLocation;
+  this->text=text;
+  this->size=size;
+  this->color=color;
+  this->layer=layer;
+
+  this->inheritTransform=true;
+  this->transform={Vector2{0,0},0,0};
+
+  this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
+}
+
+TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform) {
+  this->name=name;
+  this->fontLocation=fontLocation;
+  this->text=text;
+  this->size=size;
+  this->color=color;
+  this->layer=layer;
+
+  this->inheritTransform=false;
+  this->transform=transform;
+
+  this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
+}
+TextRenderer::TextRenderer() {
+  this->name="defaultName";
+  this->fontLocation="";
+  this->text="";
+  this->size=0;
+  this->color={0, 0,0};
+  this->layer=0;
+
+  this->inheritTransform=false;
+  this->transform={Vector2{0,0},0,0};
+
+  this->texture=nullptr;
+}
+
+bool TextRenderer::editFont(std::string fontLocation) {
+  this->fontLocation = fontLocation;
+  this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
+  if (!texture) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool TextRenderer::editSize(int size) {
+  this->size=size;
+  this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
+  if (!texture) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool TextRenderer::editText(std::string text) {
+  this->text=text;
+  this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
+  if (!texture) {
+    return true;
+  } else {
+    return false;
+  }
+}
+bool TextRenderer::editColor(Color color) {
+  this->color=color;
+  this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
+  if (!texture) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+std::string const TextRenderer::GetName() {
+  return name;
+}
+bool TextRenderer::SetName(std::string name) {
+  this->name=name;
+  return true;
+}
+
+
 // Entity struct
 bool Entity::SetName(std::string name) {
   this->name=name;

@@ -1,6 +1,7 @@
 #ifndef _ECS_HPP
 #define _ECS_HPP
 
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "../general/general.hpp"
 
 #include <algorithm>
@@ -88,24 +89,9 @@ class Transform {
   uint32_t ID;
 
 };
-// text renderer
-class TextRenderer{
-  public:
-  TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer);
-  TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform);
-  bool editText(std::string fontLocation, std::string text, int size, Color color);
-  SDL_Texture* texture;
-  int layer;
-  bool inheritTransform;
-  Transform transform;
+*/ 
 
-  uint32_t getID();
-  private:
-  uint32_t ID;
 
-};
-
-*/
 // PrimitiveRendering
 class PrimitiveRenderer{
 public:
@@ -150,7 +136,7 @@ private:
 
 // Transform
 class Transform {
-  public:
+public:
   Transform(Vector2 pos, float width, float height);
   Transform(Vector2 pos, float radius);
   Transform();
@@ -158,6 +144,39 @@ class Transform {
   float height;
   float width;
   float radius;
+
+};
+
+// text renderer
+class TextRenderer{
+public:
+  TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer);
+  TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform);
+  TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer);
+  TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform);
+  TextRenderer();
+
+  bool editFont(std::string fontLocation);
+  bool editSize(int size);
+
+  bool editText(std::string text);
+  bool editColor(Color color);
+
+  SDL_Texture* texture;
+  int layer;
+  bool inheritTransform;
+  Transform transform;
+
+  std::string const GetName();
+  bool SetName(std::string name);
+private:
+  std::string name;
+
+  std::string text;
+  TTF_Font* font;
+  Color color;
+  int size;
+  std::string fontLocation;
 
 };
 
@@ -171,41 +190,41 @@ private:
     uint32_t m_componentCount = 0;
     std::unordered_map<uint32_t, T> m_components = {};
   public:
-    // they told me templates were hell, i didnt believe them
-    const std::unordered_map<uint32_t, T> getComponentList() {
+    const std::unordered_map<uint32_t, T>& getComponentList() {
       return m_components;
     }
-    T& get(std::string name) {
-      for (auto C : m_components) {
-        if (C.second.GetName() == name) {
-          return C.second; 
-        }
-      }
-      return nullptr;
+
+    T& get(uint32_t id) {
+        return m_components.at(id);
     }
-    T& get(uint32_t ID) {
-      return m_components[ID];
+    T& get(const std::string& name) {
     }
+
     bool has() {
-      if (m_components.empty()) {
-        return false;
-      } else {
-        return true;
-      }
+      return !m_components.empty();
     }
-    void add(T component) {
-      m_componentCount++;
-      m_components.emplace(m_componentCount, component);
-    }
-    void remove(std::string name) {
-      for (auto C : m_components) {
-        if (C.second.GetName() == name) {
-          m_components.erase(C.first);
+
+    void remove(uint32_t id) {
+        auto it = m_components.find(id);
+
+        if (it == m_components.end()) {
+            return;
         }
-      }
+
+        m_components.erase(it);
     }
-    void remove(uint32_t ID) {
-      m_components.erase(ID);
+
+
+    void add(T&& component) {
+      uint32_t id = m_componentCount++;
+
+      m_components.emplace(id, std::move(component));
+
+    }
+
+    template<typename... Args>
+    void addMany(Args&&... args) {
+        (add(std::forward<Args>(args)), ...);
     }
 
   };
@@ -217,6 +236,7 @@ public:
   Transform TransformComp;
   Component<ImgRenderer> ImgRendererComp;
   Component<PrimitiveRenderer> PrimitiveRendererComp;
+  Component<TextRenderer> TextRendererComp;
 
 
   Entity();
