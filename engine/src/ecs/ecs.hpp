@@ -201,6 +201,7 @@ private:
     }
     template<typename... Args>
     void add(T component, Args... args) {
+      add(component);
       add(args...);
     }
 

@@ -41,6 +41,8 @@ class Renderer {
   SDL_Texture* textureFromFont(std::string location, int fontSize, Color color, std::string text);
   SDL_Texture* textureFromFont(TTF_Font* font, Color color, std::string text);
 
+  TTF_Font* createFont(std::string location, int fontSize);
+
   void renderTexture(SDL_Texture* texture, SDL_FRect uv, int layer, SDL_FRect location);
   void renderTextureFull(SDL_Texture* texture, int layer, SDL_FRect location);
 

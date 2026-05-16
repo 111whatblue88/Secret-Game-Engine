@@ -118,6 +118,7 @@ TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size,
   this->inheritTransform=true;
   this->transform={Vector2{0,0},0,0};
 
+  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
   this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
 }
 TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform) {
@@ -131,6 +132,7 @@ TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size,
   this->inheritTransform=false;
   this->transform=transform;
 
+  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
   this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
 }
 TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer) {
@@ -144,6 +146,7 @@ TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::stri
   this->inheritTransform=true;
   this->transform={Vector2{0,0},0,0};
 
+  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
   this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
 }
 
@@ -158,6 +161,7 @@ TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::stri
   this->inheritTransform=false;
   this->transform=transform;
 
+  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
   this->texture=rend::RenderSys::m_renderer.textureFromFont(fontLocation,size,color,text);
 }
 TextRenderer::TextRenderer() {
@@ -171,6 +175,8 @@ TextRenderer::TextRenderer() {
   this->inheritTransform=false;
   this->transform={Vector2{0,0},0,0};
 
+  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
+
   this->texture=nullptr;
 }
 
@@ -178,9 +184,9 @@ bool TextRenderer::editFont(std::string fontLocation) {
   this->fontLocation = fontLocation;
   this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
   if (!texture) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 
@@ -188,9 +194,9 @@ bool TextRenderer::editSize(int size) {
   this->size=size;
   this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
   if (!texture) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 
@@ -198,18 +204,18 @@ bool TextRenderer::editText(std::string text) {
   this->text=text;
   this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
   if (!texture) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 bool TextRenderer::editColor(Color color) {
   this->color=color;
   this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
   if (!texture) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }
 

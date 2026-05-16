@@ -6,6 +6,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 
+#include <SDL3_ttf/SDL_ttf.h>
 #include <cstddef>
 #include <cstdint>
 //#include <iostream>
@@ -208,6 +209,13 @@ SDL_Texture* Renderer::textureFromFont(TTF_Font* font, Color color, std::string 
 
   return SDL_CreateTextureFromSurface(m_renderer, surface);
 
+}
+TTF_Font* Renderer::createFont(std::string location, int fontSize) {
+  TTF_Font* font = TTF_OpenFont(location.c_str(), fontSize);
+  if (!font) {
+    font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+  }
+  return font;
 }
 
 
