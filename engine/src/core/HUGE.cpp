@@ -1,5 +1,6 @@
 #include "../HUGE.hpp"
 
+#include <format>
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
 #include <cstdint>
@@ -19,6 +20,7 @@ Engine::EngineOptions Engine::options = {
 
 std::function<void()> Engine::update = []() {};
 
+bool Engine::engineExit = false;
 float Engine::m_deltaTime = 0;
 
 float Engine::deltaTime() {
@@ -30,26 +32,24 @@ void Engine::wait(int ms) {
 };
 
 void Engine::earlyExit(std::string msg) {
+  COutput::logWarning(std::format("Exiting early. Exit message: \"{}\"", msg));
 
-  // print msg
-
-  // set m_quit to true in InputSys
-  //
+  engineExit = true;
 };
 
 bool Engine::init(int width, int height, std::string name) {
-  COutput::log("Initializing engine...");
+  COutput::logCustom("ENGINE", "Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-      COutput::logError("failed to start SDL");
-      COutput::logError(SDL_GetError());
+      COutput::logError("SDL_Init failed");
+      COutput::logSDLError();
     } 
   }
   if (TTF_WasInit() == 0) {
     if (!TTF_Init()) {
       COutput::logError("failed to start TTF");
-      COutput::logError(SDL_GetError());
+      COutput::logSDLError();
     }
   }
 
@@ -61,17 +61,23 @@ bool Engine::init(int width, int height, std::string name) {
 
 bool Engine::run() {
 
-  COutput::log("Loop started. Fetching engine data...");
   std::ifstream f("../../../engine/engineInfo.json");
   json engineInfo = json::parse(f);
-  COutput::log(std::string("Name: ")+std::string(engineInfo["releaseName"]));
-  COutput::log(std::string("Description: ")+std::string(engineInfo["description"]));
-  COutput::log(std::string("Ver: ")+std::string(engineInfo["ver"]));
+  COutput::logCustom("ENGINE", engineInfo["releaseName"]);
+  COutput::logCustom("ENGINE", engineInfo["description"]);
+  COutput::logCustom("ENGINE", std::string("Ver: ")+std::string(engineInfo["ver"]));
 
+  if (!rend::RenderSys::m_renderer.wasInit()) {
+    COutput::logCustom("FATAL ERROR", 
+      "Renderer and window do not exist. Maybe the init function was not called?",
+      COutput::MsgColor::red
+    );
+    earlyExit("No renderer or window");
+  }
 
   uint32_t lastFrameTime = SDL_GetTicks();
 
-  while (!input::InputSys::quit) {
+  while (!engineExit) {
 
     uint32_t currentFrameTime = SDL_GetTicks();
     m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
@@ -88,10 +94,10 @@ bool Engine::run() {
     if (frametime<1000/ options.fpsCap) {
       SDL_Delay((1000/options.fpsCap)-frametime);
     }
+    COutput::logSDLError();
     
   }
 
-  // log exit
   return true;
 
 }

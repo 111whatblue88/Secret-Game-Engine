@@ -36,6 +36,8 @@ public:
 
 private:
 
+  static bool engineExit;
+
   static float m_deltaTime;
 
 };

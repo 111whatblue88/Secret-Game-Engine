@@ -17,6 +17,11 @@ public:
   static void log(std::string msg);
 
   static void log(std::string, MsgColor color);
+
+  static void logSDLError();
+
+  static void logCustom(std::string header, std::string msg, MsgColor color);
+  static void logCustom(std::string header, std::string msg);
 private:
   static std::string resolveColor(MsgColor color);
 };

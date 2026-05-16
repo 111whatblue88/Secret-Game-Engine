@@ -7,8 +7,6 @@
 namespace huge {
 namespace input {
 
-bool InputSys::quit = false;
-
 InputSys::Keys InputSys::keys = {
   KeyState::NONE, 
   KeyState::NONE, 
@@ -30,7 +28,7 @@ bool InputSys::Input() {
     switch (m_input.type) {
     
       case SDL_EVENT_QUIT: {
-        quit = true;
+        core::Engine::earlyExit("OS quit key given");
         break;
       }
       case SDL_EVENT_KEY_DOWN: {

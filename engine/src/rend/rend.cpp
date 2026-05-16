@@ -6,6 +6,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 
+#include <format>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <cstddef>
 #include <cstdint>
@@ -17,6 +18,7 @@
 namespace huge {
 namespace rend {
 
+using namespace console;
 
  bool Renderer::init(int width, int height, std::string name) {
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
@@ -31,16 +33,28 @@ namespace rend {
   }
   m_window = SDL_CreateWindow(name.c_str(), width, height, 0);
   if (!m_window) {
+    COutput::logError("Window creation failed");
+    COutput::logSDLError();
     return false; 
   }
   m_renderer = SDL_CreateRenderer(m_window, NULL);
   if (!m_renderer) {
+    COutput::logError("Renderer creation failed");
+    COutput::logSDLError();
     return false;
   }
 
   return true;
 }
- 
+
+bool Renderer::wasInit() {
+  if (!m_renderer && !m_window) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 void Renderer::renderClear() {
   SDL_RenderClear(m_renderer);
 }
@@ -154,26 +168,26 @@ void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
           offsetx += 1;
       }
   }
-
 }
 
 
 SDL_Texture* Renderer::textureFromImage(std::string location) {
   SDL_Texture* texture = IMG_LoadTexture(m_renderer, location.c_str());
   if (!texture) {
-    std::cout << SDL_GetError() << "\n";
-    //TODO: log texture fallback
+
+    COutput::logError(std::format("loading texture failed, known file location was \"{}\", loading fallback", location));
+    COutput::logSDLError();
+
     SDL_Texture* texture = IMG_LoadTexture(
         m_renderer, 
         "../../../engine/assets/fallbacks/textures/default.png");
         //TODO: fix below
         // the texture goes through here, but doesnt render for some reason
     if (!texture) {
+      COutput::logError("loading fallback texture failed!");
+      COutput::logSDLError();
     }
 
-  }
-  if (!texture) {
-    std::cout << "no texture!2\n";
   }
   return texture;
 }
@@ -182,9 +196,12 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
   
   TTF_Font* font = TTF_OpenFont(fontLocation.c_str(), fontSize);
   if (!font) {
-    //TODO: add logging for fallback font being loaded
+    COutput::logError(std::format("loading font failed, known file location was \"{}\", loading fallback", fontLocation));
+    COutput::logSDLError();
     font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     if (!font) {
+      COutput::logError("loading fallback font failed!");
+      COutput::logSDLError();
     }
   }
 
@@ -213,7 +230,13 @@ SDL_Texture* Renderer::textureFromFont(TTF_Font* font, Color color, std::string 
 TTF_Font* Renderer::createFont(std::string location, int fontSize) {
   TTF_Font* font = TTF_OpenFont(location.c_str(), fontSize);
   if (!font) {
+    COutput::logError(std::format("loading font failed, known file location was \"{}\", loading fallback", location));
+    COutput::logSDLError();
     font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    if (!font) {
+      COutput::logError("loading fallback font failed!");
+      COutput::logSDLError();
+    }
   }
   return font;
 }
@@ -247,8 +270,6 @@ bool RenderSys::render() {
 
   m_renderer.setRenderColor(Color{0,0,0});
   m_renderer.renderClear();
-
-  //TODO: render entity component here
 
   auto& EList = EntitySys::GetEntityList();
 

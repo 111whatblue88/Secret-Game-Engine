@@ -46,6 +46,8 @@ class Renderer {
   void renderTexture(SDL_Texture* texture, SDL_FRect uv, int layer, SDL_FRect location);
   void renderTextureFull(SDL_Texture* texture, int layer, SDL_FRect location);
 
+  bool wasInit();
+
   private:
 
   SDL_Renderer* m_renderer;
