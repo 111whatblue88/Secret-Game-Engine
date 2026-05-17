@@ -4,12 +4,12 @@
 #include "ecs/ecs.hpp"
 #include "math/math.hpp"
 #include "console/COutput.hpp"
+#include "../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 
 #include <nlohmann/json.hpp>
 #include <iostream>
-#include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <functional>
 

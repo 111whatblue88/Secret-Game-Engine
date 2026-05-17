@@ -2,13 +2,12 @@
 #define _REND_HPP
 
 #include "../general/general.hpp"
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
-#include <SDL3/SDL_rect.h>
-#include <SDL3/SDL_render.h>
 #include <unordered_map>
 #include <vector>
-#include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <map>
 

@@ -2,7 +2,6 @@
 #include "../HUGE.hpp"
 
 #include <format>
-#include <SDL3/SDL_error.h>
 #include <cstring>
 #include <string>
 #include <iostream>

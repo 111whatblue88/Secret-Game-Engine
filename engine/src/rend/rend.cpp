@@ -1,16 +1,12 @@
 #include "../HUGE.hpp"
-#include <SDL3/SDL_error.h>
-#include <SDL3/SDL_oldnames.h>
-#include <SDL3/SDL_pixels.h>
-#include <SDL3/SDL_rect.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_video.h>
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
+#include <SDL3/SDL_oldnames.h>
+#include <SDL3/SDL_render.h>
 #include <format>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <cstddef>
 #include <cstdint>
-//#include <iostream>
 #include <string>
 #include <sys/types.h>
 #include <unordered_map>
@@ -175,24 +171,23 @@ void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
 
 
 SDL_Texture* Renderer::textureFromImage(std::string location) {
-  SDL_Texture* texture = IMG_LoadTexture(m_renderer, location.c_str());
+  SDL_Texture* texture;
+  texture = IMG_LoadTexture(m_renderer, location.c_str());
   if (!texture) {
 
-    COutput::logError(std::format("loading texture failed, known file location was \"{}\", loading fallback", location));
+    COutput::logError(std::format("loading texture failed, given file location was \"{}\", loading fallback", location));
     COutput::logSDLError();
 
-    SDL_Texture* texture = IMG_LoadTexture(
+    texture = IMG_LoadTexture(
         m_renderer, 
-        "../../../engine/assets/fallbacks/textures/default.png");
-        //TODO: fix below
-        // the texture goes through here, but doesnt render for some reason
+        "../../../engine/assets/fallbacks/textures/default.png"
+    );
     if (!texture) {
       COutput::logError("loading fallback texture failed!");
       COutput::logSDLError();
     } else {
       COutput::logCustom("ENGINE","loaded fallback texture successfully");
     }
-
   }
   return texture;
 }
@@ -298,7 +293,6 @@ bool RenderSys::render() {
           });
         } else {
           if (!IR.second.texture) {
-            std::cout << "goddamnit\n";
           }
           RenderSys::CallList.push_back(RenderSys::RenderCall{
             RenderSys::CallType::RFULLTEXTURE,

@@ -1,11 +1,10 @@
 #include "ecs.hpp"
 #include "../HUGE.hpp"
-#include <SDL3/SDL_pixels.h>
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+
 #include <algorithm>
 #include <cstdint>
-
-#include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <sys/types.h>
 

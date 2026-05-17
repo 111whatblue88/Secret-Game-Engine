@@ -2,6 +2,7 @@
 #define _ECS_HPP
 
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../general/general.hpp"
 
 #include <algorithm>
@@ -9,7 +10,6 @@
 #include <functional>
 #include <string>
 #include <iostream>
-#include <SDL3/SDL.h>
 #include <sys/types.h>
 #include <vector>
 #include <cstdint>
