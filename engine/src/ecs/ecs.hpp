@@ -42,17 +42,20 @@ public:
   bool SetName(std::string name);
 
 private:
-  std::string name;
+  std::string m_name;
 };
 
 // physicsBody
-class PhysicsBody{
-  public:
-  Vector2 velocity;
+class PhysicsBody {
+public:
+  PhysicsBody();
+
   bool isStatic;
 
+  Vector2 getVelocity();
   void addForce(Vector2 force);
-  PhysicsBody();
+private:
+  Vector2 m_velocity;
 };
 
 // basicCollider
@@ -74,7 +77,7 @@ class BasicCollider{
 };
 
 // PrimitiveRendering
-class PrimitiveRenderer{
+class PrimitiveRenderer : public Component{
 public:
   enum class PrimitiveType {
     square, squareFill,
@@ -82,19 +85,16 @@ public:
     line
   };
   PrimitiveRenderer(PrimitiveType type, Color color);
-  PrimitiveRenderer(PrimitiveType type, Color color, Vector2 vec);
+  PrimitiveRenderer(PrimitiveType type, Color color, Vector2 p1, Vector2 p2);
   PrimitiveRenderer(std::string name, PrimitiveType type, Color color);
-  PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 vec);
+  PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 p1, Vector2 p2);
   PrimitiveRenderer();
   PrimitiveType type;
   Color color;
+  
+  Vector2 firstPoint;
+  Vector2 secondPoint;
 
-  Vector2 LineTypeSecondPoint;
-
-  std::string const GetName();
-  bool SetName(std::string name);
-private:
-  std::string name;
 };
 
 // img renderer
@@ -228,7 +228,7 @@ public:
   Component<ImgRenderer> ImgRendererComp;
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
-
+  PhysicsBody PhysicsBodyComp;
 
   Entity();
   Entity(class Transform transform);

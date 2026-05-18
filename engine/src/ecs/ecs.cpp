@@ -3,6 +3,7 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
+#include <SDL3/SDL_gpu.h>
 #include <algorithm>
 #include <cstdint>
 #include <string>
@@ -10,6 +11,7 @@
 
 using namespace huge;
 using namespace ecs;
+using namespace rend;
 
 using ID = uint32_t;
 
@@ -32,10 +34,10 @@ Transform::Transform() {
 
 // Component
 std::string const Component::GetName() {
-  return name;
+  return m_name;
 }
 bool Component::SetName(std::string name) {
-  this->name=name;
+  this->m_name=name;
   return true;
 }
 
@@ -70,41 +72,39 @@ ImgRenderer::ImgRenderer() {
 
 // Primitive Renderer 
 PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color) {
-this->name="defaultName";
+this->SetName("defaultName");
 this->type = type;
 this->color = color;
-this->LineTypeSecondPoint = {0,0};
+this->firstPoint = {0,0};
+this->secondPoint = {0,0};
 }
-PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color, Vector2 vec) {
-this->name="defaultName";
+PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color, Vector2 p1, Vector2 p2) {
+this->SetName("defaultName");
 this->type = type;
 this->color = color;
-this->LineTypeSecondPoint = vec;
+this->firstPoint = p1;
+this->secondPoint = p2;
 }
 PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color) {
-this->name=name;
+this->SetName(name);
 this->type = type;
 this->color = color;
-this->LineTypeSecondPoint = {0,0};
+this->firstPoint = {0,0};
+this->secondPoint = {0,0};
 }
-PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 vec) {
-this->name=name;
+PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 p1, Vector2 p2) {
+this->SetName(name);
 this->type = type;
 this->color = color;
-this->LineTypeSecondPoint = vec;
+this->firstPoint = p1;
+this->secondPoint = p2;
 }
 PrimitiveRenderer::PrimitiveRenderer() {
-this->name="defaultName";
+this->SetName("defaultName");
 this->type=PrimitiveType::line;
 this->color=Color(0,0,0);
-this->LineTypeSecondPoint = {0,0};
-}
-std::string const PrimitiveRenderer::GetName() {
-  return name;
-}
-bool PrimitiveRenderer::SetName(std::string name) {
-  this->name=name;
-  return true;
+this->firstPoint = {0,0};
+this->secondPoint = {0,0};
 }
 
 // Text Renderer
@@ -153,7 +153,6 @@ bool TextRenderer::editFont(std::string fontLocation) {
     return true;
   }
 }
-
 bool TextRenderer::editSize(int size) {
   this->size=size;
   this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
@@ -163,7 +162,6 @@ bool TextRenderer::editSize(int size) {
     return true;
   }
 }
-
 bool TextRenderer::editText(std::string text) {
   this->text=text;
   this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
@@ -181,6 +179,17 @@ bool TextRenderer::editColor(Color color) {
   } else {
     return true;
   }
+}
+
+// Physics Body
+PhysicsBody::PhysicsBody() {
+}
+Vector2 PhysicsBody::getVelocity() {
+  return m_velocity;
+}
+void PhysicsBody::addForce(Vector2 force) {
+  m_velocity.x += force.x;
+  m_velocity.y += force.y;
 }
 
 
@@ -217,7 +226,119 @@ std::unordered_map<uint32_t, Entity>& EntitySys::GetEntityList() {
   return m_entityList;
 }
 bool EntitySys::update() {
-  // if you want to know why this is empty, bad things happened here
+  
+  auto& EList = EntitySys::GetEntityList();
+
+  for (auto E : EList) {
+
+    E.second.TransformComp.pos.x += E.second.PhysicsBodyComp.getVelocity().x;
+    E.second.TransformComp.pos.y += E.second.PhysicsBodyComp.getVelocity().y;
+
+    // img renderer
+    if (E.second.ImgRendererComp.has()) {
+      for (auto IR : E.second.ImgRendererComp.getComponentList()) {
+
+        IR.second.transform.height = IR.second.transform.height == 0 ? E.second.TransformComp.height: IR.second.transform.height;
+        IR.second.transform.width = IR.second.transform.width == 0 ? E.second.TransformComp.width : IR.second.transform.width;
+
+        if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.w || IR.second.uv.h) {
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RTEXTURE,
+            RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.transform.pos)},
+            RenderSys::SizeData{IR.second.transform.width, IR.second.transform.height},
+            RenderSys::RenderingData{Color(0,0,0),IR.second.texture, IR.second.uv,0}
+          });
+        } else {
+          if (!IR.second.texture) {
+          }
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RFULLTEXTURE,
+            RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.transform.pos)},
+            RenderSys::SizeData{IR.second.transform.width, IR.second.transform.height},
+            RenderSys::RenderingData{Color(0,0,0),IR.second.texture, 0,0,0,0,0}
+          });
+        }
+      }
+    }
+
+    // primitve renderer
+    if (E.second.PrimitiveRendererComp.has()) {
+      for (auto PR : E.second.PrimitiveRendererComp.getComponentList()) {
+        PR.second.transform.height = PR.second.transform.height == 0 ? E.second.TransformComp.height: PR.second.transform.height;
+        PR.second.transform.width = PR.second.transform.width == 0 ? E.second.TransformComp.width : PR.second.transform.width;
+        PR.second.transform.radius= PR.second.transform.radius== 0 ? E.second.TransformComp.radius: PR.second.transform.radius;
+        switch (PR.second.type) {
+          case ecs::PrimitiveRenderer::PrimitiveType::square: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RBOX,
+              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
+              RenderSys::SizeData{PR.second.transform.width, PR.second.transform.height},
+              RenderSys::RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::squareFill: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RBOXFILL,
+              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
+              RenderSys::SizeData{PR.second.transform.width, PR.second.transform.height},
+              RenderSys::RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::circle: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RCIRCLE,
+              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
+              RenderSys::SizeData{0,0,PR.second.transform.radius},
+              RenderSys::RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::circleFill: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RCIRCLEFILL,
+              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
+              RenderSys::SizeData{0,0,PR.second.transform.radius},
+              RenderSys::RenderingData{PR.second.color}
+            });
+            break;
+          }
+          case ecs::PrimitiveRenderer::PrimitiveType::line: {
+            RenderSys::CallList.push_back(RenderSys::RenderCall{
+              RenderSys::CallType::RLINE,
+              RenderSys::PositionalData{PR.second.firstPoint, PR.second.secondPoint},
+              RenderSys::SizeData{},
+              RenderSys::RenderingData{PR.second.color}
+            });
+            break;
+          }
+        }
+      }      
+    }
+
+    // Text Renderer
+    if (E.second.TextRendererComp.has()) {
+      for (auto TR : E.second.TextRendererComp.getComponentList()) {
+        TR.second.transform.height = TR.second.transform.height == 0 ? E.second.TransformComp.height: TR.second.transform.height;
+        TR.second.transform.width = TR.second.transform.width == 0 ? E.second.TransformComp.width : TR.second.transform.width;
+        RenderSys::CallList.push_back(RenderSys::RenderCall{
+          RenderSys::CallType::RFULLTEXTURE,
+          RenderSys::PositionalData{(E.second.TransformComp.pos + TR.second.transform.pos)},
+          RenderSys::SizeData{TR.second.transform.width, TR.second.transform.height},
+          RenderSys::RenderingData{{0,0,0}, TR.second.texture}
+        });
+      }
+    }
+
+
+
+
+
+
+
+
+  }
   return true;
 };
 
