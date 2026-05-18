@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <numeric>
 #include <string>
 #include <iostream>
 #include <sys/types.h>
@@ -18,33 +19,32 @@
 namespace huge {
 namespace ecs {
 
-/*
-// img renderer
-class ImgRenderer{
-  public:
-  ImgRenderer(std::string location, SDL_FRect uv, int layer);
-  ImgRenderer(std::string location, int layer);
-  SDL_Texture* texture;
-  SDL_FRect uv;
-  int layer;
+// Transform
+class Transform {
+public:
+  Transform(Vector2 pos, float width, float height);
+  Transform(Vector2 pos, float radius);
+  Transform();
+  Vector2 pos;
+  float height;
+  float width;
+  float radius;
+
 };
 
-// PrimitiveRendering
-class PrimitiveRenderer{
-  public:
-  enum class PrimitiveType {
-    square, squareFill,
-    circle, circleFill,
-    line
-  };
-  PrimitiveType type;
-  Color color;
+// base Entity class 
+class Component {
+public:
 
-  Vector2 LineTypeSecondPoint;
+  Transform transform;  
 
-  PrimitiveRenderer(PrimitiveType type, Color color);
-  PrimitiveRenderer(PrimitiveType type, Color color, Vector2 vec);
+  std::string const GetName();
+  bool SetName(std::string name);
+
+private:
+  std::string name;
 };
+
 // physicsBody
 class PhysicsBody{
   public:
@@ -73,25 +73,6 @@ class BasicCollider{
   BasicCollider();
 };
 
-// Transform
-class Transform {
-  public:
-  Transform(Vector2 pos, float width, float height);
-  Transform(Vector2 pos, float radius);
-  Transform();
-  Vector2 pos;
-  float height;
-  float width;
-  float radius;
-  
-  uint32_t getID();
-  private:
-  uint32_t ID;
-
-};
-*/ 
-
-
 // PrimitiveRendering
 class PrimitiveRenderer{
 public:
@@ -117,43 +98,24 @@ private:
 };
 
 // img renderer
-class ImgRenderer{
+class ImgRenderer : public Component{
 public:
   ImgRenderer(std::string location, SDL_FRect uv, int layer);
   ImgRenderer(std::string location, int layer);
   ImgRenderer(std::string name, std::string location, SDL_FRect uv, int layer);
-  ImgRenderer(std::string name,std::string location, int layer);
+  ImgRenderer(std::string name, std::string location, int layer);
   ImgRenderer();
+
   SDL_Texture* texture;
   SDL_FRect uv;
   int layer;
-
-  std::string const GetName();
-  bool SetName(std::string name);
-private:
-  std::string name;
-};
-
-// Transform
-class Transform {
-public:
-  Transform(Vector2 pos, float width, float height);
-  Transform(Vector2 pos, float radius);
-  Transform();
-  Vector2 pos;
-  float height;
-  float width;
-  float radius;
-
 };
 
 // text renderer
-class TextRenderer{
+class TextRenderer : public Component{
 public:
   TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer);
-  TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform);
   TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer);
-  TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform);
   TextRenderer();
 
   bool editFont(std::string fontLocation);
@@ -164,13 +126,8 @@ public:
 
   SDL_Texture* texture;
   int layer;
-  bool inheritTransform;
-  Transform transform;
 
-  std::string const GetName();
-  bool SetName(std::string name);
 private:
-  std::string name;
 
   std::string text;
   TTF_Font* font;

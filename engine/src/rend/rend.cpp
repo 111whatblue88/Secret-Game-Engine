@@ -284,11 +284,15 @@ bool RenderSys::render() {
     // img renderer
     if (E.second.ImgRendererComp.has()) {
       for (auto IR : E.second.ImgRendererComp.getComponentList()) {
+
+        IR.second.transform.height = IR.second.transform.height == 0 ? E.second.TransformComp.height: IR.second.transform.height;
+        IR.second.transform.width = IR.second.transform.width == 0 ? E.second.TransformComp.width : IR.second.transform.width;
+
         if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.w || IR.second.uv.h) {
           RenderSys::CallList.push_back(RenderSys::RenderCall{
             RenderSys::CallType::RTEXTURE,
-            PositionalData{E.second.TransformComp.pos},
-            SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+            PositionalData{(E.second.TransformComp.pos + IR.second.transform.pos)},
+            SizeData{IR.second.transform.width, IR.second.transform.height},
             RenderingData{Color(0,0,0),IR.second.texture, IR.second.uv,0}
           });
         } else {
@@ -296,8 +300,8 @@ bool RenderSys::render() {
           }
           RenderSys::CallList.push_back(RenderSys::RenderCall{
             RenderSys::CallType::RFULLTEXTURE,
-            PositionalData{E.second.TransformComp.pos},
-            SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
+            PositionalData{(E.second.TransformComp.pos + IR.second.transform.pos)},
+            SizeData{IR.second.transform.width, IR.second.transform.height},
             RenderingData{Color(0,0,0),IR.second.texture, 0,0,0,0,0}
           });
         }
@@ -308,6 +312,7 @@ bool RenderSys::render() {
 
     // primitve renderer
     if (E.second.PrimitiveRendererComp.has()) {
+      
       for (auto PR : E.second.PrimitiveRendererComp.getComponentList()) {
         switch (PR.second.type) {
           case ecs::PrimitiveRenderer::PrimitiveType::square: {
@@ -362,21 +367,14 @@ bool RenderSys::render() {
     // Text Renderer
     if (E.second.TextRendererComp.has()) {
       for (auto TR : E.second.TextRendererComp.getComponentList()) {
-        if (TR.second.inheritTransform) {
-          RenderSys::CallList.push_back(RenderSys::RenderCall{
-            RenderSys::CallType::RFULLTEXTURE,
-            PositionalData{E.second.TransformComp.pos},
-            SizeData{E.second.TransformComp.width, E.second.TransformComp.height},
-            RenderingData{{0,0,0}, TR.second.texture}
-          });
-        } else {
-          RenderSys::CallList.push_back(RenderSys::RenderCall{
-            RenderSys::CallType::RFULLTEXTURE,
-            PositionalData{TR.second.transform.pos},
-            SizeData{TR.second.transform.width, TR.second.transform.height},
-            RenderingData{{0,0,0}, TR.second.texture}
-          });
-        }
+        TR.second.transform.height = TR.second.transform.height == 0 ? E.second.TransformComp.height: TR.second.transform.height;
+        TR.second.transform.width = TR.second.transform.width == 0 ? E.second.TransformComp.width : TR.second.transform.width;
+        RenderSys::CallList.push_back(RenderSys::RenderCall{
+          RenderSys::CallType::RFULLTEXTURE,
+          PositionalData{(E.second.TransformComp.pos + TR.second.transform.pos)},
+          SizeData{TR.second.transform.width, TR.second.transform.height},
+          RenderingData{{0,0,0}, TR.second.texture}
+        });
       }
     }
 

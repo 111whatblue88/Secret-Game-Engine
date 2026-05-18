@@ -30,6 +30,15 @@ Transform::Transform() {
   this->radius=0;
 }
 
+// Component
+std::string const Component::GetName() {
+  return name;
+}
+bool Component::SetName(std::string name) {
+  this->name=name;
+  return true;
+}
+
 // IMG Renderer 
 ImgRenderer::ImgRenderer(std::string location, SDL_FRect uv, int layer) {
   this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
@@ -42,13 +51,13 @@ ImgRenderer::ImgRenderer(std::string location, int layer) {
   this->uv={0,0,0,0};
 };
 ImgRenderer::ImgRenderer(std::string name, std::string location, SDL_FRect uv, int layer) {
-  this->name=name;
+  this->SetName(name);
   this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
   this->layer=layer;
   this->uv=uv;
 }
-ImgRenderer::ImgRenderer(std::string name,std::string location, int layer) {
-  this->name=name;
+ImgRenderer::ImgRenderer(std::string name, std::string location, int layer) {
+  this->SetName(name);
   this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
   this->layer=layer;
   this->uv={0,0,0,0};
@@ -57,13 +66,6 @@ ImgRenderer::ImgRenderer() {
   this->texture=NULL;
   this->layer=0;
   this->uv={0,0,0,0};
-}
-std::string const ImgRenderer::GetName() {
-  return name;
-}
-bool ImgRenderer::SetName(std::string name) {
-  this->name=name;
-  return true;
 }
 
 // Primitive Renderer 
@@ -107,72 +109,35 @@ bool PrimitiveRenderer::SetName(std::string name) {
 
 // Text Renderer
 TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer) {
-  this->name="defaultName";
+  this->SetName("defaultName");
   this->fontLocation=fontLocation;
   this->text=text;
   this->size=size;
   this->color=color;
   this->layer=layer;
-
-  this->inheritTransform=true;
-  this->transform={Vector2{0,0},0,0};
 
   this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
   this->texture=rend::RenderSys::m_renderer.textureFromFont(font ,color,text);
 }
-TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform) {
-  this->name="defaultName";
-  this->fontLocation=fontLocation;
-  this->text=text;
-  this->size=size;
-  this->color=color;
-  this->layer=layer;
-
-  this->inheritTransform=false;
-  this->transform=transform;
-
-  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
-  this->texture=rend::RenderSys::m_renderer.textureFromFont(font,color,text);
-}
 TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer) {
-  this->name=name;
+  this->SetName(name);
   this->fontLocation=fontLocation;
   this->text=text;
   this->size=size;
   this->color=color;
   this->layer=layer;
 
-  this->inheritTransform=true;
-  this->transform={Vector2{0,0},0,0};
-
   this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
   this->texture=rend::RenderSys::m_renderer.textureFromFont(font,color,text);
 }
 
-TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer, Transform transform) {
-  this->name=name;
-  this->fontLocation=fontLocation;
-  this->text=text;
-  this->size=size;
-  this->color=color;
-  this->layer=layer;
-
-  this->inheritTransform=false;
-  this->transform=transform;
-
-  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
-  this->texture=rend::RenderSys::m_renderer.textureFromFont(font,color,text);
-}
 TextRenderer::TextRenderer() {
-  this->name="defaultName";
+  this->SetName("defaultName");
   this->fontLocation="";
   this->text="";
   this->size=0;
   this->color={0, 0,0};
   this->layer=0;
-
-  this->inheritTransform=false;
-  this->transform={Vector2{0,0},0,0};
 
   this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
 
@@ -216,14 +181,6 @@ bool TextRenderer::editColor(Color color) {
   } else {
     return true;
   }
-}
-
-std::string const TextRenderer::GetName() {
-  return name;
-}
-bool TextRenderer::SetName(std::string name) {
-  this->name=name;
-  return true;
 }
 
 
