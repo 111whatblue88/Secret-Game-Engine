@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <ctime>
 #include <functional>
 #include <numeric>
 #include <string>
@@ -52,14 +53,14 @@ public:
 
   bool isStatic;
 
-  Vector2 getVelocity();
+  Vector2 const getVelocity();
   void addForce(Vector2 force);
 private:
   Vector2 m_velocity;
 };
 
 // basicCollider
-class BasicCollider{
+class BasicCollider : public Component{
   public:
   enum class Collidertype {
     boxCollider,
@@ -71,8 +72,11 @@ class BasicCollider{
 
   std::function<void()> onCollision;
 
+  Vector2 firstLinePoint;
+  Vector2 secondLinePoint;
+
   BasicCollider(Collidertype type);
-  BasicCollider(Collidertype type, bool renderCollider);
+  BasicCollider(std::string name, Collidertype type);
   BasicCollider();
 };
 
@@ -92,8 +96,8 @@ public:
   PrimitiveType type;
   Color color;
   
-  Vector2 firstPoint;
-  Vector2 secondPoint;
+  Vector2 firstLinePoint;
+  Vector2 secondLinePoint;
 
 };
 
@@ -148,7 +152,7 @@ private:
     std::unordered_map<uint32_t, T> m_components = {};
   public:
 
-    const std::unordered_map<uint32_t, T>& getComponentList() {
+    std::unordered_map<uint32_t, T>& getComponentList() {
       return m_components;
     }
 
@@ -228,6 +232,7 @@ public:
   Component<ImgRenderer> ImgRendererComp;
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
+  Component<BasicCollider> BasicColliderComp;
   PhysicsBody PhysicsBodyComp;
 
   Entity();

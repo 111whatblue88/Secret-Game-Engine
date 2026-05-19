@@ -75,36 +75,36 @@ PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color) {
 this->SetName("defaultName");
 this->type = type;
 this->color = color;
-this->firstPoint = {0,0};
-this->secondPoint = {0,0};
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
 }
 PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color, Vector2 p1, Vector2 p2) {
 this->SetName("defaultName");
 this->type = type;
 this->color = color;
-this->firstPoint = p1;
-this->secondPoint = p2;
+this->firstLinePoint = p1;
+this->secondLinePoint = p2;
 }
 PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color) {
 this->SetName(name);
 this->type = type;
 this->color = color;
-this->firstPoint = {0,0};
-this->secondPoint = {0,0};
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
 }
 PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 p1, Vector2 p2) {
 this->SetName(name);
 this->type = type;
 this->color = color;
-this->firstPoint = p1;
-this->secondPoint = p2;
+this->firstLinePoint = p1;
+this->secondLinePoint = p2;
 }
 PrimitiveRenderer::PrimitiveRenderer() {
 this->SetName("defaultName");
 this->type=PrimitiveType::line;
 this->color=Color(0,0,0);
-this->firstPoint = {0,0};
-this->secondPoint = {0,0};
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
 }
 
 // Text Renderer
@@ -183,8 +183,9 @@ bool TextRenderer::editColor(Color color) {
 
 // Physics Body
 PhysicsBody::PhysicsBody() {
+  m_velocity = {0,0};
 }
-Vector2 PhysicsBody::getVelocity() {
+Vector2 const PhysicsBody::getVelocity() {
   return m_velocity;
 }
 void PhysicsBody::addForce(Vector2 force) {
@@ -192,6 +193,19 @@ void PhysicsBody::addForce(Vector2 force) {
   m_velocity.y += force.y;
 }
 
+// Collider 
+BasicCollider::BasicCollider(Collidertype type) {
+  this->SetName("defaultName");
+  this->type = type;
+}
+BasicCollider::BasicCollider(std::string name, Collidertype type) {
+  this->SetName(name);
+  this->type = type;
+}
+BasicCollider::BasicCollider() {
+  this->SetName("defaultName");
+  this->type = BasicCollider::Collidertype::boxCollider;
+}
 
 // Entity struct
 bool Entity::SetName(std::string name) {
@@ -229,14 +243,54 @@ bool EntitySys::update() {
   
   auto& EList = EntitySys::GetEntityList();
 
-  for (auto E : EList) {
+  for (auto& E : EList) {
 
     E.second.TransformComp.pos.x += E.second.PhysicsBodyComp.getVelocity().x;
     E.second.TransformComp.pos.y += E.second.PhysicsBodyComp.getVelocity().y;
+    
+    if (E.second.BasicColliderComp.has()) {
+      for (auto& BC : E.second.BasicColliderComp.getComponentList()) {
+        BC.second.transform.height = BC.second.transform.height == 0 ? E.second.TransformComp.height: BC.second.transform.height;
+        BC.second.transform.width = BC.second.transform.width == 0 ? E.second.TransformComp.width : BC.second.transform.width;
+        if (BC.second.renderCollider) {
+          switch (BC.second.type) {
+         
+            case huge::ecs::BasicCollider::Collidertype::boxCollider: {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RBOX,
+                RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.transform.pos)},
+                RenderSys::SizeData{BC.second.transform.width, BC.second.transform.height},
+                RenderSys::RenderingData{Color(255,0,0)}
+              });
+              break;
+            }
+            case huge::ecs::BasicCollider::Collidertype::circleCollider: {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RCIRCLE,
+                RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.transform.pos)},
+                RenderSys::SizeData{0,0,BC.second.transform.radius},
+                RenderSys::RenderingData{Color(255,0,0)}
+              });
+              break;
+            }
+            case huge::ecs::BasicCollider::Collidertype::lineCollider: {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RLINE,
+                RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.firstLinePoint),
+              (E.second.TransformComp.pos + BC.second.secondLinePoint)},
+                RenderSys::SizeData{0,0,0},
+                RenderSys::RenderingData{Color(255,0,0)}
+              });
+              break;
+            }
+          }
+        }
+      }
+    }
 
     // img renderer
     if (E.second.ImgRendererComp.has()) {
-      for (auto IR : E.second.ImgRendererComp.getComponentList()) {
+      for (auto& IR : E.second.ImgRendererComp.getComponentList()) {
 
         IR.second.transform.height = IR.second.transform.height == 0 ? E.second.TransformComp.height: IR.second.transform.height;
         IR.second.transform.width = IR.second.transform.width == 0 ? E.second.TransformComp.width : IR.second.transform.width;
@@ -263,7 +317,7 @@ bool EntitySys::update() {
 
     // primitve renderer
     if (E.second.PrimitiveRendererComp.has()) {
-      for (auto PR : E.second.PrimitiveRendererComp.getComponentList()) {
+      for (auto& PR : E.second.PrimitiveRendererComp.getComponentList()) {
         PR.second.transform.height = PR.second.transform.height == 0 ? E.second.TransformComp.height: PR.second.transform.height;
         PR.second.transform.width = PR.second.transform.width == 0 ? E.second.TransformComp.width : PR.second.transform.width;
         PR.second.transform.radius= PR.second.transform.radius== 0 ? E.second.TransformComp.radius: PR.second.transform.radius;
@@ -307,7 +361,7 @@ bool EntitySys::update() {
           case ecs::PrimitiveRenderer::PrimitiveType::line: {
             RenderSys::CallList.push_back(RenderSys::RenderCall{
               RenderSys::CallType::RLINE,
-              RenderSys::PositionalData{PR.second.firstPoint, PR.second.secondPoint},
+              RenderSys::PositionalData{PR.second.firstLinePoint, PR.second.secondLinePoint},
               RenderSys::SizeData{},
               RenderSys::RenderingData{PR.second.color}
             });
@@ -319,7 +373,7 @@ bool EntitySys::update() {
 
     // Text Renderer
     if (E.second.TextRendererComp.has()) {
-      for (auto TR : E.second.TextRendererComp.getComponentList()) {
+      for (auto& TR : E.second.TextRendererComp.getComponentList()) {
         TR.second.transform.height = TR.second.transform.height == 0 ? E.second.TransformComp.height: TR.second.transform.height;
         TR.second.transform.width = TR.second.transform.width == 0 ? E.second.TransformComp.width : TR.second.transform.width;
         RenderSys::CallList.push_back(RenderSys::RenderCall{
