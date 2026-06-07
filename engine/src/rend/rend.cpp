@@ -169,7 +169,6 @@ void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
   }
 }
 
-
 SDL_Texture* Renderer::textureFromImage(std::string location) {
   SDL_Texture* texture;
   texture = IMG_LoadTexture(m_renderer, location.c_str());
@@ -193,7 +192,24 @@ SDL_Texture* Renderer::textureFromImage(std::string location) {
 }
 
 SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, Color color, std::string text) {
-  
+ 
+  if (fontLocation == "default") {
+    TTF_Font* font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    
+    if (!font) {
+      COutput::logError("loading default font failed!");
+      COutput::logSDLError();
+    }
+
+    SDL_Surface* surface = TTF_RenderText_Solid(
+        font,
+        text.c_str(), 
+        0, 
+        SDL_Color{Uint8(color.r),Uint8(color.g),Uint8(color.b), 255
+    });
+    return SDL_CreateTextureFromSurface(m_renderer, surface);
+  }
+
   TTF_Font* font = TTF_OpenFont(fontLocation.c_str(), fontSize);
   if (!font) {
     COutput::logError(std::format("loading font failed, given file location was \"{}\", loading fallback", fontLocation));
@@ -230,6 +246,18 @@ SDL_Texture* Renderer::textureFromFont(TTF_Font* font, Color color, std::string 
 
 }
 TTF_Font* Renderer::createFont(std::string location, int fontSize) {
+
+  if (location == "default") {
+    TTF_Font* font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    
+    if (!font) {
+      COutput::logError("loading default font failed!");
+      COutput::logSDLError();
+    }
+
+    return font;
+  }
+
   TTF_Font* font = TTF_OpenFont(location.c_str(), fontSize);
   if (!font) {
     COutput::logError(std::format("loading font failed, given file location was \"{}\", loading fallback", location));

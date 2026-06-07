@@ -26,6 +26,8 @@ namespace input {
       KeyState S;
       KeyState D;
 
+      KeyState ESC;
+
     };
   public:
     static Keys keys;

@@ -12,6 +12,7 @@ InputSys::Keys InputSys::keys = {
   KeyState::NONE, 
   KeyState::NONE, 
   KeyState::NONE, 
+  KeyState::NONE, 
 };
 
 SDL_Event InputSys::m_input = SDL_Event();
@@ -22,6 +23,7 @@ bool InputSys::Input() {
   resetKey(keys.A); 
   resetKey(keys.S); 
   resetKey(keys.D); 
+  resetKey(keys.ESC); 
 
   while (SDL_PollEvent(&m_input)) {
 
@@ -46,6 +48,10 @@ bool InputSys::Input() {
           case SDLK_D: 
             keys.D = KeyState::PRESSED;
             break;
+
+          case SDLK_ESCAPE: 
+            keys.ESC = KeyState::PRESSED;
+            break;
         }
         break;
       }
@@ -62,6 +68,10 @@ bool InputSys::Input() {
             break;
           case SDLK_D: 
             keys.D = KeyState::RELEASED;
+            break;
+
+          case SDLK_ESCAPE: 
+            keys.ESC = KeyState::RELEASED;
             break;
         }
         break;
@@ -89,9 +99,7 @@ void InputSys::resetKey(InputSys::KeyState& key) {
       key = InputSys::KeyState::NONE;
       break; 
     }
-
   }
-
 };
 
 
