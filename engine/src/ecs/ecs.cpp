@@ -183,15 +183,12 @@ bool TextRenderer::editColor(Color color) {
 
 // Physics Body
 PhysicsBody::PhysicsBody() {
-  m_velocity = {0,0};
+  isStatic = true;
+  gravityEnabled = false;
+  velocity = {0,0};
+  angularVelocity = 0;
 }
-Vector2 const PhysicsBody::getVelocity() {
-  return m_velocity;
-}
-void PhysicsBody::addForce(Vector2 force) {
-  m_velocity.x += force.x;
-  m_velocity.y += force.y;
-}
+
 
 // Collider 
 BasicCollider::BasicCollider(Collidertype type) {
@@ -245,9 +242,6 @@ bool EntitySys::update() {
 
   for (auto& E : EList) {
 
-    E.second.TransformComp.pos.x += E.second.PhysicsBodyComp.getVelocity().x;
-    E.second.TransformComp.pos.y += E.second.PhysicsBodyComp.getVelocity().y;
-    
     if (E.second.BasicColliderComp.has()) {
       for (auto& BC : E.second.BasicColliderComp.getComponentList()) {
         BC.second.transform.height = BC.second.transform.height == 0 ? E.second.TransformComp.height: BC.second.transform.height;
@@ -385,12 +379,18 @@ bool EntitySys::update() {
       }
     }
 
+    // PhysicsBody
 
+    Vector2 GRAVITY = {0,9.81};
 
+    if (!E.second.PhysicsBodyComp.isStatic) {
+      if (E.second.PhysicsBodyComp.gravityEnabled) {
+        E.second.PhysicsBodyComp.velocity = E.second.PhysicsBodyComp.velocity + GRAVITY.scale(core::Engine::deltaTime());
+      }
 
-
-
-
+      E.second.TransformComp.rotation += E.second.PhysicsBodyComp.angularVelocity;
+      E.second.TransformComp.pos = E.second.TransformComp.pos + E.second.PhysicsBodyComp.velocity;
+    }
 
   }
   return true;

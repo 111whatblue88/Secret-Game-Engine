@@ -17,6 +17,8 @@ struct Vector2 {
   Vector2 operator*(Vector2 other);
   Vector2 operator/(Vector2 other);
 
+  Vector2 scale(float scalar);
+
 };
 
 struct Color {

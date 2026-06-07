@@ -26,9 +26,14 @@ public:
   Transform(Vector2 pos, float width, float height);
   Transform(Vector2 pos, float radius);
   Transform();
+
   Vector2 pos;
+
   float height;
   float width;
+
+  float rotation;
+
   float radius;
 
 };
@@ -52,11 +57,15 @@ public:
   PhysicsBody();
 
   bool isStatic;
+  bool gravityEnabled;
 
-  Vector2 const getVelocity();
-  void addForce(Vector2 force);
+  Vector2 velocity;
+  float angularVelocity;
+
+  void step(float dt);
+
 private:
-  Vector2 m_velocity;
+
 };
 
 // basicCollider
