@@ -28,13 +28,13 @@ class Renderer {
   void renderPoints(SDL_FPoint* p, int c);
   void renderGeometry(SDL_Vertex* v, int numverticies, int* indecies, int numindices);
 
-  void renderBox(Vector2 pos, float width, float height, Color color);
-  void renderBoxFill(Vector2 pos, float width, float height, Color color);
+  void renderBox(Vec2 pos, float width, float height, Color color);
+  void renderBoxFill(Vec2 pos, float width, float height, Color color);
 
-  void renderCircle(Vector2 pos, float radius, Color color);
-  void renderCircleFill(Vector2 pos, float radius, Color color);
+  void renderCircle(Vec2 pos, float radius, Color color);
+  void renderCircleFill(Vec2 pos, float radius, Color color);
 
-  void renderLine(Vector2 pos1, Vector2 pos2, Color color);
+  void renderLine(Vec2 pos1, Vec2 pos2, Color color);
 
   SDL_Texture* textureFromImage(std::string location);
   SDL_Texture* textureFromFont(std::string location, int fontSize, Color color, std::string text);
@@ -70,8 +70,8 @@ public:
   };
 
   struct PositionalData {
-    huge::Vector2 pos;
-    Vector2 pos2;
+    huge::Vec2 pos;
+    Vec2 pos2;
   };
   struct SizeData {
     float width;

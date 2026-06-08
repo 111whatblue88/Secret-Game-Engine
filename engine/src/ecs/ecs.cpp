@@ -16,20 +16,11 @@ using namespace rend;
 using ID = uint32_t;
 
 // Transform
-Transform::Transform(Vector2 pos, float width, float height){
+Transform::Transform(Vec2 pos){
   this->pos=pos;
-  this->width=width;
-  this->height=height;
-}
-Transform::Transform(Vector2 pos, float radius) {
-  this->pos=pos;
-  this->radius=radius;
 }
 Transform::Transform() {
   this->pos={0,0};
-  this->width=0;
-  this->height=0;
-  this->radius=0;
 }
 
 // Component
@@ -71,38 +62,76 @@ ImgRenderer::ImgRenderer() {
 }
 
 // Primitive Renderer 
-PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color) {
+PrimitiveRenderer::PrimitiveRenderer(Color color, Vec2 p1, Vec2 p2) {
 this->SetName("defaultName");
-this->type = type;
+this->type = PrimitiveType::line;
+this->fill = false;
 this->color = color;
-this->firstLinePoint = {0,0};
-this->secondLinePoint = {0,0};
-}
-PrimitiveRenderer::PrimitiveRenderer(PrimitiveType type, Color color, Vector2 p1, Vector2 p2) {
-this->SetName("defaultName");
-this->type = type;
-this->color = color;
+this->rect = {{0,0},0,0};
+this->circle = {{0,0},0};
 this->firstLinePoint = p1;
 this->secondLinePoint = p2;
 }
-PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color) {
+PrimitiveRenderer::PrimitiveRenderer(std::string name, Color color, Vec2 p1, Vec2 p2) {
 this->SetName(name);
-this->type = type;
+this->type = PrimitiveType::line;
+this->fill = false;
 this->color = color;
-this->firstLinePoint = {0,0};
-this->secondLinePoint = {0,0};
-}
-PrimitiveRenderer::PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 p1, Vector2 p2) {
-this->SetName(name);
-this->type = type;
-this->color = color;
+this->rect = {{0,0},0,0};
+this->circle = {{0,0},0};
 this->firstLinePoint = p1;
 this->secondLinePoint = p2;
 }
+
+PrimitiveRenderer::PrimitiveRenderer(Color color, bool fill, Rect rect) {
+this->SetName("defaultName");
+this->type = PrimitiveType::square;
+this->fill = fill;
+this->color = color;
+this->rect = rect;
+this->circle = {{0,0},0};
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
+}
+PrimitiveRenderer::PrimitiveRenderer(std::string name, Color color, bool fill, Rect rect) {
+this->SetName(name);
+this->type = PrimitiveType::square;
+this->fill = fill;
+this->color = color;
+this->rect = rect;
+this->circle = {{0,0},0};
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
+}
+
+PrimitiveRenderer::PrimitiveRenderer(std::string name, Color color, bool fill, Circle circle) {
+this->SetName(name);
+this->type = PrimitiveType::circle;
+this->fill = fill;
+this->color = color;
+this->rect = {{0,0},0,0};
+this->circle = circle;
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
+}
+PrimitiveRenderer::PrimitiveRenderer(Color color, bool fill, Circle circle) {
+this->SetName("defaultName");
+this->type = PrimitiveType::circle;
+this->fill = fill;
+this->color = color;
+this->rect = {{0,0},0,0};
+this->circle = circle;
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
+}
+
 PrimitiveRenderer::PrimitiveRenderer() {
 this->SetName("defaultName");
-this->type=PrimitiveType::line;
-this->color=Color(0,0,0);
+this->type = PrimitiveType::line;
+this->fill = false;
+this->color = {0,0,0};
+this->rect = {{0,0},0,0};
+this->circle = {{0,0},0};
 this->firstLinePoint = {0,0};
 this->secondLinePoint = {0,0};
 }
@@ -188,21 +217,45 @@ PhysicsBody::PhysicsBody() {
   velocity = {0,0};
   angularVelocity = 0;
 }
+void PhysicsBody::applyImpulse(Vec2 impulse) {
+  this->velocity = this->velocity + impulse.scale(1/ this->mass);
+}
 
 
 // Collider 
-BasicCollider::BasicCollider(Collidertype type) {
+BasicBoxCollider::BasicBoxCollider(Rect colliderRect) {
   this->SetName("defaultName");
-  this->type = type;
+  this->colliderBox = colliderRect;
+  this->renderCollider = false;
 }
-BasicCollider::BasicCollider(std::string name, Collidertype type) {
+BasicBoxCollider::BasicBoxCollider(std::string name, Rect colliderRect) {
   this->SetName(name);
-  this->type = type;
+  this->colliderBox = colliderRect;
+  this->renderCollider = false;
 }
-BasicCollider::BasicCollider() {
+BasicBoxCollider::BasicBoxCollider(std::string name) {
+  this->SetName(name);
+  this->colliderBox = {Vec2{0,0},0,0};
+  this->renderCollider = false;
+}
+BasicBoxCollider::BasicBoxCollider() {
   this->SetName("defaultName");
-  this->type = BasicCollider::Collidertype::boxCollider;
+  this->colliderBox = {Vec2{0,0},0,0};
+  this->renderCollider = false;
 }
+
+bool BasicBoxCollider::isColliding(Rect e, Rect other) {
+  if (
+    e.pos.x < other.pos.x + other.width &&
+    e.pos.x + e.width > other.pos.x &&
+    e.pos.y < other.pos.y + other.height &&
+    e.pos.y + e.height > other.pos.y
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 // Entity struct
 bool Entity::SetName(std::string name) {
@@ -214,7 +267,7 @@ std::string const Entity::GetName() {
 }
 Entity::Entity() {
   this->name = "defaultName";
-  this->TransformComp = Transform(Vector2(20,20),20,20);
+  this->TransformComp.pos = {0,0};
 }
 Entity::Entity(class Transform transform) {
   this->name = "defaultName";
@@ -242,58 +295,15 @@ bool EntitySys::update() {
 
   for (auto& E : EList) {
 
-    if (E.second.BasicColliderComp.has()) {
-      for (auto& BC : E.second.BasicColliderComp.getComponentList()) {
-        BC.second.transform.height = BC.second.transform.height == 0 ? E.second.TransformComp.height: BC.second.transform.height;
-        BC.second.transform.width = BC.second.transform.width == 0 ? E.second.TransformComp.width : BC.second.transform.width;
-        if (BC.second.renderCollider) {
-          switch (BC.second.type) {
-         
-            case huge::ecs::BasicCollider::Collidertype::boxCollider: {
-              RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RBOX,
-                RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.transform.pos)},
-                RenderSys::SizeData{BC.second.transform.width, BC.second.transform.height},
-                RenderSys::RenderingData{Color(255,0,0)}
-              });
-              break;
-            }
-            case huge::ecs::BasicCollider::Collidertype::circleCollider: {
-              RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RCIRCLE,
-                RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.transform.pos)},
-                RenderSys::SizeData{0,0,BC.second.transform.radius},
-                RenderSys::RenderingData{Color(255,0,0)}
-              });
-              break;
-            }
-            case huge::ecs::BasicCollider::Collidertype::lineCollider: {
-              RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RLINE,
-                RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.firstLinePoint),
-              (E.second.TransformComp.pos + BC.second.secondLinePoint)},
-                RenderSys::SizeData{0,0,0},
-                RenderSys::RenderingData{Color(255,0,0)}
-              });
-              break;
-            }
-          }
-        }
-      }
-    }
-
     // img renderer
     if (E.second.ImgRendererComp.has()) {
       for (auto& IR : E.second.ImgRendererComp.getComponentList()) {
 
-        IR.second.transform.height = IR.second.transform.height == 0 ? E.second.TransformComp.height: IR.second.transform.height;
-        IR.second.transform.width = IR.second.transform.width == 0 ? E.second.TransformComp.width : IR.second.transform.width;
-
         if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.w || IR.second.uv.h) {
           RenderSys::CallList.push_back(RenderSys::RenderCall{
             RenderSys::CallType::RTEXTURE,
-            RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.transform.pos)},
-            RenderSys::SizeData{IR.second.transform.width, IR.second.transform.height},
+            RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.location.pos)},
+            RenderSys::SizeData{IR.second.location.width, IR.second.location.height},
             RenderSys::RenderingData{Color(0,0,0),IR.second.texture, IR.second.uv,0}
           });
         } else {
@@ -301,8 +311,8 @@ bool EntitySys::update() {
           }
           RenderSys::CallList.push_back(RenderSys::RenderCall{
             RenderSys::CallType::RFULLTEXTURE,
-            RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.transform.pos)},
-            RenderSys::SizeData{IR.second.transform.width, IR.second.transform.height},
+            RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.location.pos)},
+            RenderSys::SizeData{IR.second.location.width, IR.second.location.height},
             RenderSys::RenderingData{Color(0,0,0),IR.second.texture, 0,0,0,0,0}
           });
         }
@@ -312,44 +322,41 @@ bool EntitySys::update() {
     // primitve renderer
     if (E.second.PrimitiveRendererComp.has()) {
       for (auto& PR : E.second.PrimitiveRendererComp.getComponentList()) {
-        PR.second.transform.height = PR.second.transform.height == 0 ? E.second.TransformComp.height: PR.second.transform.height;
-        PR.second.transform.width = PR.second.transform.width == 0 ? E.second.TransformComp.width : PR.second.transform.width;
-        PR.second.transform.radius= PR.second.transform.radius== 0 ? E.second.TransformComp.radius: PR.second.transform.radius;
         switch (PR.second.type) {
           case ecs::PrimitiveRenderer::PrimitiveType::square: {
-            RenderSys::CallList.push_back(RenderSys::RenderCall{
-              RenderSys::CallType::RBOX,
-              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
-              RenderSys::SizeData{PR.second.transform.width, PR.second.transform.height},
-              RenderSys::RenderingData{PR.second.color}
-            });
-            break;
-          }
-          case ecs::PrimitiveRenderer::PrimitiveType::squareFill: {
-            RenderSys::CallList.push_back(RenderSys::RenderCall{
-              RenderSys::CallType::RBOXFILL,
-              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
-              RenderSys::SizeData{PR.second.transform.width, PR.second.transform.height},
-              RenderSys::RenderingData{PR.second.color}
-            });
+            if (PR.second.fill) {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RBOXFILL,
+                RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
+                RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
+                RenderSys::RenderingData{PR.second.color}
+              });
+            } else {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RBOX,
+                RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
+                RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
+                RenderSys::RenderingData{PR.second.color}
+              });
+            }
             break;
           }
           case ecs::PrimitiveRenderer::PrimitiveType::circle: {
-            RenderSys::CallList.push_back(RenderSys::RenderCall{
-              RenderSys::CallType::RCIRCLE,
-              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
-              RenderSys::SizeData{0,0,PR.second.transform.radius},
-              RenderSys::RenderingData{PR.second.color}
-            });
-            break;
-          }
-          case ecs::PrimitiveRenderer::PrimitiveType::circleFill: {
-            RenderSys::CallList.push_back(RenderSys::RenderCall{
-              RenderSys::CallType::RCIRCLEFILL,
-              RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.transform.pos},
-              RenderSys::SizeData{0,0,PR.second.transform.radius},
-              RenderSys::RenderingData{PR.second.color}
-            });
+            if (PR.second.fill) {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RCIRCLEFILL,
+                RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.circle.pos},
+                RenderSys::SizeData{0,0,PR.second.circle.radius},
+                RenderSys::RenderingData{PR.second.color}
+              });
+            } else {
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::RCIRCLE,
+                RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.circle.pos},
+                RenderSys::SizeData{0,0,PR.second.circle.radius},
+                RenderSys::RenderingData{PR.second.color}
+              });
+            }
             break;
           }
           case ecs::PrimitiveRenderer::PrimitiveType::line: {
@@ -368,29 +375,108 @@ bool EntitySys::update() {
     // Text Renderer
     if (E.second.TextRendererComp.has()) {
       for (auto& TR : E.second.TextRendererComp.getComponentList()) {
-        TR.second.transform.height = TR.second.transform.height == 0 ? E.second.TransformComp.height: TR.second.transform.height;
-        TR.second.transform.width = TR.second.transform.width == 0 ? E.second.TransformComp.width : TR.second.transform.width;
         RenderSys::CallList.push_back(RenderSys::RenderCall{
           RenderSys::CallType::RFULLTEXTURE,
-          RenderSys::PositionalData{(E.second.TransformComp.pos + TR.second.transform.pos)},
-          RenderSys::SizeData{TR.second.transform.width, TR.second.transform.height},
+          RenderSys::PositionalData{(E.second.TransformComp.pos + TR.second.location.pos)},
+          RenderSys::SizeData{TR.second.location.width, TR.second.location.height},
           RenderSys::RenderingData{{0,0,0}, TR.second.texture}
         });
       }
     }
 
+    if (E.second.BasicBoxColliderComp.has()) {
+      for (auto& BC : E.second.BasicBoxColliderComp.getComponentList()) {
+        if (BC.second.renderCollider) {
+          RenderSys::CallList.push_back(RenderSys::RenderCall{
+            RenderSys::CallType::RBOX,
+            RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.colliderBox.pos)},
+            RenderSys::SizeData{BC.second.colliderBox.width, BC.second.colliderBox.height},
+            RenderSys::RenderingData{Color(255,0,0)}
+          });
+        }
+      }
+    }
+
     // PhysicsBody
 
-    Vector2 GRAVITY = {0,9.81};
+    Vec2 GRAVITY = {0,9.81};
 
     if (!E.second.PhysicsBodyComp.isStatic) {
       if (E.second.PhysicsBodyComp.gravityEnabled) {
         E.second.PhysicsBodyComp.velocity = E.second.PhysicsBodyComp.velocity + GRAVITY.scale(core::Engine::deltaTime());
       }
 
-      E.second.TransformComp.rotation += E.second.PhysicsBodyComp.angularVelocity;
       E.second.TransformComp.pos = E.second.TransformComp.pos + E.second.PhysicsBodyComp.velocity;
     }
+
+    if (E.second.BasicBoxColliderComp.has()) {
+      for (auto& BC : E.second.BasicBoxColliderComp.getComponentList()) {
+        for (auto& other : EList) {
+          if (E.first == other.first) {
+            continue;
+          }
+          
+          for (auto& otherBC : other.second.BasicBoxColliderComp.getComponentList()) {
+
+            Rect thisT = {(E.second.TransformComp.pos + BC.second.colliderBox.pos), BC.second.colliderBox.width, BC.second.colliderBox.height};
+            Rect otherT = {(other.second.TransformComp.pos + otherBC.second.colliderBox.pos), otherBC.second.colliderBox.width, otherBC.second.colliderBox.height};
+
+            if (BasicBoxCollider::isColliding(thisT, otherT)) {
+
+              if (E.second.PhysicsBodyComp.isStatic) {
+
+                other.second.PhysicsBodyComp.velocity.x = -(other.second.PhysicsBodyComp.velocity.x);
+                other.second.TransformComp.pos = other.second.TransformComp.pos + other.second.PhysicsBodyComp.velocity; 
+
+                if (!BasicBoxCollider::isColliding(thisT, otherT)) {
+                  break;
+                }
+
+                other.second.PhysicsBodyComp.velocity.x = -(other.second.PhysicsBodyComp.velocity.x);
+
+                other.second.PhysicsBodyComp.velocity.y = -(other.second.PhysicsBodyComp.velocity.y);
+                other.second.TransformComp.pos = other.second.TransformComp.pos + other.second.PhysicsBodyComp.velocity; 
+
+                if (!BasicBoxCollider::isColliding(thisT, otherT)) {
+                  break;
+                }
+
+                other.second.PhysicsBodyComp.velocity.x = -(other.second.PhysicsBodyComp.velocity.x);
+                other.second.PhysicsBodyComp.velocity.y = -(other.second.PhysicsBodyComp.velocity.y);
+
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   }
   return true;

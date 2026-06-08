@@ -4,21 +4,40 @@
 #include <vector>
 
 namespace huge {
-struct Vector2 {
+struct Vec2 {
   
   float x;
   float y;
 
-  Vector2();
-  Vector2(float x, float y);
+  Vec2();
+  Vec2(float x, float y);
 
-  Vector2 operator+(Vector2 other);
-  Vector2 operator-(Vector2 other);
-  Vector2 operator*(Vector2 other);
-  Vector2 operator/(Vector2 other);
+  Vec2 operator+(Vec2 other);
+  Vec2 operator-(Vec2 other);
+  Vec2 operator*(Vec2 other);
+  Vec2 operator/(Vec2 other);
 
-  Vector2 scale(float scalar);
+  Vec2 scale(float scalar);
 
+};
+
+struct Rect {
+
+  Vec2 pos;
+  float width;
+  float height;
+
+  Rect();
+  Rect(Vec2 pos, float width, float height);
+
+};
+
+struct Circle {
+  Vec2 pos;
+  float radius;
+
+  Circle();
+  Circle(Vec2 pos, float radius);
 };
 
 struct Color {

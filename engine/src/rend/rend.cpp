@@ -69,21 +69,21 @@ void Renderer::renderGeometry(SDL_Vertex* v, int numverticies, int* indices, int
 void Renderer::renderPoints(SDL_FPoint* p, int c) {
   SDL_RenderPoints(m_renderer, p, c);
 }
-void Renderer::renderBox(Vector2 pos, float width, float height, Color color) {
+void Renderer::renderBox(Vec2 pos, float width, float height, Color color) {
   setRenderColor(color);
   SDL_FRect rect = {pos.x, pos.y, width, height};
   SDL_RenderRect(m_renderer, &rect);
 }
-void Renderer::renderBoxFill(Vector2 pos, float width, float height, Color color) {
+void Renderer::renderBoxFill(Vec2 pos, float width, float height, Color color) {
   setRenderColor(color);
   SDL_FRect rect = {pos.x, pos.y, width, height};
   SDL_RenderFillRect(m_renderer, &rect);
 }
-void Renderer::renderLine(Vector2 pos1, Vector2 pos2, Color color) {
+void Renderer::renderLine(Vec2 pos1, Vec2 pos2, Color color) {
   setRenderColor(color);
   SDL_RenderLine(m_renderer, pos1.x, pos1.y, pos2.x, pos2.y);
 }
-void Renderer::renderCircle(Vector2 pos, float radius, Color color) {
+void Renderer::renderCircle(Vec2 pos, float radius, Color color) {
   setRenderColor(color);
 
     const int32_t diameter = (radius * 2);
@@ -126,7 +126,7 @@ void Renderer::renderCircle(Vector2 pos, float radius, Color color) {
 
 }
 
-void Renderer::renderCircleFill(Vector2 pos, float radius, Color color) {
+void Renderer::renderCircleFill(Vec2 pos, float radius, Color color) {
   setRenderColor(color);
 
   int offsetx, offsety, d;

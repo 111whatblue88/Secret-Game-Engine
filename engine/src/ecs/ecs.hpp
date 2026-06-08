@@ -20,29 +20,21 @@
 namespace huge {
 namespace ecs {
 
+class Entity;
+
 // Transform
 class Transform {
 public:
-  Transform(Vector2 pos, float width, float height);
-  Transform(Vector2 pos, float radius);
+  Transform(Vec2 pos);
   Transform();
 
-  Vector2 pos;
-
-  float height;
-  float width;
-
-  float rotation;
-
-  float radius;
+  Vec2 pos;
 
 };
 
 // base Entity class 
 class Component {
 public:
-
-  Transform transform;  
 
   std::string const GetName();
   bool SetName(std::string name);
@@ -59,54 +51,65 @@ public:
   bool isStatic;
   bool gravityEnabled;
 
-  Vector2 velocity;
+  float mass;
+
+  Vec2 velocity;
   float angularVelocity;
 
-  void step(float dt);
+  void applyImpulse(Vec2 impulse);
 
 private:
 
 };
 
-// basicCollider
-class BasicCollider : public Component{
+// basicBoxCollider
+class BasicBoxCollider : public Component{
   public:
-  enum class Collidertype {
-    boxCollider,
-    circleCollider,
-    lineCollider
-  };
-  Collidertype type;
+  
+  Rect colliderBox;
+
   bool renderCollider;
 
   std::function<void()> onCollision;
 
-  Vector2 firstLinePoint;
-  Vector2 secondLinePoint;
+  static bool isColliding(Rect e, Rect other);
 
-  BasicCollider(Collidertype type);
-  BasicCollider(std::string name, Collidertype type);
-  BasicCollider();
+  BasicBoxCollider(Rect colliderRect);
+  BasicBoxCollider(std::string name);
+  BasicBoxCollider(std::string name, Rect colliderRect);
+  BasicBoxCollider();
 };
 
 // PrimitiveRendering
 class PrimitiveRenderer : public Component{
 public:
   enum class PrimitiveType {
-    square, squareFill,
-    circle, circleFill,
+    square,
+    circle,
     line
   };
-  PrimitiveRenderer(PrimitiveType type, Color color);
-  PrimitiveRenderer(PrimitiveType type, Color color, Vector2 p1, Vector2 p2);
-  PrimitiveRenderer(std::string name, PrimitiveType type, Color color);
-  PrimitiveRenderer(std::string name, PrimitiveType type, Color color, Vector2 p1, Vector2 p2);
+
   PrimitiveRenderer();
+
+  PrimitiveRenderer(Color color, Vec2 p1, Vec2 p2);
+  PrimitiveRenderer(std::string name, Color color, Vec2 p1, Vec2 p2);
+
+  PrimitiveRenderer(Color color, bool fill, Rect rect);
+  PrimitiveRenderer(std::string name, Color color, bool fill, Rect rect);
+
+  PrimitiveRenderer(Color color, bool fill, Circle circle);
+  PrimitiveRenderer(std::string name, Color color, bool fill, Circle circle);
+ 
+  bool fill;
+
   PrimitiveType type;
   Color color;
-  
-  Vector2 firstLinePoint;
-  Vector2 secondLinePoint;
+ 
+  Rect rect;
+  Circle circle;
+
+  Vec2 firstLinePoint;
+  Vec2 secondLinePoint;
 
 };
 
@@ -119,6 +122,8 @@ public:
   ImgRenderer(std::string name, std::string location, int layer);
   ImgRenderer();
 
+  Rect location;
+
   SDL_Texture* texture;
   SDL_FRect uv;
   int layer;
@@ -130,6 +135,8 @@ public:
   TextRenderer(std::string fontLocation, std::string text, int size, Color color, int layer);
   TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer);
   TextRenderer();
+
+  Rect location;
 
   bool editFont(std::string fontLocation);
   bool editSize(int size);
@@ -241,7 +248,7 @@ public:
   Component<ImgRenderer> ImgRendererComp;
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
-  Component<BasicCollider> BasicColliderComp;
+  Component<BasicBoxCollider> BasicBoxColliderComp;
   PhysicsBody PhysicsBodyComp;
 
   Entity();
