@@ -62,17 +62,29 @@ private:
 
 };
 
+class PlayerController{
+  public:
+  PlayerController();
+  bool enabled;
+};
+
 // basicBoxCollider
 class BasicBoxCollider : public Component{
   public:
-  
+
+  struct Collision {
+    bool hit;
+    Vec2 normal;
+    float depth;
+  };
+
   Rect colliderBox;
 
   bool renderCollider;
 
   std::function<void()> onCollision;
 
-  static bool isColliding(Rect e, Rect other);
+  static Collision isColliding(Rect e, Rect other);
 
   BasicBoxCollider(Rect colliderRect);
   BasicBoxCollider(std::string name);
@@ -245,11 +257,13 @@ public:
   std::string const GetName();
   
   Transform TransformComp;
+  PhysicsBody PhysicsBodyComp;
+  PlayerController PlayerControllerComp;
+
   Component<ImgRenderer> ImgRendererComp;
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
   Component<BasicBoxCollider> BasicBoxColliderComp;
-  PhysicsBody PhysicsBodyComp;
 
   Entity();
   Entity(class Transform transform);

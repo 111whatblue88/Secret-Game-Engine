@@ -3,6 +3,7 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
+#include <cmath>
 #include <SDL3/SDL_gpu.h>
 #include <algorithm>
 #include <cstdint>
@@ -216,6 +217,7 @@ PhysicsBody::PhysicsBody() {
   gravityEnabled = false;
   velocity = {0,0};
   angularVelocity = 0;
+  mass = 1;
 }
 void PhysicsBody::applyImpulse(Vec2 impulse) {
   this->velocity = this->velocity + impulse.scale(1/ this->mass);
@@ -227,35 +229,88 @@ BasicBoxCollider::BasicBoxCollider(Rect colliderRect) {
   this->SetName("defaultName");
   this->colliderBox = colliderRect;
   this->renderCollider = false;
+  this->onCollision = [&](){};
 }
 BasicBoxCollider::BasicBoxCollider(std::string name, Rect colliderRect) {
   this->SetName(name);
   this->colliderBox = colliderRect;
   this->renderCollider = false;
+  this->onCollision = [&](){};
 }
 BasicBoxCollider::BasicBoxCollider(std::string name) {
   this->SetName(name);
   this->colliderBox = {Vec2{0,0},0,0};
   this->renderCollider = false;
+  this->onCollision = [&](){};
 }
 BasicBoxCollider::BasicBoxCollider() {
   this->SetName("defaultName");
   this->colliderBox = {Vec2{0,0},0,0};
   this->renderCollider = false;
+  this->onCollision = [&](){};
 }
 
-bool BasicBoxCollider::isColliding(Rect e, Rect other) {
-  if (
-    e.pos.x < other.pos.x + other.width &&
-    e.pos.x + e.width > other.pos.x &&
-    e.pos.y < other.pos.y + other.height &&
-    e.pos.y + e.height > other.pos.y
-  ) {
-    return true;
-  } else {
-    return false;
+BasicBoxCollider::Collision BasicBoxCollider::isColliding(Rect a, Rect b) {
+
+  Collision result{};
+
+  float aLeft   = a.pos.x;
+  float aRight  = a.pos.x + a.width;
+  float aTop    = a.pos.y;
+  float aBottom = a.pos.y + a.height;
+
+  float bLeft   = b.pos.x;
+  float bRight  = b.pos.x + b.width;
+  float bTop    = b.pos.y;
+  float bBottom = b.pos.y + b.height;
+
+  float overlapLeft   = aRight - bLeft;
+  float overlapRight  = bRight - aLeft;
+  float overlapTop    = aBottom - bTop;
+  float overlapBottom = bBottom - aTop;
+
+  if (overlapLeft <= 0 ||
+      overlapRight <= 0 ||
+      overlapTop <= 0 ||
+      overlapBottom <= 0)
+  {
+      return result;
   }
+
+  result.hit = true;
+
+  float minOverlapX =
+      (overlapLeft < overlapRight)
+      ? overlapLeft
+      : -overlapRight;
+
+  float minOverlapY =
+      (overlapTop < overlapBottom)
+      ? overlapTop
+      : -overlapBottom;
+
+  if (abs(minOverlapX) < abs(minOverlapY)){
+    result.depth = abs(minOverlapX);
+    result.normal = {
+        minOverlapX < 0 ? -1.0f : 1.0f,
+        0.0f
+    };
+  }
+  else{
+    result.depth = abs(minOverlapY);
+    result.normal = {
+        0.0f,
+        minOverlapY < 0 ? -1.0f : 1.0f
+    };
+  }
+
+  return result;
 };
+
+PlayerController::PlayerController() {
+  enabled = false;
+}
+
 
 // Entity struct
 bool Entity::SetName(std::string name) {
@@ -405,47 +460,67 @@ bool EntitySys::update() {
       if (E.second.PhysicsBodyComp.gravityEnabled) {
         E.second.PhysicsBodyComp.velocity = E.second.PhysicsBodyComp.velocity + GRAVITY.scale(core::Engine::deltaTime());
       }
-
       E.second.TransformComp.pos = E.second.TransformComp.pos + E.second.PhysicsBodyComp.velocity;
     }
 
     if (E.second.BasicBoxColliderComp.has()) {
       for (auto& BC : E.second.BasicBoxColliderComp.getComponentList()) {
         for (auto& other : EList) {
+
           if (E.first == other.first) {
             continue;
           }
-          
           for (auto& otherBC : other.second.BasicBoxColliderComp.getComponentList()) {
 
-            Rect thisT = {(E.second.TransformComp.pos + BC.second.colliderBox.pos), BC.second.colliderBox.width, BC.second.colliderBox.height};
-            Rect otherT = {(other.second.TransformComp.pos + otherBC.second.colliderBox.pos), otherBC.second.colliderBox.width, otherBC.second.colliderBox.height};
+            Rect thisRect = {(E.second.TransformComp.pos+BC.second.colliderBox.pos), BC.second.colliderBox.width, BC.second.colliderBox.height};
+            Rect otherRect = {(other.second.TransformComp.pos+otherBC.second.colliderBox.pos), otherBC.second.colliderBox.width, otherBC.second.colliderBox.height};
 
-            if (BasicBoxCollider::isColliding(thisT, otherT)) {
+            BasicBoxCollider::Collision collision = BasicBoxCollider::isColliding(thisRect, otherRect);
+            if (collision.hit) {
 
               if (E.second.PhysicsBodyComp.isStatic) {
+                continue;
+              }
 
-                other.second.PhysicsBodyComp.velocity.x = -(other.second.PhysicsBodyComp.velocity.x);
-                other.second.TransformComp.pos = other.second.TransformComp.pos + other.second.PhysicsBodyComp.velocity; 
+              if (!other.second.PhysicsBodyComp.isStatic) {
+                float correction = collision.depth * 0.5f;
 
-                if (!BasicBoxCollider::isColliding(thisT, otherT)) {
-                  break;
-                }
+                E.second.TransformComp.pos.x -= collision.normal.x * correction;
+                E.second.TransformComp.pos.y -= collision.normal.y * correction;
 
-                other.second.PhysicsBodyComp.velocity.x = -(other.second.PhysicsBodyComp.velocity.x);
-
-                other.second.PhysicsBodyComp.velocity.y = -(other.second.PhysicsBodyComp.velocity.y);
-                other.second.TransformComp.pos = other.second.TransformComp.pos + other.second.PhysicsBodyComp.velocity; 
-
-                if (!BasicBoxCollider::isColliding(thisT, otherT)) {
-                  break;
-                }
-
-                other.second.PhysicsBodyComp.velocity.x = -(other.second.PhysicsBodyComp.velocity.x);
-                other.second.PhysicsBodyComp.velocity.y = -(other.second.PhysicsBodyComp.velocity.y);
+                other.second.TransformComp.pos.x += collision.normal.x * correction;
+                other.second.TransformComp.pos.y += collision.normal.y * correction;
+              } else {
+                E.second.TransformComp.pos.x -= collision.normal.x * collision.depth;
+                E.second.TransformComp.pos.y -= collision.normal.y * collision.depth;
 
               }
-            }
+
+              if (collision.normal.x != 0) { 
+                if (E.second.PlayerControllerComp.enabled) {
+                  E.second.PhysicsBodyComp.velocity.x = 0;
+                } else {
+                E.second.PhysicsBodyComp.velocity.x = -(E.second.PhysicsBodyComp.velocity.x);
+                }
+              }
+
+              if (collision.normal.y != 0) {
+                if (E.second.PlayerControllerComp.enabled) {
+                  E.second.PhysicsBodyComp.velocity.y = 0;
+                } else {
+                E.second.PhysicsBodyComp.velocity.y = -(E.second.PhysicsBodyComp.velocity.y);
+                }
+              }
+
+              BC.second.onCollision();
+              otherBC.second.onCollision();
+
+              } else {
+                continue;
+              }
+
+
+
           }
         }
       }
