@@ -11,9 +11,11 @@ InputSys::Keys InputSys::keys = {
 
   KeyState::NONE, 
   KeyState::NONE, 
+  KeyState::NONE, 
+  KeyState::NONE, 
 
   KeyState::NONE, 
-  KeyState::NONE, 
+
   KeyState::NONE, 
   KeyState::NONE, 
   KeyState::NONE, 
@@ -29,6 +31,7 @@ bool InputSys::Input() {
   resetKey(keys.A); 
   resetKey(keys.S); 
   resetKey(keys.D); 
+  resetKey(keys.P); 
   resetKey(keys.ESC); 
   resetKey(keys.I); 
   resetKey(keys.K); 
@@ -66,6 +69,9 @@ bool InputSys::Input() {
           case SDLK_D: 
             keys.D = KeyState::PRESSED;
             break;
+          case SDLK_P: 
+            keys.P = KeyState::PRESSED;
+            break;
           case SDLK_I: 
             keys.I = KeyState::PRESSED;
             break;
@@ -100,6 +106,9 @@ bool InputSys::Input() {
             break;
           case SDLK_D: 
             keys.D = KeyState::RELEASED;
+            break;
+          case SDLK_P: 
+            keys.P = KeyState::RELEASED;
             break;
           case SDLK_I: 
             keys.I = KeyState::RELEASED;

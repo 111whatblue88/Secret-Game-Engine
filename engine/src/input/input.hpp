@@ -26,6 +26,8 @@ namespace input {
       KeyState S;
       KeyState D;
 
+      KeyState P;
+
       KeyState I;
       KeyState K;
 
