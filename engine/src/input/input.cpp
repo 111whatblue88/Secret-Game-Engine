@@ -8,6 +8,12 @@ namespace huge {
 namespace input {
 
 InputSys::Keys InputSys::keys = {
+
+  KeyState::NONE, 
+  KeyState::NONE, 
+
+  KeyState::NONE, 
+  KeyState::NONE, 
   KeyState::NONE, 
   KeyState::NONE, 
   KeyState::NONE, 
@@ -24,6 +30,11 @@ bool InputSys::Input() {
   resetKey(keys.S); 
   resetKey(keys.D); 
   resetKey(keys.ESC); 
+  resetKey(keys.I); 
+  resetKey(keys.K); 
+
+  resetKey(keys.num1); 
+  resetKey(keys.num2); 
 
   while (SDL_PollEvent(&m_input)) {
 
@@ -36,6 +47,13 @@ bool InputSys::Input() {
       }
       case SDL_EVENT_KEY_DOWN: {
         switch (m_input.key.key) {
+          case SDLK_1: 
+            keys.num1 = KeyState::PRESSED;
+            break;
+          case SDLK_2: 
+            keys.num2 = KeyState::PRESSED;
+            break;
+
           case SDLK_W: 
             keys.W = KeyState::PRESSED;
             break;
@@ -48,6 +66,12 @@ bool InputSys::Input() {
           case SDLK_D: 
             keys.D = KeyState::PRESSED;
             break;
+          case SDLK_I: 
+            keys.I = KeyState::PRESSED;
+            break;
+          case SDLK_K: 
+            keys.K = KeyState::PRESSED;
+            break;
 
           case SDLK_ESCAPE: 
             keys.ESC = KeyState::PRESSED;
@@ -57,6 +81,14 @@ bool InputSys::Input() {
       }
       case SDL_EVENT_KEY_UP: {
         switch (m_input.key.key) {
+
+          case SDLK_1: 
+            keys.num1 = KeyState::RELEASED;
+            break;
+          case SDLK_2: 
+            keys.num2 = KeyState::RELEASED;
+            break;
+
           case SDLK_W: 
             keys.W = KeyState::RELEASED;
             break;
@@ -69,7 +101,12 @@ bool InputSys::Input() {
           case SDLK_D: 
             keys.D = KeyState::RELEASED;
             break;
-
+          case SDLK_I: 
+            keys.I = KeyState::RELEASED;
+            break;
+          case SDLK_K: 
+            keys.K = KeyState::RELEASED;
+            break;
           case SDLK_ESCAPE: 
             keys.ESC = KeyState::RELEASED;
             break;

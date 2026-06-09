@@ -460,7 +460,7 @@ bool EntitySys::update() {
       if (E.second.PhysicsBodyComp.gravityEnabled) {
         E.second.PhysicsBodyComp.velocity = E.second.PhysicsBodyComp.velocity + GRAVITY.scale(core::Engine::deltaTime());
       }
-      E.second.TransformComp.pos = E.second.TransformComp.pos + E.second.PhysicsBodyComp.velocity;
+      E.second.TransformComp.pos = E.second.TransformComp.pos + E.second.PhysicsBodyComp.velocity.scale(core::Engine::deltaTime());
     }
 
     if (E.second.BasicBoxColliderComp.has()) {
