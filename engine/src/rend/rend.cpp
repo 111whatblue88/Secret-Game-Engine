@@ -2,6 +2,7 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
+#include <SDL3/SDL_init.h>
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_render.h>
 #include <format>

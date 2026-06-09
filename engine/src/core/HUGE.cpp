@@ -56,6 +56,8 @@ bool Engine::init(int width, int height, std::string name) {
     }
   }
 
+  audio::AudioSys::Init();
+
   if (rend::RenderSys::m_renderer.init(width, height, name)) {
     return false;
   }

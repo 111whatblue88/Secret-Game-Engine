@@ -3,16 +3,20 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
+#include <SDL3/SDL_audio.h>
+#include <SDL3/SDL_oldnames.h>
 #include <cmath>
 #include <SDL3/SDL_gpu.h>
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <string>
 #include <sys/types.h>
 
 using namespace huge;
 using namespace ecs;
 using namespace rend;
+using namespace audio;
 
 using ID = uint32_t;
 
@@ -210,6 +214,41 @@ bool TextRenderer::editColor(Color color) {
     return true;
   }
 }
+
+
+bool AudioEmitter::playAudio() {
+  if (AudioSys::PlayAudio(stream->stream)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+bool AudioEmitter::pauseAudio() {
+  if (AudioSys::PauseAudio(stream->stream)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+AudioEmitter::~AudioEmitter() {
+  SDL_DestroyAudioStream(stream->stream);
+  SDL_free(stream->audioData);
+  free(stream);
+}
+AudioEmitter::AudioEmitter() {
+  SetName("defaultName");
+  this->stream = new audio::AudioSys::audioStream();
+}
+AudioEmitter::AudioEmitter(std::string WAVLocation) {
+  SetName("defaultName");
+  this->stream=audio::AudioSys::audioStreamFromWAV(WAVLocation);  
+}
+AudioEmitter::AudioEmitter(std::string name, std::string WAVLocation) {
+  SetName(name);
+  this->stream=audio::AudioSys::audioStreamFromWAV(WAVLocation);  
+}
+  
 
 // Physics Body
 PhysicsBody::PhysicsBody() {

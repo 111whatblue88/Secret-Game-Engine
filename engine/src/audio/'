@@ -1,0 +1,51 @@
+
+#include "audio.hpp"
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../general/general.hpp"
+#include "../HUGE.hpp"
+#include <SDL3/SDL_audio.h>
+#include <SDL3/SDL_init.h>
+
+using namespace huge;
+using namespace audio;
+
+bool AudioSys::Init() {
+  if (!SDL_WasInit(SDL_INIT_AUDIO)) {
+    if (!SDL_Init(SDL_INIT_AUDIO)) {
+      return false;
+    } 
+  }
+  return true;
+}
+
+SDL_AudioStream AudioSys::PlayAudio(std::string WAVLocation) {
+
+  SDL_AudioSpec audioSpec;
+     
+  Uint8 *audioData = NULL;
+  Uint32 audioLen = 0;
+  
+  if (!SDL_LoadWAV(WAVLocation.c_str(), &audioSpec,&audioData, &audioLen)) {
+
+    console::COutput::logCustom("AUDIO", "failed to load WAV file", console::COutput::MsgColor::red);
+    console::COutput::logSDLError();
+
+    return;
+  }
+
+  SDL_AudioStream* stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audioSpec, NULL,NULL);
+
+  if (!stream) {
+    console::COutput::logCustom("AUDIO", "failed to create audio stream", console::COutput::MsgColor::red);
+    console::COutput::logSDLError();
+
+    return false;
+  }
+
+  SDL_ResumeAudioStreamDevice(stream);
+
+
+  return true;
+}
+
+

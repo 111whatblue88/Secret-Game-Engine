@@ -4,7 +4,9 @@
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../general/general.hpp"
+#include "../audio/audio.hpp"
 
+#include <SDL3/SDL_audio.h>
 #include <algorithm>
 #include <cstddef>
 #include <ctime>
@@ -66,6 +68,25 @@ class PlayerController{
   public:
   PlayerController();
   bool enabled;
+};
+
+// audioEmitter
+class AudioEmitter : public Component {
+public:
+ 
+  bool playAudio();
+  bool pauseAudio();
+
+  ~AudioEmitter();
+
+  AudioEmitter();
+  AudioEmitter(std::string WAVLocation);
+  AudioEmitter(std::string name, std::string WAVLocation);
+
+private:
+  
+  audio::AudioSys::audioStream* stream;
+
 };
 
 // basicBoxCollider
@@ -264,6 +285,7 @@ public:
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
   Component<BasicBoxCollider> BasicBoxColliderComp;
+  Component<AudioEmitter> AudioEmitterComp;
 
   Entity();
   Entity(class Transform transform);
