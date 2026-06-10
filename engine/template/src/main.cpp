@@ -1,11 +1,19 @@
-#include "../../../engine/src/HUGE.hpp"
+#include <string>
+
+#include "../../../engine/src/secret.hpp"
 
 int main() {
 
-  using namespace huge;
+  using namespace secret;
+  using namespace input;
+  using namespace ecs;
+  using namespace rend;
+  using namespace console;
   using ID = uint32_t;
 
-  core::Engine::init(1600, 1000, "testgame");
+  const std::string GAMENAME = "template";
+
+  core::Engine::init(500, 500, GAMENAME);
   core::Engine::options.fpsCap = 60;
 
   // Update - Called every frame
@@ -16,6 +24,3 @@ int main() {
   core::Engine::run();
 
 }
-
-
-

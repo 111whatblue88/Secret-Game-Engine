@@ -94,7 +94,7 @@ bool Engine::run() {
     m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
     lastFrameTime = currentFrameTime;
 
-    huge::input::InputSys::Input();
+    secret::input::InputSys::Input();
 
     ecs::EntitySys::update();
     update();

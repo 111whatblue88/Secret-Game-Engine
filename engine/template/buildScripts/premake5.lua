@@ -13,12 +13,12 @@ project "TemplateProject"
       "-Wl,-rpath,'$$ORIGIN/../lib'"
   }
   libdirs { 
-    "../../../build/HUGE/lib", 
+    "../../../build/secret/lib", 
     "../../../engine/vendored/SDL/src/build/",
     "../../../engine/vendored/SDL/src_ttf/build/",
     "../../../engine/vendored/SDL/src_image/build/",
   } 
-  links { "HUGE", "SDL3", "SDL3_ttf", "SDL3_image" }
+  links { "secret", "SDL3", "SDL3_ttf", "SDL3_image" }
 
   files { "../src/**.cpp" }
 
