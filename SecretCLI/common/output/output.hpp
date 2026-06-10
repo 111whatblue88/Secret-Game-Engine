@@ -4,7 +4,7 @@
 #include <string>
 
 namespace secret {
-namespace helpers {
+namespace output {
  
   enum class color {
     red, green, blue, white

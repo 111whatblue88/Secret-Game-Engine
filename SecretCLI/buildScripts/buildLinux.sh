@@ -1,14 +1,17 @@
 #!/bin/bash
+cd ..
 echo "starting premake script..."
 premake5 gmake
 wait
-cd ../build/secretCLI/
+cd build/SecretCLI/
 echo "starting make script..."
 make
 wait
-cd ../parser/ 
+cd ../SecretCLIParser/ 
 echo "starting make script..."
 make
 wait
-cd ../bin
-./secretCLI
+cd ../SecretLIB/ 
+echo "starting make script..."
+make
+wait
