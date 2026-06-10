@@ -1,7 +1,7 @@
-# HUGE 
-## Huge Unused Game-Engine
+# Secret Game Engine
+## Shh!
 
-Huge is a small game engine I'm developing, it's very bad and very broken
+Secret is a small game engine I'm developing, it's very bad and very broken
 
 ## Building
 ### MacOS/Windows
@@ -22,7 +22,7 @@ I have not made documentation for this project yet, you are on your own.
 
 ### Extra Info
 You might be thinking "why is there so many .sh files?". Well eventually everything that is 
-currently managed by shell files will be managed by the hugeCLI, which will be a small CLI program which
+currently managed by shell files will be managed by the secretCLI, which will be a small CLI program which
 manages small automation engine tasks, like project management and compilation.
 
 You might also be thinking "wow, this readme sucks", that means its working.
