@@ -1,7 +1,20 @@
 -- premake5.lua
 workspace "secret"
   configurations { "Debug", "Release" }
-  location "../build"
+  location "../build/bin"
+
+project "secret"
+  kind "ConsoleApp"
+  language "C++"
+  location "../build/parser"
+  targetdir "../build/parser/bin"
+
+  files { "../parser/**" }
+
+  includedirs
+  {
+    "../../engine/vendored/argparse/include/**",
+  }
 
 project "secretCLI"
   kind "ConsoleApp"
@@ -9,11 +22,10 @@ project "secretCLI"
   location "../build/secretCLI"
   targetdir "../build/bin"
 
-  files { "../src/**.hpp","../src/**.cpp" }
+  files { "../CLI/**.hpp","../CLI/**.cpp" }
 
   includedirs
   {
-    "../src",
-    "../src/parser",
-    "../src/printingTools"
+    "../CLI",
+    "../CLI/printingTools"
   }

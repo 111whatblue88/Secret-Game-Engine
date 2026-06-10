@@ -1,5 +1,11 @@
 #include "../secretCLI.hpp"
 
+#include <cstdio>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <array>
 #include <format>
 #include <cstdint>
 #include <functional>
@@ -12,6 +18,27 @@ using namespace secret;
 using namespace helpers;
 
 using json = nlohmann::json;
+
+void helpers::execCommand(const char* cmd) {
+  std::string command = std::format("{} 2>&1", cmd);
+    FILE* pipe = popen(command.c_str(), "r");
+    if (!pipe) {
+        return;
+    }
+
+    std::array<char, 256> buffer;
+
+    while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
+        std::cout << buffer.data();
+        std::cout.flush();
+    }
+
+    int status = pclose(pipe);
+
+    return;
+}
+
+
 
 void helpers::printColor(std::string string, color color) {
   switch (color) {
@@ -47,7 +74,7 @@ void helpers::printSplash(color color) {
 
 
 
-  std::ifstream f("../cliInfo.json");
+  std::ifstream f("../../cliInfo.json");
   json cliInfo = json::parse(f);
 
   helpers::clearTerm();

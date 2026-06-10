@@ -10,6 +10,8 @@ namespace helpers {
     red, green, blue, white
   };
 
+  void execCommand(const char* cmd);
+
   void printColor(std::string string, color color);
   void clearTerm();
   void printSplash(color color);
