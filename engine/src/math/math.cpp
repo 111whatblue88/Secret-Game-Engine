@@ -1,11 +1,11 @@
 
 #include "math.hpp"
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 
 #include <cmath>
 #include <vector>
 
-namespace huge {
+namespace secret {
 namespace math {
 
 float vectorLength(Vec2 a) {

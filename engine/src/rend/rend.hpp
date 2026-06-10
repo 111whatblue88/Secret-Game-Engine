@@ -11,7 +11,7 @@
 #include <string>
 #include <map>
 
-namespace huge {
+namespace secret {
 namespace rend {
 
 
@@ -70,7 +70,7 @@ public:
   };
 
   struct PositionalData {
-    huge::Vec2 pos;
+    Vec2 pos;
     Vec2 pos2;
   };
   struct SizeData {

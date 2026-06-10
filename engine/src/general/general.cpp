@@ -1,7 +1,7 @@
 
 #include "general.hpp"
 
-using namespace huge;
+using namespace secret;
 
 Vec2::Vec2() {
   x=0;

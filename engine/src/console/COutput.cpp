@@ -1,12 +1,12 @@
 #include "COutput.hpp"
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 
 #include <format>
 #include <cstring>
 #include <string>
 #include <iostream>
 
-using namespace huge;
+using namespace secret ;
 using namespace console;
 
 void COutput::logError(std::string errMsg) {

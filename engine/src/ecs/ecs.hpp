@@ -19,7 +19,7 @@
 #include <cstdint>
 #include <unordered_map>
 
-namespace huge {
+namespace secret {
 namespace ecs {
 
 class Entity;

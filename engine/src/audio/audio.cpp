@@ -2,11 +2,11 @@
 #include "audio.hpp"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../general/general.hpp"
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 #include <SDL3/SDL_audio.h>
 #include <SDL3/SDL_init.h>
 
-using namespace huge;
+using namespace secret;
 using namespace audio;
 
 AudioSys::audioStream::audioStream() {

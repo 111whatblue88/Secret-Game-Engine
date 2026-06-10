@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace huge {
+namespace secret {
 struct Vec2 {
   
   float x;

@@ -14,7 +14,7 @@
 #include <string>
 #include <functional>
 
-namespace huge {
+namespace secret {
 namespace core {
 
 class Engine {

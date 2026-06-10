@@ -1,5 +1,5 @@
 #include "ecs.hpp"
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
@@ -13,7 +13,7 @@
 #include <string>
 #include <sys/types.h>
 
-using namespace huge;
+using namespace secret;
 using namespace ecs;
 using namespace rend;
 using namespace audio;

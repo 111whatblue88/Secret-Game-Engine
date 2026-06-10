@@ -1,4 +1,4 @@
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <unordered_map>
 
-namespace huge {
+namespace secret {
 namespace rend {
 
 using namespace console;

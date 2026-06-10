@@ -1,15 +1,15 @@
 -- premake5.lua
-workspace "HUGE"
+workspace "secret"
   configurations { "Debug", "Release" }
   location "../build" 
 
-project "HUGE"
+project "secret"
 
   kind "SharedLib"
   language "C++"
 
-  location "../build/HUGE" 
-  targetdir "../build/HUGE/lib"
+  location "../build/secret" 
+  targetdir "../build/secret/lib"
 
   libdirs { "../engine/vendored/SDL/src/build", "../engine/vendored/SDL/src_image/build", "../engine/vendored/SDL/src_ttf/build" }
   links { "SDL3", "SDL3_ttf", "SDL3_image" }

@@ -3,7 +3,7 @@
 
 #include "../general/general.hpp"
 
-namespace huge{
+namespace secret {
 namespace math {
   
   float vectorLength(Vec2 a);

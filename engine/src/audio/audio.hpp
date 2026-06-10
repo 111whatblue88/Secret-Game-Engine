@@ -6,7 +6,7 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../general/general.hpp"
 
-namespace huge {
+namespace secret {
 namespace audio {
 
   class AudioSys {

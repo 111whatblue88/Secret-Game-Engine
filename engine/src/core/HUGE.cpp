@@ -1,4 +1,4 @@
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 
 #include <format>
 #include <SDL3/SDL_stdinc.h>
@@ -8,7 +8,7 @@
 #include <string>
 #include <fstream>
 
-namespace huge {
+namespace secret {
 namespace core {
 
 using json = nlohmann::json;

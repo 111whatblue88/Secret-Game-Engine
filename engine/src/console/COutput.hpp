@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace huge {
+namespace secret {
 namespace console {
 
 class COutput {

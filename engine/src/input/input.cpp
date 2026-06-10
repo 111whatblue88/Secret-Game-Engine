@@ -1,10 +1,10 @@
-#include "../HUGE.hpp"
+#include "../secret.hpp"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_oldnames.h>
 
 
-namespace huge {
+namespace secret {
 namespace input {
 
 InputSys::Keys InputSys::keys = {
