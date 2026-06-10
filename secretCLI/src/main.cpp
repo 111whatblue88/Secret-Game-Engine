@@ -1,33 +1,26 @@
-#include "../../engine/src/elogine.hpp"
+#include "secretCLI.hpp"
 
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <functional>
 
-using namespace elogine::terminal;
-
-//Commands Commands("fjds");
+using namespace secret;
+using namespace helpers;
 
 int main() {
 
-  Output::clearTerminal();
-  //Commands.printSplash(); 
+  std::string ans;
 
+  clearTerm();
+  printSplash(color::white);
 
-  std::string input;
-  std::vector<std::string> tokens;
+  do {
 
-  /*
-  while (!Commands.quit) {
+    printColor("> ", color::blue);
+    std::getline(std::cin >> std::ws, ans);
 
-    input = Input::getInput(Output::colorString(">", Output::Color::white));
-    tokens = Input::tokenize(input);
-
-    Commands.processCommands(tokens);
-
-  }
-  */
+  } while (ans != "quit");
 
 }
 
