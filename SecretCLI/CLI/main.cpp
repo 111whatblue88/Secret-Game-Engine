@@ -12,13 +12,7 @@ using namespace filesystem;
 
 int main() {
 
-  std::cout << "hello?";
-
-  locateToEngineRoot();
-
-  /*
-
-  std::string input;
+  std::string input = "";
 
   clearTerm();
   printSplash(color::blue);
@@ -28,18 +22,21 @@ int main() {
     printColor("> ", color::blue);
     std::getline(std::cin >> std::ws, input);
 
+    if (input == "quit" || input == "exit") {
+      return 0;
+    }
     if (input == "clear") {
       clearTerm();
       continue;
     }
-    if (input == "quit" || "exit") {
-      return 0;
-    }
 
+    locateToEngineRoot();
     filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser {}", input).c_str());
 
+
+
   }
-  */
+  
 }
 
 

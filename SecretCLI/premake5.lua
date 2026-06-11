@@ -1,15 +1,7 @@
 -- premake5.lua
 workspace "Secret"
   configurations { "Debug", "Release" }
-  location "../build"
-
-project "SecretLIB"
-  kind "SharedLib"
-  language "C++"
-  location "build/SecretLIB"
-  targetdir "build/lib"
-
-  files { "common/**" }
+  location "build"
 
 project "SecretCLIParser"
   kind "ConsoleApp"
@@ -17,10 +9,7 @@ project "SecretCLIParser"
   location "build/SecretCLIParser"
   targetdir "build/SecretCLIParser/bin"
 
-  files { "CLIParser/**" }
-  
-  libdirs { "build/lib/**" }
-  links { "SecretLIB" }
+  files { "CLIParser/**", "common/**" }
   
 
 project "SecretCLI"
@@ -29,10 +18,7 @@ project "SecretCLI"
   location "build/SecretCLI"
   targetdir "./"
 
-  libdirs { "build/lib/**" }
-  links { "SecretLIB" }
-
-  files { "CLI/**","CLI/**" }
+  files { "CLI/**", "common/**" }
 
 
 

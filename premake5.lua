@@ -1,25 +1,25 @@
 -- premake5.lua
 workspace "secret"
   configurations { "Debug", "Release" }
-  location "../build" 
+  location "build" 
 
 project "secret"
 
   kind "SharedLib"
   language "C++"
 
-  location "../build/secret" 
-  targetdir "../build/secret/lib"
+  location "build/secret" 
+  targetdir "build/secret/lib"
 
-  libdirs { "../engine/vendored/SDL/src/build", "../engine/vendored/SDL/src_image/build", "../engine/vendored/SDL/src_ttf/build" }
+  libdirs { "engine/vendored/SDL/src/build", "engine/vendored/SDL/src_image/build", "engine/vendored/SDL/src_ttf/build" }
   links { "SDL3", "SDL3_ttf", "SDL3_image" }
 
   filter "configurations:Debug"
     defines { "DEBUG" }
-    files { "../engine/debug/**.hpp", "../engine/debug/**.cpp" }
+    files { "engine/src/**.hpp", "engine/src/**.cpp" }
 
   filter "configurations:Release"
     defines { "NDEBUG" }
     optimize "On"
-    files { "../engine/src/**.hpp", "../engine/src/**.cpp" }
+    files { "engine/src/**.hpp", "engine/src/**.cpp" }
 

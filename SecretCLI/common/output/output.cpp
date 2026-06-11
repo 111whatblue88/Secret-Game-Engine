@@ -44,7 +44,6 @@ void output::printSplash(color color) {
   std::ifstream f("SecretCLI/cliInfo.json");
   json cliInfo = json::parse(f);
 
-  output::clearTerm();
   output::printColor("   ____                __  _______   ____\n", color::white);
   output::printColor("  / __/__ ___________ / /_/ ___/ /  /  _/\n", color::white);
   output::printColor(" _\\ \\/ -_) __/ __/ -_) __/ /__/ /___/ / \n", color::white);

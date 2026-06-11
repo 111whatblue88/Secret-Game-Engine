@@ -11,7 +11,7 @@ using namespace secret;
 using namespace filesystem;
 
 void filesystem::execCommand(const char* cmd) {
-  std::string command = std::format("{} 2>&1", cmd);
+  std::string command = std::format("stdbuf -oL {} 2>&1", cmd);
     FILE* pipe = popen(command.c_str(), "r");
     if (!pipe) {
         return;
@@ -31,9 +31,9 @@ void filesystem::execCommand(const char* cmd) {
 
 void filesystem::locateToEngineRoot() {
   while (true) {
-    if (fs::current_path() == "Secret Game Engine") {
+    if (fs::current_path().filename() == "Secret-Game-Engine") {
       return;
     }
-    fs::current_path("../");
+    fs::current_path("..");
   }
 }

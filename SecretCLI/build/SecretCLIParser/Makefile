@@ -37,9 +37,9 @@ ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS)
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += ../lib/libSecretLIB.so
-LDDEPS += ../lib/libSecretLIB.so
-ALL_LDFLAGS += $(LDFLAGS) -Wl,-rpath,'$$ORIGIN/../../lib' -s
+LIBS +=
+LDDEPS +=
+ALL_LDFLAGS += $(LDFLAGS) -s
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -66,8 +66,12 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/fs.o
 GENERATED += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/output.o
+OBJECTS += $(OBJDIR)/fs.o
 OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/output.o
 
 # Rules
 # #############################################
@@ -132,6 +136,12 @@ endif
 # #############################################
 
 $(OBJDIR)/main.o: ../../CLIParser/main.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/fs.o: ../../common/filesystem/fs.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/output.o: ../../common/output/output.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
