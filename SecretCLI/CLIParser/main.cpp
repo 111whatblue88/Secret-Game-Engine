@@ -57,8 +57,11 @@ int main(int argc, char *argv[]) {
   projectInfo.add_argument("projectName");
   argparse::ArgumentParser projectCreate("create");
   projectCreate.add_argument("projectName");
+  argparse::ArgumentParser projectRemove("remove");
+  projectRemove.add_argument("projectName");
   argparse::ArgumentParser projectList("list");
 
+  projectParser.add_subparser(projectRemove);
   projectParser.add_subparser(projectList);
   projectParser.add_subparser(projectCreate);
   projectParser.add_subparser(projectBuild);
@@ -192,7 +195,26 @@ int main(int argc, char *argv[]) {
       printColor("Successfully created project\n", color::green);
 
     }
+    if (projectParser.is_subcommand_used("remove")) {
+      locateToEngineRoot();
 
+      std::string projectName = projectRemove.get<std::string>("projectName");
+
+      if (!fs::exists(fs::current_path()/"projects")) {
+        printColor("No projects.. Use \"project create {NAME}\" to create a project\n", color::red);
+        return 1;
+      }
+      fs::current_path(fs::current_path()/"projects");
+      if (!fs::exists(fs::current_path()/projectName)) {
+        printColor("Given project does not exist\n", color::red);
+        return 1;
+      }
+
+      fs::remove_all(fs::current_path()/projectName);
+
+      printColor("Project files deleted successfully\n", color::green);
+
+    }
     if (projectParser.is_subcommand_used("build")) {
       locateToEngineRoot();
       std::string projectName = projectBuild.get<std::string>("projectName");
@@ -210,6 +232,11 @@ int main(int argc, char *argv[]) {
       printColor("Building project...\n", color::green);
 
       fs::current_path(fs::current_path()/projectName);
+
+      if (fs::exists(fs::current_path()/"build")) {
+        fs::remove_all(fs::current_path()/"build");
+      }
+
       filesystem::execCommand("premake5 gmake");
       fs::current_path(fs::current_path()/"build");
       if (projectBuild["--release"] == true) {
@@ -280,7 +307,10 @@ int main(int argc, char *argv[]) {
     if (engineParser.is_subcommand_used("build")) {
       locateToEngineRoot();
       if (!engineBuild.is_subcommand_used("all")) {
-       
+
+        if (fs::exists(fs::current_path()/"build")) {
+          fs::remove_all(fs::current_path()/"build");
+        }
 
         filesystem::execCommand("premake5 gmake");
         fs::current_path(fs::current_path()/"build");
