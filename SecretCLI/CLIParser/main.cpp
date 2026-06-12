@@ -104,8 +104,8 @@ int main(int argc, char *argv[]) {
 
       if (!fs::exists(fs::current_path()/"projects")) {
         fs::create_directory(fs::current_path()/"projects");
+        printColor("projects folder does not exist, creating directory...\n", color::white);
       }
-      printColor("projects folder does not exist, creating directory...\n", color::white);
       if (fs::exists(fs::current_path()/"projects"/projectName)) {
         printColor("Project with the same name already exists\n", color::red);
         return 1;
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
       std::ofstream outFile2("src/main.cpp");
       outFile2 << sourceFile;
 
-      std::ifstream infoFileStream("src/main.cpp");
+      std::ifstream infoFileStream("projectInfo.json");
       std::string infoFile(
         (std::istreambuf_iterator<char>(infoFileStream)),
         std::istreambuf_iterator<char>()
@@ -174,7 +174,7 @@ int main(int argc, char *argv[]) {
         pos += projectName.length();
       }
 
-      std::ofstream infoFileWrite("src/main.cpp");
+      std::ofstream infoFileWrite("projectInfo.json");
       infoFileWrite << infoFile;
 
       printColor("Successfully created project\n", color::green);
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
       fs::current_path(fs::current_path()/"build");
       filesystem::execCommand("make");
 
-      printColor("Project built", color::green);
+      printColor("Project built\n", color::green);
 
     } 
     if (projectParser.is_subcommand_used("run")) {
