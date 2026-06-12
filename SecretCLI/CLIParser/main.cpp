@@ -42,6 +42,12 @@ int main(int argc, char *argv[]) {
 
   argparse::ArgumentParser projectBuild("build");
   projectBuild.add_argument("projectName");
+  projectBuild.add_argument("--release")
+    .default_value(false)
+    .implicit_value(true);
+  projectBuild.add_argument("--debug")
+    .default_value(false)
+    .implicit_value(true);
   argparse::ArgumentParser projectRun("run");
   projectRun.add_argument("projectName");
   projectRun.add_argument("--suppress")
@@ -62,6 +68,12 @@ int main(int argc, char *argv[]) {
   // Engine Parsing
   argparse::ArgumentParser engineParser("engine");
   argparse::ArgumentParser engineBuild("build");
+  engineBuild.add_argument("--release")
+    .default_value(false)
+    .implicit_value(true);
+  engineBuild.add_argument("--debug")
+    .default_value(false)
+    .implicit_value(true);
   argparse::ArgumentParser engineBuildAll("all");
   engineBuild.add_subparser(engineBuildAll);
   argparse::ArgumentParser engineInfo("info");
@@ -200,7 +212,12 @@ int main(int argc, char *argv[]) {
       fs::current_path(fs::current_path()/projectName);
       filesystem::execCommand("premake5 gmake");
       fs::current_path(fs::current_path()/"build");
-      filesystem::execCommand("make");
+      if (projectBuild["--release"] == true) {
+
+        filesystem::execCommand("make config=release");
+      } else {
+      filesystem::execCommand("make config=debug");
+      }
 
       printColor("Project built\n", color::green);
 
@@ -267,7 +284,11 @@ int main(int argc, char *argv[]) {
 
         filesystem::execCommand("premake5 gmake");
         fs::current_path(fs::current_path()/"build");
-      filesystem::execCommand("make");
+        if (engineBuild["--release"] == true) {
+          filesystem::execCommand("make config=release");
+        } else {
+          filesystem::execCommand("make config=debug");
+        }
 
         return 0;
       }

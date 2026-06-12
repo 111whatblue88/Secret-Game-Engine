@@ -15,6 +15,18 @@
 #include <string>
 #include <functional>
 
+// macros
+
+#ifdef DEBUG
+// debug enabled
+#define RELEASEORDEBUG "DEBUG"
+#define debug_log(x, y) console::COutput::logCustom(std::format("DEBUG_{}", x), y, console::COutput::MsgColor::gray)
+#else
+// debug not enabled
+#define RELEASEORDEBUG "RELEASE"
+#define debug_log(x, y)
+#endif
+
 namespace secret {
 namespace core {
 

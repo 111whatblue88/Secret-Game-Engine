@@ -3,6 +3,7 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
+#include <format>
 #include <SDL3/SDL_audio.h>
 #include <SDL3/SDL_oldnames.h>
 #include <cmath>
@@ -380,9 +381,24 @@ Entity& EntitySys::CreateEntity(Transform transform) {
   m_entityList.emplace(m_entityCount, Entity(transform));
   return m_entityList[m_entityCount];
 }
+Entity& EntitySys::CreateEntity(std::string name, Transform transform) {
+  m_entityCount++;
+  m_entityList.emplace(m_entityCount, Entity(name, transform));
+  return m_entityList[m_entityCount];
+}
+Entity& findEntity(std::string name) {
+
+  for (auto it = EntitySys::GetEntityList().begin(); it != EntitySys::GetEntityList().end(); it++) {
+    if (it->second.GetName() == name) {
+      return EntitySys::GetEntityList().at(it->first);
+    }
+  }
+  return EntitySys::GetEntityList().at(0);
+}
 std::unordered_map<uint32_t, Entity>& EntitySys::GetEntityList() {
   return m_entityList;
 }
+
 bool EntitySys::update() {
   
   auto& EList = EntitySys::GetEntityList();

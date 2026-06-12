@@ -48,6 +48,10 @@ std::string COutput::resolveColor(MsgColor color) {
       return "\e[0m";
       break;
     }
+    case MsgColor::gray: {
+      return "\e[38;2;80;80;80m";
+      break;
+    }
   }
   return "";
 }

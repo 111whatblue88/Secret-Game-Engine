@@ -34,7 +34,7 @@ public:
 
 };
 
-// base Entity class 
+// base Component class 
 class Component {
 public:
 
@@ -253,7 +253,7 @@ private:
       }
       // this does NOTHING its just to suppress a warning. Do NOT call this function with an 
       // invalid component name
-      return m_components.at(1);
+      return m_components.at(0);
     }
 
     T& operator[](const uint32_t& ID) {
@@ -267,7 +267,7 @@ private:
       }
       // this does NOTHING its just to suppress a warning. Do NOT call this function with an 
       // invalid component name
-      return m_components.at(1);
+      return m_components.at(0);
     }
 
 
@@ -297,11 +297,14 @@ class EntitySys {
   public:
 
   static Entity& CreateEntity(Transform transform); 
+  static Entity& CreateEntity(std::string name, Transform transform); 
 
   static bool update();
 
   static std::unordered_map<uint32_t, Entity>& GetEntityList();
-  //static std::vector<uint32_t> getEntityComponentList();
+  static std::vector<uint32_t> getEntityComponentList();
+
+  static Entity& findEntity(std::string name);
 
   private:
   static std::unordered_map<uint32_t, Entity> m_entityList;

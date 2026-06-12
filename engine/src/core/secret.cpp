@@ -82,7 +82,8 @@ bool Engine::run() {
     json engineInfo = json::parse(f);
     COutput::logCustom("ENGINE", engineInfo["releaseName"]);
     COutput::logCustom("ENGINE", engineInfo["description"]);
-    COutput::logCustom("ENGINE", std::string("Ver.(RELEASE): ")+std::string(engineInfo["ver"]));
+    std::string version = engineInfo["ver"];
+    COutput::logCustom("ENGINE", std::format("Ver.({}): {}", RELEASEORDEBUG, version));
 
   } else {
     COutput::logCustom("ENGINE", "Exit request detected, aborting startup...", COutput::MsgColor::yellow);

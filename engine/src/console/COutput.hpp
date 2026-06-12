@@ -9,7 +9,7 @@ namespace console {
 class COutput {
 public:
   enum class MsgColor {
-    red, green, yellow, white, reset
+    red, green, yellow, white, gray,  reset
   };
 
   static void logError(std::string errMsg);
