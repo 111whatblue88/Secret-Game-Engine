@@ -1,5 +1,6 @@
 #include "../../engine/vendored/argparse/include/argparse/argparse.hpp"
 
+#include <algorithm>
 #include <complex>
 #include <cstdio>
 #include <iostream>
@@ -43,9 +44,17 @@ int main(int argc, char *argv[]) {
   projectBuild.add_argument("projectName");
   argparse::ArgumentParser projectRun("run");
   projectRun.add_argument("projectName");
+  projectRun.add_argument("--suppress")
+    .default_value(false)
+    .implicit_value(true);
   argparse::ArgumentParser projectInfo("info");
   projectInfo.add_argument("projectName");
+  argparse::ArgumentParser projectCreate("create");
+  projectCreate.add_argument("projectName");
+  argparse::ArgumentParser projectList("list");
 
+  projectParser.add_subparser(projectList);
+  projectParser.add_subparser(projectCreate);
   projectParser.add_subparser(projectBuild);
   projectParser.add_subparser(projectRun);
   projectParser.add_subparser(projectInfo);
@@ -74,6 +83,104 @@ int main(int argc, char *argv[]) {
   }
 
   if (program.is_subcommand_used("project")) {
+
+    if (projectParser.is_subcommand_used("list")) {
+
+      locateToEngineRoot();
+
+      if (!fs::exists(fs::current_path()/"projects")) {
+        printColor("No projects.. Use \"project create {NAME}\" to create a project\n", color::red);
+        return 1;
+      }
+
+      fs::current_path(fs::current_path()/"projects");
+      filesystem::execCommand("ls");
+
+    }
+    if (projectParser.is_subcommand_used("create")) {
+      locateToEngineRoot();
+
+      std::string projectName = projectCreate.get<std::string>("projectName");
+
+      if (!fs::exists(fs::current_path()/"projects")) {
+        fs::create_directory(fs::current_path()/"projects");
+      }
+      printColor("projects folder does not exist, creating directory...\n", color::white);
+      if (fs::exists(fs::current_path()/"projects"/projectName)) {
+        printColor("Project with the same name already exists\n", color::red);
+        return 1;
+      }
+
+      printColor("created template directory, renaming to project name...\n", color::white);
+      fs::create_directory(fs::current_path()/"projects"/"template");
+      fs::rename(fs::current_path()/"projects"/"template", fs::current_path()/"projects"/projectName);
+     
+      printColor("copying template files...\n", color::white);
+      fs::copy(
+        fs::current_path()/"engine/template",
+        fs::current_path()/"projects"/projectName,
+        fs::copy_options::recursive
+      );
+
+      fs::current_path(fs::current_path()/"projects");
+      fs::current_path(fs::current_path()/projectName);
+
+      printColor("replacing instances of template name with project name...\n", color::white);
+
+      std::string replaceString = "{{NAME}}";
+
+      std::ifstream premakeFileStream("premake5.lua");
+      std::string premakeFile(
+        (std::istreambuf_iterator<char>(premakeFileStream)),
+        std::istreambuf_iterator<char>()
+      );
+
+      size_t pos = 0;
+      while ((pos = premakeFile.find(replaceString, pos)) != std::string::npos)
+      {
+        premakeFile.replace(pos, replaceString.length(), projectName);
+        pos += projectName.length();
+      }
+
+      std::ofstream outFile("premake5.lua");
+      outFile << premakeFile;
+
+      std::ifstream sourceFileStream("src/main.cpp");
+      std::string sourceFile(
+        (std::istreambuf_iterator<char>(sourceFileStream)),
+        std::istreambuf_iterator<char>()
+      );
+
+      pos = 0;
+      while ((pos = sourceFile.find(replaceString, pos)) != std::string::npos)
+      {
+        sourceFile.replace(pos, replaceString.length(), projectName);
+        pos += projectName.length();
+      }
+
+      std::ofstream outFile2("src/main.cpp");
+      outFile2 << sourceFile;
+
+      std::ifstream infoFileStream("src/main.cpp");
+      std::string infoFile(
+        (std::istreambuf_iterator<char>(infoFileStream)),
+        std::istreambuf_iterator<char>()
+      );
+
+      pos = 0;
+      while ((pos = infoFile.find(replaceString, pos)) != std::string::npos)
+      {
+        infoFile.replace(pos, replaceString.length(), projectName);
+        pos += projectName.length();
+      }
+
+      std::ofstream infoFileWrite("src/main.cpp");
+      infoFileWrite << infoFile;
+
+      printColor("Successfully created project\n", color::green);
+
+    }
+
     if (projectParser.is_subcommand_used("build")) {
       locateToEngineRoot();
       std::string projectName = projectBuild.get<std::string>("projectName");
@@ -87,10 +194,16 @@ int main(int argc, char *argv[]) {
         printColor("Given project does not exist\n", color::red);
         return 1;
       }
+
+      printColor("Building project...\n", color::green);
+
       fs::current_path(fs::current_path()/projectName);
       filesystem::execCommand("premake5 gmake");
       fs::current_path(fs::current_path()/"build");
       filesystem::execCommand("make");
+
+      printColor("Project built", color::green);
+
     } 
     if (projectParser.is_subcommand_used("run")) {
       locateToEngineRoot();
@@ -110,6 +223,14 @@ int main(int argc, char *argv[]) {
         printColor("Project exists, but required build directories/files do not exist\n", color::red);
         return 1;
       }
+      if (projectRun["--suppress"] == true) {
+        fs::current_path(fs::current_path()/"build"/"bin");
+        filesystem::execCommandQuiet(std::format("./{}", projectName).c_str());
+        return 0;
+      }
+
+      printColor("Running project...\n", color::green);
+
       fs::current_path(fs::current_path()/"build"/"bin");
       filesystem::execCommand(std::format("./{}", projectName).c_str());
     } 

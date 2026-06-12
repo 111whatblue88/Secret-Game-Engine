@@ -1,5 +1,5 @@
 {
-  "releaseName": "Template Game",
+  "releaseName": "{{NAME}}",
   "description": " ",
   "ver": "0.0"
 }

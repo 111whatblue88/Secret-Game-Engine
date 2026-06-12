@@ -27,6 +27,7 @@ int main() {
     }
     if (input == "clear") {
       clearTerm();
+      printSplash(color::blue);
       continue;
     }
 

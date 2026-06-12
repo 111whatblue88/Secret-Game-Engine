@@ -10,8 +10,6 @@ namespace fs = std::filesystem;
 namespace secret {
 namespace filesystem {
 
-
-void execCommandQuiet(const char* cmd);
 void execCommand(const char* cmd);
 
 void locateToEngineRoot();

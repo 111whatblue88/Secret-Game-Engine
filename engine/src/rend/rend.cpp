@@ -178,9 +178,10 @@ SDL_Texture* Renderer::textureFromImage(std::string location) {
     COutput::logError(std::format("loading texture failed, given file location was \"{}\", loading fallback", location));
     COutput::logSDLError();
 
+    filesystem::locateToEngineRoot();
     texture = IMG_LoadTexture(
         m_renderer, 
-        "../../../engine/assets/fallbacks/textures/default.png"
+        "engine/assets/fallbacks/textures/default.png"
     );
     if (!texture) {
       COutput::logError("loading fallback texture failed!");
@@ -195,7 +196,8 @@ SDL_Texture* Renderer::textureFromImage(std::string location) {
 SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, Color color, std::string text) {
  
   if (fontLocation == "default") {
-    TTF_Font* font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    filesystem::locateToEngineRoot();
+    TTF_Font* font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     
     if (!font) {
       COutput::logError("loading default font failed!");
@@ -215,7 +217,8 @@ SDL_Texture* Renderer::textureFromFont(std::string fontLocation, int fontSize, C
   if (!font) {
     COutput::logError(std::format("loading font failed, given file location was \"{}\", loading fallback", fontLocation));
     COutput::logSDLError();
-    font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    filesystem::locateToEngineRoot();
+    font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     if (!font) {
       COutput::logError("loading fallback font failed!");
       COutput::logSDLError();
@@ -249,7 +252,8 @@ SDL_Texture* Renderer::textureFromFont(TTF_Font* font, Color color, std::string 
 TTF_Font* Renderer::createFont(std::string location, int fontSize) {
 
   if (location == "default") {
-    TTF_Font* font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    filesystem::locateToEngineRoot();
+    TTF_Font* font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     
     if (!font) {
       COutput::logError("loading default font failed!");
@@ -263,7 +267,8 @@ TTF_Font* Renderer::createFont(std::string location, int fontSize) {
   if (!font) {
     COutput::logError(std::format("loading font failed, given file location was \"{}\", loading fallback", location));
     COutput::logSDLError();
-    font = TTF_OpenFont("../../../engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+    filesystem::locateToEngineRoot();
+    font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
     if (!font) {
       COutput::logError("loading fallback font failed!");
       COutput::logSDLError();

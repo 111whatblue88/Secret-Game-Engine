@@ -11,7 +11,7 @@ int main() {
   using namespace console;
   using ID = uint32_t;
 
-  const std::string GAMENAME = "template";
+  const std::string GAMENAME = "{{NAME}}";
 
   core::Engine::init(500, 500, GAMENAME);
   core::Engine::options.fpsCap = 60;

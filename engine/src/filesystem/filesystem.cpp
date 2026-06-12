@@ -3,30 +3,12 @@
 #include <string>
 #include <format>
 
-#include "fs.hpp"
+#include "../secret.hpp"
 
 namespace fs = std::filesystem;
 
 using namespace secret;
 using namespace filesystem;
-
-void filesystem::execCommandQuiet(const char* cmd) {
-  std::string command = std::format("{} 2>&1", cmd);
-    FILE* pipe = popen(command.c_str(), "r");
-    if (!pipe) {
-        return;
-    }
-
-    std::array<char, 256> buffer;
-
-    while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
-
-    }
-
-    int status = pclose(pipe);
-
-    return;
-}
 
 void filesystem::execCommand(const char* cmd) {
   std::string command = std::format("stdbuf -oL {} 2>&1", cmd);

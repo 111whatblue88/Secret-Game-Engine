@@ -1,12 +1,12 @@
 -- premake5.lua
-workspace "Template"
+workspace "{{NAME}}"
   configurations { "Debug", "Release" }
   location "build"
 
-project "TemplateProject"
+project "{{NAME}}"
   kind "WindowedApp"
   language "C++"
-  location "build/TemplateProject"
+  location "build/{{NAME}}"
   targetdir "build/bin"
 
   local rpaths = {
