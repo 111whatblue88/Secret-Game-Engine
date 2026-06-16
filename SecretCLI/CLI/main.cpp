@@ -40,6 +40,10 @@ int main() {
     std::ifstream f("SecretCLI/cliInfo.json");
     json cliInfo = json::parse(f);
 
+    if (input == "context clear") {
+      filesystem::execCommand("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser context clear");
+      continue;
+    }
     if (cliInfo["context"]["project"] == "") {
       filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser {}", input).c_str());
       continue;
