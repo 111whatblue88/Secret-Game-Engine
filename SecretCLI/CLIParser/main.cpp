@@ -68,6 +68,16 @@ int main(int argc, char *argv[]) {
   projectParser.add_subparser(projectRun);
   projectParser.add_subparser(projectInfo);
 
+  // Context Switching
+  argparse::ArgumentParser contextParser("context");
+
+  argparse::ArgumentParser contextClear("clear");
+  argparse::ArgumentParser contextProject("project");
+  contextProject.add_argument("projectName");
+
+  contextParser.add_subparser(contextClear);
+  contextParser.add_subparser(contextProject);
+
   // Engine Parsing
   argparse::ArgumentParser engineParser("engine");
   argparse::ArgumentParser engineBuild("build");
@@ -87,6 +97,7 @@ int main(int argc, char *argv[]) {
   // Add all parsers to main parser 
   program.add_subparser(projectParser);
   program.add_subparser(engineParser);
+  program.add_subparser(contextParser);
 
   try {
     program.parse_args(argc, argv);
@@ -97,6 +108,44 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  if (program.is_subcommand_used("context")) {
+    if (contextParser.is_subcommand_used("clear")) {
+      locateToEngineRoot();
+      std::ifstream f("SecretCLI/cliInfo.json");
+      json cliInfo = json::parse(f);
+      cliInfo["context"]["project"] = "";
+
+      std::ofstream cliInfoFile("SecretCLI/cliInfo.json");
+      cliInfoFile << cliInfo.dump(2);
+      cliInfoFile.close();
+      printColor("Context cleared\n", color::green);
+    }
+    if (contextParser.is_subcommand_used("project")) {
+      std::string projectName = contextProject.get("projectName");
+      locateToEngineRoot();
+      std::ifstream cliInfoFileREAD("SecretCLI/cliInfo.json");
+      json cliInfo = json::parse(cliInfoFileREAD);
+      f.close();
+
+      if (!fs::exists(fs::current_path()/"projects")) {
+        printColor("No projects.. Use \"project create {NAME}\" to create a project\n", color::red);
+        return 1;
+      }
+      if (!fs::exists(fs::current_path()/"projects"/projectName)) {
+        printColor("Given project does not exist\n", color::red);
+        return 1;
+      }
+
+      cliInfo["context"]["project"] = projectName;
+
+      std::ofstream cliInfoFileWRITE("SecretCLI/cliInfo.json");
+      cliInfoFileWRITE << cliInfo.dump(2);
+      cliInfoFileWRITE.close();
+      printColor("Context changed\n", color::green);
+
+    }
+
+  }
   if (program.is_subcommand_used("project")) {
 
     if (projectParser.is_subcommand_used("list")) {
