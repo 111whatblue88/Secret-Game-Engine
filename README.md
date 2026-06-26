@@ -26,5 +26,3 @@ building and running projects easier. No documentation...im sorry
 ~~You might also be thinking "wow, this readme sucks", that means its working.~~
 i take that back, this readme is amazing. 
 
-## Contributing
-No. If you make a pull request i will pulverize you
