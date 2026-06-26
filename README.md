@@ -1,7 +1,7 @@
 # Secret Game Engine
 ## Shh!
 
-Secret is a small game engine I'm developing, it's very bad and very broken
+Secret is a small game engine. If your definition of a game engine is a barely functioning SDL wrapper
 
 ## Building
 ### MacOS/Windows
@@ -11,18 +11,20 @@ will never be possible
 2. Run the (in order) scripts /buildScripts/buildDependencies.sh, /buildScripts/buildEngine.sh 
 
 ## Usage
-To create a project run the .createNewProject.sh file in the root repo directory
-Rename the project in /projects to whatever you want 
+Use the CLI to create a project with "project create {name}", 50% chance the CLI is not broken when you try this
 
 Project source files need to be placed in /src, it searches that directory recursively 
-To build a project go in the /PROJECTFOLDER/buildScripts and run either build.sh or buildAndRun.sh 
+To build a project use the CLI, "project build {name}", "project run {name}"
 
 ## Documentation
-I have not made documentation for this project yet, you are on your own. 
+I have not made documentation for this project yet, sorry :p
 
-### Extra Info
-You might be thinking "why is there so many .sh files?". Well eventually everything that is 
-currently managed by shell files will be managed by the secretCLI, which will be a small CLI program which
-manages small automation engine tasks, like project management and compilation.
+## CLI 
+As of recent i have added a CLI tool called "SecretCLI", as there is no GUI you use this to make 
+building and running projects easier. No documentation...im sorry
 
-You might also be thinking "wow, this readme sucks", that means its working.
+--You might also be thinking "wow, this readme sucks", that means its working.--
+i take that back, this readme is amazing. 
+
+## Contributing
+No. If you make a pull request i will pulverize you

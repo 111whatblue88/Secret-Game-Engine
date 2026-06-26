@@ -1,6 +1,6 @@
 {
   "context": {
-    "project": ""
+    "project": "secret-pong-clone"
   },
   "description": "For Managing Your Secret Projects",
   "releaseName": "SecretCLI",
