@@ -23,7 +23,7 @@ I have not made documentation for this project yet, sorry :p
 As of recent i have added a CLI tool called "SecretCLI", as there is no GUI you use this to make 
 building and running projects easier. No documentation...im sorry
 
---You might also be thinking "wow, this readme sucks", that means its working.--
+~~You might also be thinking "wow, this readme sucks", that means its working.~~
 i take that back, this readme is amazing. 
 
 ## Contributing
