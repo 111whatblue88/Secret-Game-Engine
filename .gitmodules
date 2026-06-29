@@ -22,3 +22,6 @@
 [submodule "engine/vendored/SDL/src_mixer"]
 	path = engine/vendored/SDL/src_mixer
 	url = https://github.com/libsdl-org/SDL_mixer.git
+[submodule "engine/vendored/glew"]
+	path = engine/vendored/glew
+	url = https://github.com/nigels-com/glew.git
