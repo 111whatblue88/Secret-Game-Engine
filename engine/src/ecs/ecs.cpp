@@ -228,6 +228,50 @@ void PhysicsBody::applyImpulse(Vec2 impulse) {
   this->velocity = this->velocity + impulse.scale(1/ this->mass);
 }
 
+// audioEmitter
+AudioEmitter::AudioEmitter() {
+  SetName("defaultName");
+  track = AudioSys::createAudioTrack();
+}
+AudioEmitter::AudioEmitter(std::string name, std::string audioFileLocation) {
+  SetName(name);
+  track = AudioSys::createAudioTrack();
+  AudioSys::loadTrackAudio(track, audioFileLocation);
+}
+AudioEmitter::AudioEmitter(std::string audioFileLocation) {
+  SetName("defaultName");
+  track = AudioSys::createAudioTrack();
+  AudioSys::loadTrackAudio(track, audioFileLocation);
+}
+
+bool AudioEmitter::playAudio() {
+  if (AudioSys::playTrack(track)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+bool AudioEmitter::pauseAudio() {
+  if (AudioSys::pauseTrack(track)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+bool AudioEmitter::resumeAudio() {
+  if (AudioSys::resumeTrack(track)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+bool AudioEmitter::restartAudio() {
+  if (AudioSys::restartTrack(track)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 // Collider 
 BasicBoxCollider::BasicBoxCollider(Rect colliderRect) {
   this->SetName("defaultName");

@@ -143,6 +143,27 @@ public:
   int layer;
 };
 
+// audioEmitter
+class AudioEmitter : public Component{
+public:
+  
+  AudioEmitter();
+  AudioEmitter(std::string soundFileLocation);
+  AudioEmitter(std::string name, std::string audioFileLocation);
+
+  bool loadFile(std::string audioFileLocation);
+
+  bool playAudio();
+  bool resumeAudio();
+  bool pauseAudio();
+  bool restartAudio();
+
+private:
+
+  MIX_Track* track;
+
+};
+
 // text renderer
 class TextRenderer : public Component{
 public:
@@ -266,6 +287,7 @@ public:
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
   Component<BasicBoxCollider> BasicBoxColliderComp;
+  Component<AudioEmitter> AudioEmitterComp;
 
   Entity();
   Entity(class Transform transform);
