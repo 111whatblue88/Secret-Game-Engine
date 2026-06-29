@@ -55,10 +55,13 @@ bool Engine::init(int width, int height, std::string name) {
       COutput::logSDLError();
     }
   }
-
+  if (!rend::openGL::Init()) {
+    COutput::logError("failed to start TTF");
+    COutput::logSDLError();
+  }
   audio::AudioSys::Init();
 
-  if (rend::RenderSys::m_renderer.init(width, height, name)) {
+  if (rend::RenderSys::m_SDL.init(width, height, name)) {
     return false;
   }
   return true;
@@ -66,7 +69,7 @@ bool Engine::init(int width, int height, std::string name) {
 
 bool Engine::run() {
 
-  if (!rend::RenderSys::m_renderer.wasInit()) {
+  if (!rend::RenderSys::m_SDL.wasInit()) {
     COutput::logCustom("FATAL ERROR", 
       "Renderer and window do not exist. Maybe the init function was not called?",
       COutput::MsgColor::red
@@ -85,6 +88,15 @@ bool Engine::run() {
     std::string version = engineInfo["ver"];
     COutput::logCustom("ENGINE", std::format("Ver.({}): {}", RELEASEORDEBUG, version));
 
+    switch (options.renderingAPI) {
+      case secret::core::RenderingAPIs::SDL: 
+        COutput::logCustom("ENGINE", "Rendering API: SDL3");
+        break;
+      case secret::core::RenderingAPIs::openGL: 
+        COutput::logCustom("ENGINE", "Renering API: openGL");
+        break;
+    } 
+
   } else {
     COutput::logCustom("ENGINE", "Exit request detected, aborting startup...", COutput::MsgColor::yellow);
   }
@@ -102,7 +114,11 @@ bool Engine::run() {
     ecs::EntitySys::update();
     update();
 
-    rend::RenderSys::render(); 
+    if (options.renderingAPI == RenderingAPIs::openGL) {
+      rend::RenderSys::renderGL(); 
+    } else {
+      rend::RenderSys::renderSDL(); 
+    }
     
     uint32_t frametime = SDL_GetTicks() - currentFrameTime;
     if (frametime<1000/ options.fpsCap) {

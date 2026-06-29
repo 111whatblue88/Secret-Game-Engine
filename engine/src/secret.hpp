@@ -1,5 +1,7 @@
 #include "general/general.hpp"
-#include "rend/rend.hpp"
+#include "rendering/rendering.hpp"
+#include "rendering/openGL/GLRendering.hpp"
+#include "rendering/SDL/SDLRendering.hpp"
 #include "audio/audio.hpp"
 #include "input/input.hpp"
 #include "ecs/ecs.hpp"
@@ -10,6 +12,8 @@
 #include "../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 #include "../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../vendored/glew/include/GL/glew.h"
+#include <GL/gl.h>
 
 #include <nlohmann/json.hpp>
 #include <iostream>
@@ -31,11 +35,18 @@
 namespace secret {
 namespace core {
 
+enum class RenderingAPIs {
+  SDL,
+  openGL
+};
+
 class Engine {
   struct EngineOptions {
     int fpsCap;
+    RenderingAPIs renderingAPI;
   };
 public:
+
   static EngineOptions options;
 
   static std::function<void()> update; 

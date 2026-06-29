@@ -1,6 +1,6 @@
 {
   "context": {
-    "project": "develProject"
+    "project": ""
   },
   "description": "For Managing Your Secret Projects",
   "releaseName": "SecretCLI",

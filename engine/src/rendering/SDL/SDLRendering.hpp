@@ -1,10 +1,10 @@
-#ifndef _REND_HPP
-#define _REND_HPP
+#ifndef _SDLRENDERING_HPP
+#define _SDLRENDERING_HPP
 
-#include "../general/general.hpp"
-#include "../../vendored/SDL/src/include/SDL3/SDL.h"
-#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
-#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../general/general.hpp"
+#include "../../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 
 #include <unordered_map>
 #include <vector>
@@ -14,14 +14,14 @@
 namespace secret {
 namespace rend {
 
-
-class Renderer {
+class SDL {
   public: 
 
   bool init(int width, int height, std::string name);
 
   void renderClear(); 
   void renderPresent();
+  void renderPresentGL();
 
   void setRenderColor(Color color);
 
@@ -53,63 +53,8 @@ class Renderer {
   SDL_Window* m_window;
 
 };
-class RenderSys {
-public:
 
-  enum class CallType {
-    RBOXFILL,
-    RBOX,
-    RCIRCLE,
-    RCIRCLEFILL,
-    RLINE,
-    SETDRAWCOLOR,
-    RTEXTURE,
-    RFULLTEXTURE,
-    RGEOMETRY,
-    RPOINTS,
-  };
-
-  struct PositionalData {
-    Vec2 pos;
-    Vec2 pos2;
-  };
-  struct SizeData {
-    float width;
-    float height;
-    float radius;
-  };
-  struct RenderingData {
-    Color color;
-    SDL_Texture* texture;
-    SDL_FRect uv;
-    int layer;
-  };
-  struct GeometryData {
-    SDL_Vertex* verticies;
-    int numVerticies;
-    int* indices;
-    int numIndices;
-    SDL_FPoint* points;
-    int numPoints;
-  };
-  struct RenderCall {
-    CallType type; 
-    PositionalData PD;
-    SizeData SD;
-    RenderingData RD;
-    GeometryData GD;
-  };
-
-
-  static Renderer m_renderer;
-
-  static bool render();
-
-  static std::vector<RenderCall> CallList;
-
-};
+}
+}
 
 #endif
-
-}
-}

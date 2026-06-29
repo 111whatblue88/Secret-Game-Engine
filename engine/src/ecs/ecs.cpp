@@ -40,24 +40,24 @@ bool Component::SetName(std::string name) {
 
 // IMG Renderer 
 ImgRenderer::ImgRenderer(std::string location, SDL_FRect uv, int layer) {
-  this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
+  this->texture = rend::RenderSys::m_SDL.textureFromImage(location);
   this->layer=layer;
   this->uv=uv;
 };
 ImgRenderer::ImgRenderer(std::string location, int layer) {
-  this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
+  this->texture = rend::RenderSys::m_SDL.textureFromImage(location);
   this->layer=layer;
   this->uv={0,0,0,0};
 };
 ImgRenderer::ImgRenderer(std::string name, std::string location, SDL_FRect uv, int layer) {
   this->SetName(name);
-  this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
+  this->texture = rend::RenderSys::m_SDL.textureFromImage(location);
   this->layer=layer;
   this->uv=uv;
 }
 ImgRenderer::ImgRenderer(std::string name, std::string location, int layer) {
   this->SetName(name);
-  this->texture = rend::RenderSys::m_renderer.textureFromImage(location);
+  this->texture = rend::RenderSys::m_SDL.textureFromImage(location);
   this->layer=layer;
   this->uv={0,0,0,0};
 }
@@ -151,8 +151,8 @@ TextRenderer::TextRenderer(std::string fontLocation, std::string text, int size,
   this->color=color;
   this->layer=layer;
 
-  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
-  this->texture=rend::RenderSys::m_renderer.textureFromFont(font ,color,text);
+  this->font = rend::RenderSys::m_SDL.createFont(fontLocation, size);
+  this->texture=rend::RenderSys::m_SDL.textureFromFont(font ,color,text);
 }
 TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::string text, int size, Color color, int layer) {
   this->SetName(name);
@@ -162,8 +162,8 @@ TextRenderer::TextRenderer(std::string name, std::string fontLocation, std::stri
   this->color=color;
   this->layer=layer;
 
-  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
-  this->texture=rend::RenderSys::m_renderer.textureFromFont(font,color,text);
+  this->font = rend::RenderSys::m_SDL.createFont(fontLocation, size);
+  this->texture=rend::RenderSys::m_SDL.textureFromFont(font,color,text);
 }
 
 TextRenderer::TextRenderer() {
@@ -174,14 +174,14 @@ TextRenderer::TextRenderer() {
   this->color={0, 0,0};
   this->layer=0;
 
-  this->font = rend::RenderSys::m_renderer.createFont(fontLocation, size);
+  this->font = rend::RenderSys::m_SDL.createFont(fontLocation, size);
 
   this->texture=nullptr;
 }
 
 bool TextRenderer::editFont(std::string fontLocation) {
   this->fontLocation = fontLocation;
-  this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
+  this->texture = rend::RenderSys::m_SDL.textureFromFont(fontLocation, size, color, text);
   if (!texture) {
     return false;
   } else {
@@ -190,7 +190,7 @@ bool TextRenderer::editFont(std::string fontLocation) {
 }
 bool TextRenderer::editSize(int size) {
   this->size=size;
-  this->texture = rend::RenderSys::m_renderer.textureFromFont(fontLocation, size, color, text);
+  this->texture = rend::RenderSys::m_SDL.textureFromFont(fontLocation, size, color, text);
   if (!texture) {
     return false;
   } else {
@@ -199,7 +199,7 @@ bool TextRenderer::editSize(int size) {
 }
 bool TextRenderer::editText(std::string text) {
   this->text=text;
-  this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
+  this->texture = rend::RenderSys::m_SDL.textureFromFont(font, color, text);
   if (!texture) {
     return false;
   } else {
@@ -208,7 +208,7 @@ bool TextRenderer::editText(std::string text) {
 }
 bool TextRenderer::editColor(Color color) {
   this->color=color;
-  this->texture = rend::RenderSys::m_renderer.textureFromFont(font, color, text);
+  this->texture = rend::RenderSys::m_SDL.textureFromFont(font, color, text);
   if (!texture) {
     return false;
   } else {
@@ -419,7 +419,7 @@ bool EntitySys::update() {
 
         if (IR.second.uv.x || IR.second.uv.y || IR.second.uv.w || IR.second.uv.h) {
           RenderSys::CallList.push_back(RenderSys::RenderCall{
-            RenderSys::CallType::RTEXTURE,
+            RenderSys::CallType::SDL_RTEXTURE,
             RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.location.pos)},
             RenderSys::SizeData{IR.second.location.width, IR.second.location.height},
             RenderSys::RenderingData{Color(0,0,0),IR.second.texture, IR.second.uv,0}
@@ -428,7 +428,7 @@ bool EntitySys::update() {
           if (!IR.second.texture) {
           }
           RenderSys::CallList.push_back(RenderSys::RenderCall{
-            RenderSys::CallType::RFULLTEXTURE,
+            RenderSys::CallType::SDL_RFULLTEXTURE,
             RenderSys::PositionalData{(E.second.TransformComp.pos + IR.second.location.pos)},
             RenderSys::SizeData{IR.second.location.width, IR.second.location.height},
             RenderSys::RenderingData{Color(0,0,0),IR.second.texture, 0,0,0,0,0}
@@ -444,14 +444,14 @@ bool EntitySys::update() {
           case ecs::PrimitiveRenderer::PrimitiveType::square: {
             if (PR.second.fill) {
               RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RBOXFILL,
+                RenderSys::CallType::SDL_RBOXFILL,
                 RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
                 RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
                 RenderSys::RenderingData{PR.second.color}
               });
             } else {
               RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RBOX,
+                RenderSys::CallType::SDL_RBOX,
                 RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
                 RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
                 RenderSys::RenderingData{PR.second.color}
@@ -462,14 +462,14 @@ bool EntitySys::update() {
           case ecs::PrimitiveRenderer::PrimitiveType::circle: {
             if (PR.second.fill) {
               RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RCIRCLEFILL,
+                RenderSys::CallType::SDL_RCIRCLEFILL,
                 RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.circle.pos},
                 RenderSys::SizeData{0,0,PR.second.circle.radius},
                 RenderSys::RenderingData{PR.second.color}
               });
             } else {
               RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::RCIRCLE,
+                RenderSys::CallType::SDL_RCIRCLE,
                 RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.circle.pos},
                 RenderSys::SizeData{0,0,PR.second.circle.radius},
                 RenderSys::RenderingData{PR.second.color}
@@ -479,7 +479,7 @@ bool EntitySys::update() {
           }
           case ecs::PrimitiveRenderer::PrimitiveType::line: {
             RenderSys::CallList.push_back(RenderSys::RenderCall{
-              RenderSys::CallType::RLINE,
+              RenderSys::CallType::SDL_RLINE,
               RenderSys::PositionalData{PR.second.firstLinePoint, PR.second.secondLinePoint},
               RenderSys::SizeData{},
               RenderSys::RenderingData{PR.second.color}
@@ -494,7 +494,7 @@ bool EntitySys::update() {
     if (E.second.TextRendererComp.has()) {
       for (auto& TR : E.second.TextRendererComp.getComponentList()) {
         RenderSys::CallList.push_back(RenderSys::RenderCall{
-          RenderSys::CallType::RFULLTEXTURE,
+          RenderSys::CallType::SDL_RFULLTEXTURE,
           RenderSys::PositionalData{(E.second.TransformComp.pos + TR.second.location.pos)},
           RenderSys::SizeData{TR.second.location.width, TR.second.location.height},
           RenderSys::RenderingData{{0,0,0}, TR.second.texture}
@@ -506,7 +506,7 @@ bool EntitySys::update() {
       for (auto& BC : E.second.BasicBoxColliderComp.getComponentList()) {
         if (BC.second.renderCollider) {
           RenderSys::CallList.push_back(RenderSys::RenderCall{
-            RenderSys::CallType::RBOX,
+            RenderSys::CallType::SDL_RBOX,
             RenderSys::PositionalData{(E.second.TransformComp.pos + BC.second.colliderBox.pos)},
             RenderSys::SizeData{BC.second.colliderBox.width, BC.second.colliderBox.height},
             RenderSys::RenderingData{Color(255,0,0)}
