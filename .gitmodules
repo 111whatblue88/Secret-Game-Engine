@@ -19,3 +19,6 @@
 [submodule "engine/vendored/argparse"]
 	path = engine/vendored/argparse
 	url = https://github.com/p-ranav/argparse.git
+[submodule "engine/vendored/SDL/src_mixer"]
+	path = engine/vendored/SDL/src_mixer
+	url = https://github.com/libsdl-org/SDL_mixer.git

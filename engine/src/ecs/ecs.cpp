@@ -216,41 +216,6 @@ bool TextRenderer::editColor(Color color) {
   }
 }
 
-
-bool AudioEmitter::playAudio() {
-  if (AudioSys::PlayAudio(stream->stream)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-bool AudioEmitter::pauseAudio() {
-  if (AudioSys::PauseAudio(stream->stream)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-AudioEmitter::~AudioEmitter() {
-  SDL_DestroyAudioStream(stream->stream);
-  SDL_free(stream->audioData);
-  free(stream);
-}
-AudioEmitter::AudioEmitter() {
-  SetName("defaultName");
-  this->stream = new audio::AudioSys::audioStream();
-}
-AudioEmitter::AudioEmitter(std::string WAVLocation) {
-  SetName("defaultName");
-  this->stream=audio::AudioSys::audioStreamFromWAV(WAVLocation);  
-}
-AudioEmitter::AudioEmitter(std::string name, std::string WAVLocation) {
-  SetName(name);
-  this->stream=audio::AudioSys::audioStreamFromWAV(WAVLocation);  
-}
-  
-
 // Physics Body
 PhysicsBody::PhysicsBody() {
   isStatic = true;
@@ -262,7 +227,6 @@ PhysicsBody::PhysicsBody() {
 void PhysicsBody::applyImpulse(Vec2 impulse) {
   this->velocity = this->velocity + impulse.scale(1/ this->mass);
 }
-
 
 // Collider 
 BasicBoxCollider::BasicBoxCollider(Rect colliderRect) {

@@ -70,25 +70,6 @@ class PlayerController{
   bool enabled;
 };
 
-// audioEmitter
-class AudioEmitter : public Component {
-public:
- 
-  bool playAudio();
-  bool pauseAudio();
-
-  ~AudioEmitter();
-
-  AudioEmitter();
-  AudioEmitter(std::string WAVLocation);
-  AudioEmitter(std::string name, std::string WAVLocation);
-
-private:
-  
-  audio::AudioSys::audioStream* stream;
-
-};
-
 // basicBoxCollider
 class BasicBoxCollider : public Component{
   public:
@@ -285,7 +266,6 @@ public:
   Component<PrimitiveRenderer> PrimitiveRendererComp;
   Component<TextRenderer> TextRendererComp;
   Component<BasicBoxCollider> BasicBoxColliderComp;
-  Component<AudioEmitter> AudioEmitterComp;
 
   Entity();
   Entity(class Transform transform);

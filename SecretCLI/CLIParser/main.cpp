@@ -400,6 +400,14 @@ int main(int argc, char *argv[]) {
 
       locateToEngineRoot();
 
+      fs::current_path(fs::current_path()/"engine/vendored/SDL/src_mixer");
+      filesystem::execCommand("mkdir build");
+      fs::current_path(fs::current_path()/"build");
+      filesystem::execCommand("cmake ..");
+      filesystem::execCommand("make");
+
+      locateToEngineRoot();
+
       filesystem::execCommand("premake5 gmake");
       fs::current_path(fs::current_path()/"build");
       filesystem::execCommand("make");
