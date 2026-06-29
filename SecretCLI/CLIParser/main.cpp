@@ -408,6 +408,16 @@ int main(int argc, char *argv[]) {
 
       locateToEngineRoot();
 
+      fs::current_path(fs::current_path()/"engine/vendored/glew");
+      filesystem::execCommand("make");
+      filesystem::execCommand("sudo make install");
+      filesystem::execCommand("make clean");
+      fs::current_path(fs::current_path()/"build");
+      filesystem::execCommand("cmake ./cmake");
+      filesystem::execCommand("make -j4");
+
+      locateToEngineRoot();
+
       filesystem::execCommand("premake5 gmake");
       fs::current_path(fs::current_path()/"build");
       filesystem::execCommand("make");
