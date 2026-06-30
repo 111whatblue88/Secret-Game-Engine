@@ -119,6 +119,7 @@ bool EngineParser::parseArguments() {
     locateToEngineRoot();
 
     fs::current_path(fs::current_path()/"engine/vendored/glew");
+    filesystem::execCommand("make extensions");
     filesystem::execCommand("make");
     filesystem::execCommand("sudo make install");
     filesystem::execCommand("make clean");

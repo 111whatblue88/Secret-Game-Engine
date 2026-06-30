@@ -1,8 +1,5 @@
 {
-  "context": {
-    "project": ""
-  },
   "description": "For Managing Your Secret Projects",
   "releaseName": "SecretCLI",
-  "ver": "0.5-beta"
+  "ver": "0.6-beta"
 }

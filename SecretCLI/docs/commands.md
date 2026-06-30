@@ -9,7 +9,7 @@ This document lists all currently available commands.
 
 list -- lists all projects in the /projects folder
 build -- builds the given project
-  flags: --release, --debug
+  flags: --release, --debug, clean (deletes previous build files)
 run -- runs the given project
   flags: --suppress (suppresses project output)
 create -- creates a new project, with the name given
@@ -19,7 +19,7 @@ info -- prints info from the projectInfo file
 ### Engine Commands 
 
 build -- builds the engines source files, use "all" after to build vendored source files as well
-  flags: --release, --debug
+  flags: --release, --debug, clean (deletes previous build files)
 info -- prints info from the engine/engineInfo file
 
 ### Context Commands

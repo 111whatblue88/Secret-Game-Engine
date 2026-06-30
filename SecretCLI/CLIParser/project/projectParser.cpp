@@ -56,6 +56,10 @@ ProjectParser::ProjectParser():
   .default_value(false)
   .implicit_value(true);
 
+  projectBuild.add_argument("--clean")
+  .default_value(false)
+  .implicit_value(true);
+
   projectRun.add_argument("projectName");
 
   projectRun.add_argument("--suppress")
@@ -214,14 +218,16 @@ bool ProjectParser::parseArguments() {
 
     fs::current_path(fs::current_path()/projectName);
 
-    if (fs::exists(fs::current_path()/"build")) {
-      fs::remove_all(fs::current_path()/"build");
+    
+    if (projectBuild["clean"] == true) {
+      if (fs::exists(fs::current_path()/"build")) {
+        fs::remove_all(fs::current_path()/"build");
+      }
     }
 
     filesystem::execCommand("premake5 gmake");
     fs::current_path(fs::current_path()/"build");
     if (projectBuild["--release"] == true) {
-
       filesystem::execCommand("make config=release");
     } else {
     filesystem::execCommand("make config=debug");
