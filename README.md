@@ -19,8 +19,8 @@ You can edit the projects source code in {ROOT}/projects/{NAME}/src. The build s
 ## Documentation
 I have not made documentation for this project yet, sorry :p
 
-
 ## CLI 
 As of recent i have added a CLI tool called "SecretCLI", as there is no GUI you use this to make 
-building and running projects easier. No documentation...im sorry
+building and running projects easier. Command list is available in SecretCLI/docs, you can also use -h 
+in the CLI to get a description for a command
 
