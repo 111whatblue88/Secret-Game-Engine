@@ -1,6 +1,8 @@
+#include "input.hpp"
 #include "../secret.hpp"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_keycode.h>
+#include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_oldnames.h>
 
 
@@ -20,7 +22,11 @@ InputSys::Keys InputSys::keys = {
   KeyState::NONE, 
   KeyState::NONE, 
   KeyState::NONE, 
+  KeyState::NONE,
+
   KeyState::NONE, 
+  KeyState::NONE, 
+
 };
 
 SDL_Event InputSys::m_input = SDL_Event();
@@ -38,6 +44,9 @@ bool InputSys::Input() {
 
   resetKey(keys.num1); 
   resetKey(keys.num2); 
+
+  resetKey(keys.mouseLeft); 
+  resetKey(keys.mouseRight); 
 
   while (SDL_PollEvent(&m_input)) {
 
@@ -81,6 +90,28 @@ bool InputSys::Input() {
 
           case SDLK_ESCAPE: 
             keys.ESC = KeyState::PRESSED;
+            break;
+        }
+        break;
+      }
+      case SDL_EVENT_MOUSE_BUTTON_DOWN: {
+        switch (m_input.button.button) {
+          case SDL_BUTTON_LEFT:
+            keys.mouseLeft = KeyState::PRESSED;
+            break;
+          case SDL_BUTTON_RIGHT:
+            keys.mouseLeft = KeyState::PRESSED;
+            break;
+        }
+        break;
+      }
+      case SDL_EVENT_MOUSE_BUTTON_UP: {
+        switch (m_input.button.button) {
+          case SDL_BUTTON_LEFT:
+            keys.mouseLeft = KeyState::RELEASED;
+            break;
+          case SDL_BUTTON_RIGHT:
+            keys.mouseLeft = KeyState::RELEASED;
             break;
         }
         break;
@@ -131,6 +162,7 @@ bool InputSys::Input() {
 
   }
 
+  SDL_GetMouseState(&mousePos.x, &mousePos.y);  
 
   return true;
 }
@@ -148,6 +180,21 @@ void InputSys::resetKey(InputSys::KeyState& key) {
   }
 };
 
+bool InputSys::hideMouse(bool state) {
+  if (state) {
+    if (SDL_ShowCursor()) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    if (SDL_HideCursor()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
 
 }
 }

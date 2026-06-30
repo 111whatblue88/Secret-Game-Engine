@@ -1,6 +1,7 @@
 #ifndef _INPUT_HPP
 #define _INPUT_HPP
 
+#include "../general/general.hpp"
 #include <SDL3/SDL_events.h>
 namespace secret {
 namespace input {
@@ -15,6 +16,10 @@ namespace input {
     
     static bool Input();
     static bool quit;
+
+    static bool hideMouse(bool state);
+
+    static Vec2 mousePos;
 
   private:
     static SDL_Event m_input;
@@ -35,6 +40,9 @@ namespace input {
       KeyState num1;
 
       KeyState ESC;
+
+      KeyState mouseRight;
+      KeyState mouseLeft;
 
     };
   public:
