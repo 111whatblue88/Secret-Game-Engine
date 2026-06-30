@@ -1,0 +1,85 @@
+[
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/OS/file.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/file.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/file.d -c /home/elo/Development/Secret-Game-Engine/engine/src/OS/file.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/audio/audio.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/audio.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/audio.d -c /home/elo/Development/Secret-Game-Engine/engine/src/audio/audio.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/console/CInput.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/CInput.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/CInput.d -c /home/elo/Development/Secret-Game-Engine/engine/src/console/CInput.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/console/COutput.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/COutput.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/COutput.d -c /home/elo/Development/Secret-Game-Engine/engine/src/console/COutput.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/core/secret.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/secret.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/secret.d -c /home/elo/Development/Secret-Game-Engine/engine/src/core/secret.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/ecs/ecs.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/ecs.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/ecs.d -c /home/elo/Development/Secret-Game-Engine/engine/src/ecs/ecs.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/filesystem/filesystem.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/filesystem.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/filesystem.d -c /home/elo/Development/Secret-Game-Engine/engine/src/filesystem/filesystem.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/general/general.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/general.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/general.d -c /home/elo/Development/Secret-Game-Engine/engine/src/general/general.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/input/input.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/input.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/input.d -c /home/elo/Development/Secret-Game-Engine/engine/src/input/input.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/math/math.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/math.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/math.d -c /home/elo/Development/Secret-Game-Engine/engine/src/math/math.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/pch/pch.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/pch.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/pch.d -c /home/elo/Development/Secret-Game-Engine/engine/src/pch/pch.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/rendering/SDL/SDLRendering.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/SDLRendering.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/SDLRendering.d -c /home/elo/Development/Secret-Game-Engine/engine/src/rendering/SDL/SDLRendering.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/rendering/openGL/GLRendering.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/GLRendering.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/GLRendering.d -c /home/elo/Development/Secret-Game-Engine/engine/src/rendering/openGL/GLRendering.cpp"
+          }
+,
+          {
+            "directory": "/home/elo/Development/Secret-Game-Engine/build/secret",
+            "file": "/home/elo/Development/Secret-Game-Engine/engine/src/rendering/rendering.cpp",
+            "command": "cc -MD -MP -DNDEBUG -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/SDL3 -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src/include/build_config -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_image/include/SDL3_image -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_ttf/include/SDL3_ttf -I/home/elo/Development/Secret-Game-Engine/engine/vendored/SDL/src_mixer/include/SDL3_mixer -I/home/elo/Development/Secret-Game-Engine/engine/src/pch -I/home/elo/Development/Secret-Game-Engine/engine/src -O2 -fPIC -o /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/rendering.o -MF /home/elo/Development/Secret-Game-Engine/build/secret/obj/Release/rendering.d -c /home/elo/Development/Secret-Game-Engine/engine/src/rendering/rendering.cpp"
+          }
+]

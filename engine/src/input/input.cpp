@@ -29,6 +29,8 @@ InputSys::Keys InputSys::keys = {
 
 };
 
+Vec2 InputSys::mousePos = {0,0};
+
 SDL_Event InputSys::m_input = SDL_Event();
 
 bool InputSys::Input() {
@@ -100,7 +102,7 @@ bool InputSys::Input() {
             keys.mouseLeft = KeyState::PRESSED;
             break;
           case SDL_BUTTON_RIGHT:
-            keys.mouseLeft = KeyState::PRESSED;
+            keys.mouseRight = KeyState::PRESSED;
             break;
         }
         break;
@@ -111,7 +113,7 @@ bool InputSys::Input() {
             keys.mouseLeft = KeyState::RELEASED;
             break;
           case SDL_BUTTON_RIGHT:
-            keys.mouseLeft = KeyState::RELEASED;
+            keys.mouseRight = KeyState::RELEASED;
             break;
         }
         break;

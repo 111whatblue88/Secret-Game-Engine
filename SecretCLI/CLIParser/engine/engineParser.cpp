@@ -44,6 +44,10 @@ EngineParser::EngineParser():
   .default_value(false)
   .implicit_value(true);
 
+  engineBuild.add_argument("--clean")
+  .default_value(false)
+  .implicit_value(true);
+
   engineBuild.add_argument("--debug")
   .default_value(false)
   .implicit_value(true);
@@ -61,8 +65,10 @@ bool EngineParser::parseArguments() {
     locateToEngineRoot();
     if (!engineBuild.is_subcommand_used("all")) {
 
-      if (fs::exists(fs::current_path()/"build")) {
-        fs::remove_all(fs::current_path()/"build");
+      if (engineBuild["--clean"] == true) {
+        if (fs::exists(fs::current_path()/"build")) {
+          fs::remove_all(fs::current_path()/"build");
+        }
       }
 
       filesystem::execCommand("premake5 gmake");
@@ -121,6 +127,12 @@ bool EngineParser::parseArguments() {
     filesystem::execCommand("make -j4");
 
     locateToEngineRoot();
+
+    if (engineBuild["--clean"] == true) {
+      if (fs::exists(fs::current_path()/"build")) {
+        fs::remove_all(fs::current_path()/"build");
+      }
+    }
 
     filesystem::execCommand("premake5 gmake");
     fs::current_path(fs::current_path()/"build");
