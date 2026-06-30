@@ -13,7 +13,7 @@ Right now its main rendering API is SDL3, but openGL might be added soon
 3. In the CLI, run "engine build all"
 
 ## Usage
-For a very basic usage, use the SecretCLI and "project create {NAME}", and then "project build {NAME}", "Project run {NAME".
+For a very basic usage, use the SecretCLI and "project create {NAME}", and then "project build {NAME}", "Project run {NAME}".
 You can edit the projects source code in {ROOT}/projects/{NAME}/src. The build system searches /src recursively.
 
 ## Documentation

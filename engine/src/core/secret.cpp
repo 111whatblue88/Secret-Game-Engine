@@ -41,6 +41,10 @@ void Engine::earlyExit(std::string msg) {
 };
 
 bool Engine::init(int width, int height, std::string name) {
+#ifdef DEBUG
+  Timer initTimer;
+  initTimer.start();
+#endif
   COutput::logCustom("ENGINE", "Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
@@ -61,9 +65,13 @@ bool Engine::init(int width, int height, std::string name) {
   }
   audio::AudioSys::Init();
 
-  if (rend::RenderSys::m_SDL.init(width, height, name)) {
-    return false;
+  if (!rend::RenderSys::m_SDL.init(width, height, name)) {
+    COutput::logError("failed init SDL");
+    COutput::logSDLError();
   }
+#ifdef DEBUG
+  debug_log("ENGINE", std::format("engine took {}ms to initialize", std::to_string(initTimer.end())));
+#endif
   return true;
 }
 
@@ -86,7 +94,11 @@ bool Engine::run() {
     COutput::logCustom("ENGINE", engineInfo["releaseName"]);
     COutput::logCustom("ENGINE", engineInfo["description"]);
     std::string version = engineInfo["ver"];
-    COutput::logCustom("ENGINE", std::format("Ver.({}): {}", RELEASEORDEBUG, version));
+#ifdef DEBUG
+    COutput::logCustom("ENGINE", std::format("Ver.({}): {}", "DEBUG", version));
+#else
+    COutput::logCustom("ENGINE", std::format("Ver.({}): {}", "RELEASE", version));
+#endif
 
     switch (options.renderingAPI) {
       case secret::core::RenderingAPIs::SDL: 
@@ -132,6 +144,16 @@ bool Engine::run() {
 
   return true;
 
+}
+
+Engine::Timer::Timer():
+  startTick(0)
+{}
+void Engine::Timer::start() {
+  startTick = SDL_GetTicks();
+}
+Uint64 Engine::Timer::end() {
+  return SDL_GetTicks() - startTick;
 }
 
 }

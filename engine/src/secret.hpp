@@ -15,6 +15,7 @@
 #include "../vendored/glew/include/GL/glew.h"
 #include <GL/gl.h>
 
+#include <chrono>
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <string>
@@ -23,12 +24,8 @@
 // macros
 
 #ifdef DEBUG
-// debug enabled
-#define RELEASEORDEBUG "DEBUG"
 #define debug_log(x, y) console::COutput::logCustom(std::format("DEBUG_{}", x), y, console::COutput::MsgColor::gray)
 #else
-// debug not enabled
-#define RELEASEORDEBUG "RELEASE"
 #define debug_log(x, y)
 #endif
 
@@ -61,6 +58,19 @@ public:
   static float deltaTime();
 
   static void wait(int ms);
+
+  class Timer {
+  public:
+
+    Timer();
+
+    void start();
+    Uint64 end();
+
+  private:
+    Uint64 startTick;
+  };
+  
 
 private:
 
