@@ -44,19 +44,17 @@ int main() {
       filesystem::execCommand("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser context clear");
       continue;
     }
-    if (cliInfo["context"]["project"] == "") {
+
+    std::ifstream contextFile("SecretCLI/var/context.json");
+    json contextInfo = json::parse(contextFile);
+
+    if (contextInfo["context"]["project"] == "") {
       filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser {}", input).c_str());
       continue;
     } 
 
-    if (std::filesystem::exists("SecretCLI/var/context.json")) {
-      std::ifstream contextFile("SecretCLI/var/context.json");
-      json contextInfo = json::parse(contextFile);
-      std::string projectContext = contextInfo["context"]["project"];
-      filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser project {} {}", input, projectContext).c_str());
-    } else {
-      filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser {}", input).c_str());
-    }
+    std::string projectContext = contextInfo["context"]["project"];
+    filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser project {} {}", input, projectContext).c_str());
 
   }
   
