@@ -47,6 +47,8 @@ class SDL {
 
   bool wasInit();
 
+  static bool errorCheck(std::string file, int line);
+
   private:
 
   SDL_Renderer* m_renderer;

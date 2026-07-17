@@ -15,7 +15,8 @@ using json = nlohmann::json;
 using namespace console;
 
 Engine::EngineOptions Engine::options = {
-  60
+  60,
+  RenderingAPIs::SDL
 };
 
 std::function<void()> Engine::update = []() {};
@@ -59,19 +60,24 @@ bool Engine::init(int width, int height, std::string name) {
       COutput::logSDLError();
     }
   }
-  if (!rend::openGL::Init()) {
-    COutput::logError("failed to start TTF");
-    COutput::logSDLError();
-  }
-  audio::AudioSys::Init();
 
   if (!rend::RenderSys::m_SDL.init(width, height, name)) {
     COutput::logError("failed init SDL");
     COutput::logSDLError();
   }
+
+  if (Engine::options.renderingAPI == RenderingAPIs::openGL) {
+    if (!rend::openGL::Init()) {
+      COutput::logError("failed to init openGL");
+    }
+  }
+
+  audio::AudioSys::Init();
+
 #ifdef DEBUG
   debug_log("ENGINE", std::format("engine took {}ms to initialize", std::to_string(initTimer.end())));
 #endif
+
   return true;
 }
 
@@ -105,7 +111,7 @@ bool Engine::run() {
         COutput::logCustom("ENGINE", "Rendering API: SDL3");
         break;
       case secret::core::RenderingAPIs::openGL: 
-        COutput::logCustom("ENGINE", "Renering API: openGL");
+        COutput::logCustom("ENGINE", "Rendering API: openGL");
         break;
     } 
 

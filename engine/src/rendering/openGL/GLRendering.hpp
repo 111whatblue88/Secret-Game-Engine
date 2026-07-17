@@ -21,9 +21,29 @@ public:
   openGL();
   static bool Init();
 
-  static void renderTriangleTest();
-
   static SDL_GLContext GLContext;
+
+  // rendering
+
+  static void renderTriangleTest();
+  static void renderTriangle();
+
+  // shaders
+
+  struct shaderFileSources {
+    std::string vertexSource;
+    std::string fragmentSource;
+  };
+
+  static shaderFileSources parseShader(const std::string& shaderPath);
+
+  static unsigned int compileShader(unsigned int type, const std::string& source);
+  static unsigned int createShader(const std::string& vertexShader, const std::string& fragmentShader);
+
+  // error
+
+  static bool errorCheck(std::string file, int line);
+  static void errorClear();
 
 private:
 

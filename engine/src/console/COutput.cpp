@@ -70,4 +70,3 @@ void COutput::logCustom(std::string header, std::string msg) {
   std::cout << resolveColor(MsgColor::white) << std::format("[{}] ", header) << msg << "\n";
 }
 
-

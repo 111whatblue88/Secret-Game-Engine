@@ -16,6 +16,17 @@
 namespace secret {
 namespace rend {
 
+struct Vertex2d {
+ 
+  Vertex2d();
+  Vertex2d(Vec2 pos);
+
+  Vec2 pos;
+  Color color;
+
+};
+
+
 class RenderSys {
 public:
 
@@ -35,7 +46,8 @@ public:
 
     // openGL calls
 
-    GL_TESTTRIANGLE
+    GL_TESTTRIANGLE,
+    GL_TRIANGLE
 
   };
 

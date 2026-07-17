@@ -29,6 +29,11 @@
 #define debug_log(x, y)
 #endif
 
+#define SDLCheck(x) (x);rend::SDL::errorCheck(__FILE__, __LINE__);
+
+#define GLCheck(x) (x);openGL::errorCheck(__FILE__, __LINE__);
+
+
 namespace secret {
 namespace core {
 

@@ -30,46 +30,77 @@ bool SDL::init(int width, int height, std::string name) {
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
+      COutput::logCustom("FATAL ERROR", "SDL failed to start", COutput::MsgColor::red);
+      COutput::logSDLError();
       return false;
     } 
   }
   if (TTF_WasInit() == 0) {
     if (!TTF_Init()) {
+      COutput::logCustom("FATAL ERROR", "SDL TTF failed to start", COutput::MsgColor::red);
+      COutput::logSDLError();
       return false;
     }
   }
-  m_window = SDL_CreateWindow(name.c_str(), width, height, SDL_WINDOW_OPENGL);
-  if (!m_window) {
-    COutput::logCustom("FATAL ERROR", "Window creation failed", COutput::MsgColor::red);
-    COutput::logSDLError();
-    core::Engine::earlyExit("No window");
-    return false; 
+  if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
+    m_window = SDL_CreateWindow(name.c_str(), width, height, SDL_WINDOW_OPENGL);
+    if (!m_window) {
+      COutput::logCustom("FATAL ERROR", "Window creation failed", COutput::MsgColor::red);
+      COutput::logSDLError();
+      core::Engine::earlyExit("No window");
+      return false; 
+    }
+  } else {
+    m_window = SDL_CreateWindow(name.c_str(), width, height, 0);
+    if (!m_window) {
+      COutput::logCustom("FATAL ERROR", "Window creation failed", COutput::MsgColor::red);
+      COutput::logSDLError();
+      core::Engine::earlyExit("No window");
+      return false; 
+    }
+    m_renderer = SDL_CreateRenderer(m_window, NULL);
+    if (!m_renderer) {
+      COutput::logCustom("FATAL ERROR", "Renderer creation failed", COutput::MsgColor::red);
+      COutput::logSDLError();
+      core::Engine::earlyExit("No renderer");
+      return false;
+    }
   }
-  m_renderer = SDL_CreateRenderer(m_window, NULL);
-  if (!m_renderer) {
-    COutput::logCustom("FATAL ERROR", "Renderer creation failed", COutput::MsgColor::red);
-    COutput::logSDLError();
 
-    core::Engine::earlyExit("No renderer");
-    return false;
-  }
-
-  // GL context setup 
-  openGL::GLContext = SDL_GL_CreateContext(m_window);
+  // GL specific setup 
 
   if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
-    SDL_GL_MakeCurrent(m_window, openGL::GLContext);
+    openGL::GLContext = SDL_GL_CreateContext(m_window);
+    if (!openGL::GLContext) {
+      COutput::logCustom("FATAL ERROR", "openGL context creation failed", COutput::MsgColor::red);
+      COutput::logSDLError();
+      core::Engine::earlyExit("No renderer");
+      return false;
+    }
+    if (!SDL_GL_MakeCurrent(m_window, openGL::GLContext)) {
+      COutput::logCustom("FATAL ERROR", "openGL context creation failed", COutput::MsgColor::red);
+      COutput::logSDLError();
+      core::Engine::earlyExit("No renderer");
+      return false;
+    };
   }
-
   return true;
 }
 
 bool SDL::wasInit() {
-if (!m_renderer && !m_window) {
-  return false;
-} else {
-  return true;
-}
+  if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
+    if (!m_window) {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    if (!m_renderer && !m_window) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
 
 void SDL::renderClear() {
@@ -316,6 +347,14 @@ SDL_RenderTexture(
   NULL,
   &location
 );
+}
+
+bool SDL::errorCheck(std::string file, int line) {
+ if (SDL_GetError()) {
+   return true;
+ } else {
+   return false;
+ }
 }
 
 }

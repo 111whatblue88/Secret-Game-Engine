@@ -26,18 +26,18 @@ SDL RenderSys::m_SDL = SDL();
 
 bool RenderSys::renderGL() {
 
-
   // proccess callbacks
   for (size_t i = 0; i < CallList.size(); i++) {
    
     glClear(GL_COLOR_BUFFER_BIT);
 
     switch (CallList[i].type) {
-      
       case CallType::GL_TESTTRIANGLE:
-      openGL::renderTriangleTest();
-      break;
-
+        openGL::renderTriangleTest();
+        break;
+      case CallType::GL_TRIANGLE:
+        openGL::renderTriangle();
+        break;
     }
   }  
   CallList.clear();
