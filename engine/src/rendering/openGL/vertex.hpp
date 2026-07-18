@@ -24,9 +24,16 @@ class IndexBuffer {
 
   unsigned int ID;
 
+  unsigned int count;
+
   public:
 
+  IndexBuffer();
   IndexBuffer(const void* data, const unsigned int count);
+
+  unsigned int getCount() const;
+
+  void fillData(const void* data, const unsigned int count);
 
   void Bind() const;
   void Unbind() const;
@@ -48,6 +55,8 @@ private:
   std::vector<VertexBufferAttribute> attributes; // all of the attributes
   unsigned int stride;
 public:
+
+  VertexBufferLayout();
 
   void Push(unsigned int count, unsigned int type, bool normalized);
 

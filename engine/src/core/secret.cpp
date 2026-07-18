@@ -65,7 +65,6 @@ bool Engine::init(int width, int height, std::string name) {
     COutput::logError("failed init SDL");
     COutput::logSDLError();
   }
-
   if (Engine::options.renderingAPI == RenderingAPIs::openGL) {
     if (!rend::openGL::Init()) {
       COutput::logError("failed to init openGL");
@@ -120,15 +119,14 @@ bool Engine::run() {
   }
 
   uint32_t lastFrameTime = SDL_GetTicks();
-
   while (!engineExit) {
+
+    COutput::logSDLError();
 
     uint32_t currentFrameTime = SDL_GetTicks();
     m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
     lastFrameTime = currentFrameTime;
-
     secret::input::InputSys::Input();
-
     ecs::EntitySys::update();
     update();
 
@@ -142,7 +140,6 @@ bool Engine::run() {
     if (frametime<1000/ options.fpsCap) {
       SDL_Delay((1000/options.fpsCap)-frametime);
     }
-    COutput::logSDLError();
     
   }
 

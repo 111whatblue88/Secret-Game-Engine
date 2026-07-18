@@ -25,3 +25,6 @@
 [submodule "engine/vendored/glew"]
 	path = engine/vendored/glew
 	url = https://github.com/nigels-com/glew.git
+[submodule "engine/vendored/glm"]
+	path = engine/vendored/glm
+	url = https://github.com/g-truc/glm.git

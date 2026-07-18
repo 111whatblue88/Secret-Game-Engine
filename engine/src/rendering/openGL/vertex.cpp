@@ -36,6 +36,18 @@ void VertexBuffer::VertexBuffer::Unbind() const {
 }
 
 IndexBuffer::IndexBuffer(const void* data, const unsigned int count) {
+  this->count=count;
+  GLCheck(glGenBuffers(1, &ID));
+  GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID));
+  GLCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, data, GL_STATIC_DRAW));
+}
+
+IndexBuffer::IndexBuffer() {
+  count=0;
+}
+
+void IndexBuffer::fillData(const void* data, const unsigned int count) {
+  this->count=count;
   GLCheck(glGenBuffers(1, &ID));
   GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID));
   GLCheck(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, data, GL_STATIC_DRAW));
@@ -46,6 +58,10 @@ void IndexBuffer::Bind() const {
 }
 void IndexBuffer::Unbind() const {
   GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+
+unsigned int IndexBuffer::getCount() const {
+  return count;
 }
 
 VertexBufferAttribute::VertexBufferAttribute(unsigned int count, unsigned int type, bool normalized){
@@ -68,8 +84,10 @@ unsigned int VertexBufferAttribute::getSizeOfType(unsigned int type) {
 }
 
 VertexArray::VertexArray() {
-  GLCheck(glGenVertexArrays(1, &ID));
-  GLCheck(glBindVertexArray(ID));
+  if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
+    GLCheck(glGenVertexArrays(1, &ID));
+    GLCheck(glBindVertexArray(ID));
+  }
 }
 
 void VertexArray::Bind() const {
@@ -85,11 +103,17 @@ void VertexArray::AddLayout(const VertexBuffer& vb, const VertexBufferLayout& la
   vb.Bind();
   auto attributes = layout.getAttributes();
   unsigned int offset = 0;
+ 
   for (unsigned int i = 0; i < attributes.size(); i++) {
     const auto attribute = attributes[i];
     GLCheck(glEnableVertexAttribArray(i));
-    GLCheck(glVertexAttribPointer(i, attribute.count, attribute.type, 
-    attribute.normalized, layout.getStride(), (const void*)offset));
+    if (attribute.normalized == GL_TRUE) {
+      GLCheck(glVertexAttribPointer(i, attribute.count, attribute.type, 
+      GL_TRUE, layout.getStride(), (const void*)offset));
+    } else {
+      GLCheck(glVertexAttribPointer(i, attribute.count, attribute.type, 
+      GL_FALSE, layout.getStride(), (const void*)offset));
+    }
     
     offset+=attribute.count*attribute.getSizeOfType(attribute.type);
 
@@ -114,4 +138,9 @@ void VertexBufferLayout::Push(unsigned int count, unsigned int type, bool normal
       break;
     }
   }
+}
+
+VertexBufferLayout::VertexBufferLayout() {
+  attributes = {};
+  stride = 0;
 }

@@ -21,6 +21,25 @@ struct Vec2 {
 
 };
 
+struct Vec4 {
+  
+  float x;
+  float y;
+  float z;
+  float w;
+
+  Vec4();
+  Vec4(float x, float y, float z, float w);
+
+  Vec4 operator+(Vec4 other);
+  Vec4 operator-(Vec4 other);
+  Vec4 operator*(Vec4 other);
+  Vec4 operator/(Vec4 other);
+
+  Vec4 scale(float scalar);
+
+};
+
 struct Rect {
 
   Vec2 pos;

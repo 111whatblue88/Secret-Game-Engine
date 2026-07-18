@@ -3,6 +3,35 @@
 
 using namespace secret;
 
+Vec4::Vec4() {
+  x=0;
+  y=0;
+  z=0;
+  w=0;
+}
+Vec4::Vec4(float x, float y, float z, float w) {
+  this->x=x;
+  this->y=y;
+  this->z=z;
+  this->w=w;
+}
+
+Vec4 Vec4::operator+(Vec4 other) {
+  return Vec4(x+other.x, y+other.y, z+other.z, w+other.w); 
+}
+Vec4 Vec4::operator-(Vec4 other) {
+  return Vec4(x-other.x, y-other.y, z-other.z, w-other.w); 
+}
+Vec4 Vec4::operator/(Vec4 other) {
+  return Vec4(x/other.x, y/other.y, z/other.z, w/other.w); 
+}
+Vec4 Vec4::operator*(Vec4 other) {
+  return Vec4(x*other.x, y*other.y, z*other.z, w*other.w); 
+}
+Vec4 Vec4::scale(float scalar) {
+  return Vec4(x*scalar, y*scalar, z*scalar, w*scalar); 
+}
+
 Vec2::Vec2() {
   x=0;
   y=0;

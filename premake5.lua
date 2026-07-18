@@ -11,6 +11,10 @@ project "secret"
   location "build/secret" 
   targetdir "build/secret/lib"
 
+  includedirs {
+    "engine/vendored/glm"
+  }
+
   libdirs { "engine/vendored/SDL/src/build", 
     "engine/vendored/SDL/src_image/build",
     "engine/vendored/SDL/src_ttf/build",

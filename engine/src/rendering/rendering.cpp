@@ -2,6 +2,9 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "openGL/GLRendering.hpp"
+#include "openGL/renderer.hpp"
+#include "openGL/vertex.hpp"
+#include "openGL/shader.hpp"
 
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_oldnames.h>
@@ -38,6 +41,14 @@ bool RenderSys::renderGL() {
       case CallType::GL_TRIANGLE:
         openGL::renderTriangle();
         break;
+      case CallType::GENERAL_VERTEX_RENDER:
+        Renderer::Draw(
+          CallList[i].GD.va,
+          CallList[i].GD.ib,
+          CallList[i].GD.shader
+        );
+        break;
+
     }
   }  
   CallList.clear();
@@ -126,15 +137,15 @@ bool RenderSys::renderSDL() {
       break;
       case CallType::SDL_RGEOMETRY:
         m_SDL.renderGeometry(
-          CallList[i].GD.verticies, 
-          CallList[i].GD.numVerticies, 
-          CallList[i].GD.indices, 
-          CallList[i].GD.numIndices
+          CallList[i].GDOLD.verticies, 
+          CallList[i].GDOLD.numVerticies, 
+          CallList[i].GDOLD.indices, 
+          CallList[i].GDOLD.numIndices
       );
       case CallType::SDL_RPOINTS:
         m_SDL.renderPoints(
-          CallList[i].GD.points,
-          CallList[i].GD.numPoints
+          CallList[i].GDOLD.points,
+          CallList[i].GDOLD.numPoints
       );
       break;
     }

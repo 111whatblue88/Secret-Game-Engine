@@ -3,6 +3,7 @@
 #include "../../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "vertex.hpp"
+#include "shader.hpp"
 
 #include <GL/gl.h>
 #include <SDL3/SDL_init.h>
@@ -34,13 +35,17 @@ bool openGL::Init() {
     return false;
   }
 
-  // TESTING REMOVE AFTER
- 
+  return true;
+
+}
+
+void openGL::renderTriangleTest() {
+
   float triangle[] = {
-    -0.5f, -0.5f,
-    0.5f, -0.5f,
-    0.5f, 0.5f,
-    -0.5f, 0.5f,
+    -5.0f, -5.0f,
+    5.0f, -5.0f,
+    5.0f, 5.0f,
+    -5.0f, 5.0f,
 
   };
   unsigned int indices[] = {
@@ -59,104 +64,29 @@ bool openGL::Init() {
 
   filesystem::locateToEngineRoot();
 
-  openGL::shaderFileSources shaders = parseShader("engine/assets/shaders/basic.shader");
-
-  unsigned int shader = createShader(shaders.vertexSource, shaders.fragmentSource);
-  glUseProgram(shader);
+  Shader shader("engine/assets/shaders/basic.shader");
   
-  int location = glGetUniformLocation(shader, "u_Color");
-  glUniform4f(location, 1.0, 0.0, 0.0, 1.0);
+  shader.Bind();
 
-  // END OF TEST AREA
+  glm::mat4 proj = glm::ortho(-225.0f, 225.0f, -255.0f, 255.0f, -1.0f, 1.0f);
 
-  return true;
+  shader.setUniformMat4f("u_MVP", proj);
+  shader.setUniform4f("u_Color", Vec4{1.0, 0.0, 0.0, 1.0});
 
-}
-
-void openGL::renderTriangleTest() {
-
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+  RenderSys::CallList.push_back(
+    RenderSys::RenderCall{
+      RenderSys::CallType::GENERAL_VERTEX_RENDER,
+      RenderSys::PositionalData{},
+      RenderSys::SizeData{},
+      RenderSys::RenderingData{},
+      RenderSys::GeometryDataOLD{},
+      RenderSys::GeometryData{va,ib,shader}
+    }
+  );
 
 }
 
 void openGL::renderTriangle() {
-
-}
-
-unsigned int openGL::compileShader(unsigned int type, const std::string& source) {
-
-  unsigned int id = glCreateShader(type);
-  const char * src = source.c_str();
-
-  glShaderSource(id, 1, &src, nullptr);
-  glCompileShader(id);
-
-
-  int result;
-  glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-  if (!result) {
-    int length;
-    glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-    char* message = (char*)alloca(length*sizeof(char));
-    glGetShaderInfoLog(id, length, &length, message);
-    COutput::logCustom("SHADER", message);
-    glDeleteShader(id);
-    return 0;
-  }
-
-  return id;
-
-}
-
-unsigned int openGL::createShader(const std::string& vertexShader, const std::string& fragmentShader) {
- 
-  unsigned int program = glCreateProgram();
-  unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader);
-  unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-  glAttachShader(program, vs);
-  glAttachShader(program, fs);
-  
-  glLinkProgram(program);
-  glValidateProgram(program);
-
-  glDeleteShader(vs);
-  glDeleteShader(fs);
-
-  return program;
-
-}
-
-openGL::shaderFileSources openGL::parseShader(const std::string& shaderPath) {
-
-  enum class ShaderType {
-    vertex, fragment
-  };
-  std::stringstream vertexSrc;
-  std::stringstream fragmentSrc;
-  std::string line;
-  std::ifstream stream(shaderPath);
-  ShaderType currentType;
-  while (getline(stream, line)) {
-    if (line.find("#shader") != std::string::npos) {
-      if (line.find("vertex") != std::string::npos) {
-        currentType = ShaderType::vertex;
-      } else if (line.find("fragment") != std::string::npos) {
-        currentType = ShaderType::fragment;
-      }
-    } else {
-      switch (currentType) {
-        case ShaderType::fragment:
-          fragmentSrc << line << "\n";
-          break;
-        case ShaderType::vertex:
-          vertexSrc << line << "\n";
-          break;
-      }
-    } 
-  }
-
-  return shaderFileSources{vertexSrc.str(), fragmentSrc.str()};
 
 }
 

@@ -7,6 +7,9 @@
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "SDL/SDLRendering.hpp"
 #include "openGL/GLRendering.hpp"
+#include "openGL/vertex.hpp"
+#include "openGL/shader.hpp"
+#include "openGL/renderer.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -16,21 +19,12 @@
 namespace secret {
 namespace rend {
 
-struct Vertex2d {
- 
-  Vertex2d();
-  Vertex2d(Vec2 pos);
-
-  Vec2 pos;
-  Color color;
-
-};
-
-
 class RenderSys {
 public:
 
   enum class CallType {
+
+    // DEPRECATED
 
     // SDL Calls
     SDL_RBOXFILL,
@@ -47,7 +41,12 @@ public:
     // openGL calls
 
     GL_TESTTRIANGLE,
-    GL_TRIANGLE
+    GL_TRIANGLE,
+
+    // NEW CALLS   
+
+    GENERAL_VERTEX_RENDER
+
 
   };
 
@@ -66,7 +65,7 @@ public:
     SDL_FRect uv;
     int layer;
   };
-  struct GeometryData {
+  struct GeometryDataOLD {
     SDL_Vertex* verticies;
     int numVerticies;
     int* indices;
@@ -74,14 +73,21 @@ public:
     SDL_FPoint* points;
     int numPoints;
   };
+  // all of the above will be depracted data types
+  struct GeometryData {
+    VertexArray va;
+    IndexBuffer ib;
+    Shader shader;
+  };
+
   struct RenderCall {
     CallType type; 
     PositionalData PD;
     SizeData SD;
     RenderingData RD;
+    GeometryDataOLD GDOLD;
     GeometryData GD;
   };
-
 
   static SDL m_SDL;
 
