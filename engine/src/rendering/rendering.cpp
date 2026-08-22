@@ -43,9 +43,9 @@ bool RenderSys::renderGL() {
         break;
       case CallType::GENERAL_VERTEX_RENDER:
         Renderer::Draw(
-          CallList[i].GD.va,
-          CallList[i].GD.ib,
-          CallList[i].GD.shader
+          CallList[i].GDGL.va,
+          CallList[i].GDGL.ib,
+          CallList[i].GDGL.shader
         );
         break;
 
@@ -142,12 +142,22 @@ bool RenderSys::renderSDL() {
           CallList[i].GDOLD.indices, 
           CallList[i].GDOLD.numIndices
       );
+      break;
       case CallType::SDL_RPOINTS:
         m_SDL.renderPoints(
           CallList[i].GDOLD.points,
           CallList[i].GDOLD.numPoints
       );
       break;
+
+      // modern calls
+
+      case CallType::GENERAL_VERTEX_RENDER:
+      
+      //TODO: implement this god damn SDL actually sucks
+
+      break;
+
     }
   }  
   CallList.clear();

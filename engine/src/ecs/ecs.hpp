@@ -5,6 +5,10 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../general/general.hpp"
 #include "../audio/audio.hpp"
+#include "../rendering/openGL/GLRendering.hpp"
+#include "../rendering/openGL/vertex.hpp"
+#include "../rendering/openGL/shader.hpp"
+#include "../rendering/openGL/renderer.hpp"
 
 #include <SDL3/SDL_audio.h>
 #include <algorithm>
@@ -44,6 +48,16 @@ public:
 private:
   std::string m_name;
 };
+
+// base rendering class
+class Rendering {
+public:
+  rend::VertexArray va;
+  rend::VertexBuffer vb;
+  rend::IndexBuffer ib;
+  rend::Shader shader;
+};
+
 
 // physicsBody
 class PhysicsBody {
@@ -95,7 +109,7 @@ class BasicBoxCollider : public Component{
 };
 
 // PrimitiveRendering
-class PrimitiveRenderer : public Component{
+class PrimitiveRenderer : public Component, public Rendering{
 public:
   enum class PrimitiveType {
     square,

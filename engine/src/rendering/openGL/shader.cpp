@@ -109,8 +109,14 @@ unsigned int Shader::createShader(const std::string& vertexShader, const std::st
 Shader::Shader(const std::string& shaderPath)
   : shaderSource(shaderPath), ID(0) {
   ShaderFileSources source = parseShader(shaderSource);
- ID = createShader(source.vertexSource, source.fragmentSource);
- uniformLocationCache = {};
+  ID = createShader(source.vertexSource, source.fragmentSource);
+  uniformLocationCache = {};
+}
+
+void Shader::loadShader(const std::string& shaderPath) {
+  ShaderFileSources source = parseShader(shaderSource);
+  ID = createShader(source.vertexSource, source.fragmentSource);
+  uniformLocationCache = {};
 }
 
 Shader::Shader() {

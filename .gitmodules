@@ -28,6 +28,3 @@
 [submodule "engine/vendored/glm"]
 	path = engine/vendored/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "engine/vendored/Secret-Output-Helper"]
-	path = engine/vendored/Secret-Output-Helper
-	url = git@github.com:111whatblue88/Secret-Output-Helper.git

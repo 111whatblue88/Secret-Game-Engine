@@ -3,6 +3,8 @@ workspace "secret"
   configurations { "Debug", "Release" }
   location "build" 
 
+include "engine/vendored/Secret-Output-Helper"
+
 project "secret"
 
   kind "SharedLib"
@@ -21,7 +23,7 @@ project "secret"
     "engine/vendored/SDL/src_mixer/build",
     "engine/vendored/glew/build/lib",
   }
-  links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW" }
+  links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
 
   filter "configurations:Debug"
     defines { "DEBUG" }

@@ -21,6 +21,19 @@ struct Vec2 {
 
 };
 
+//TODO: implement functionality for this and replace GLM code with it
+struct mat4 {
+
+  float matrix[4][4];
+
+  mat4(float mat4[4][4]);
+  mat4();
+
+  mat4 operator*(Vec2 other);
+  mat4 operator*(mat4 other);
+
+};
+
 struct Vec4 {
   
   float x;

@@ -35,6 +35,16 @@ void VertexBuffer::VertexBuffer::Unbind() const {
   GLCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
+VertexBuffer::VertexBuffer() {
+
+}
+
+void VertexBuffer::fillData(const void* data, const unsigned int dataSize) {
+  GLCheck(glGenBuffers(1, &ID));
+  GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
+  GLCheck(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW));
+}
+
 IndexBuffer::IndexBuffer(const void* data, const unsigned int count) {
   this->count=count;
   GLCheck(glGenBuffers(1, &ID));

@@ -28,12 +28,16 @@ namespace rend {
 using namespace console;
 
 SDL_GLContext openGL::GLContext = NULL;
+glm::mat4 openGL::windowProjection = {};
 
-bool openGL::Init() {
+bool openGL::Init(float w, float h) {
 
   if (glewInit() != GLEW_OK) {
     return false;
   }
+
+  glViewport(0,0,w,h);
+  windowProjection = glm::ortho(0.0f,w,0.0f,h, -1.0f, 1.0f);
 
   return true;
 
@@ -42,10 +46,10 @@ bool openGL::Init() {
 void openGL::renderTriangleTest() {
 
   float triangle[] = {
-    -5.0f, -5.0f,
-    5.0f, -5.0f,
-    5.0f, 5.0f,
-    -5.0f, 5.0f,
+    -50.0f, -50.0f,
+    50.0f, -50.0f,
+    50.0f, 50.0f,
+    -50.0f, 50.0f,
 
   };
   unsigned int indices[] = {
@@ -68,9 +72,7 @@ void openGL::renderTriangleTest() {
   
   shader.Bind();
 
-  glm::mat4 proj = glm::ortho(-225.0f, 225.0f, -255.0f, 255.0f, -1.0f, 1.0f);
-
-  shader.setUniformMat4f("u_MVP", proj);
+  shader.setUniformMat4f("u_MVP", windowProjection);
   shader.setUniform4f("u_Color", Vec4{1.0, 0.0, 0.0, 1.0});
 
   RenderSys::CallList.push_back(
@@ -80,7 +82,7 @@ void openGL::renderTriangleTest() {
       RenderSys::SizeData{},
       RenderSys::RenderingData{},
       RenderSys::GeometryDataOLD{},
-      RenderSys::GeometryData{va,ib,shader}
+      RenderSys::GeometryDataGL{va,ib,shader}
     }
   );
 

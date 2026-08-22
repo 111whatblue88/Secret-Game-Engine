@@ -5,11 +5,20 @@ Secret is a small game engine. Currently with very basic systems (ecs, audio, re
 Right now its main rendering API is SDL3, but openGL might be added soon
 
 ## Building
-### MacOS/Windows
-....never
+### Windows 
+
+##### Dependencies
+CMake installed and in path
+An ASM assembler installed and in path
+Premake5 installed and in path
+MSBuild in path
+
+1. Clone the repo with "git clone https://github.com/111whatblue88/Secret-Game-Engine.git --recursive"
+2. Run the buildWindows.bat setup script in /SecretCLI/buildScripts
+3. In the CLI, run "engine build all"
 ### Linux
 1. Clone the repo with "git clone https://github.com/111whatblue88/Secret-Game-Engine.git --recursive"
-2. Run the CLI setup script in /SecretCLI/buildScripts
+2. Run the buildLinux.sh setup script in /SecretCLI/buildScripts
 3. In the CLI, run "engine build all"
 
 ## Usage

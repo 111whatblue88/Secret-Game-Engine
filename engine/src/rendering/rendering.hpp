@@ -43,7 +43,7 @@ public:
     GL_TESTTRIANGLE,
     GL_TRIANGLE,
 
-    // NEW CALLS   
+    // NEW CALLS
 
     GENERAL_VERTEX_RENDER
 
@@ -73,11 +73,16 @@ public:
     SDL_FPoint* points;
     int numPoints;
   };
-  // all of the above will be depracted data types
-  struct GeometryData {
+  // all of the above will be deprecated data types
+  struct GeometryDataGL {
     VertexArray va;
     IndexBuffer ib;
     Shader shader;
+  };
+  struct GeometryDataSDL {
+    float* va;
+    int* ib;
+    int indexCount;
   };
 
   struct RenderCall {
@@ -86,7 +91,8 @@ public:
     SizeData SD;
     RenderingData RD;
     GeometryDataOLD GDOLD;
-    GeometryData GD;
+    GeometryDataGL GDGL;
+    GeometryDataSDL GDSDL;
   };
 
   static SDL m_SDL;

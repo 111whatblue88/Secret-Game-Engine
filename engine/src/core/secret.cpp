@@ -36,7 +36,7 @@ void Engine::exit() {
   engineExit = true;
 }
 void Engine::earlyExit(std::string msg) {
-  COutput::logWarning(std::format("Exiting early on next cycle. Exit message: \"{}\"", msg));
+  COutput::LogWarning("ENGINE", std::format("Exiting early on next cycle. Exit message: \"{}\"", msg), OH::Color::YELLOW);
 
   engineExit = true;
 };
@@ -46,18 +46,18 @@ bool Engine::init(int width, int height, std::string name) {
   Timer initTimer;
   initTimer.start();
 #endif
-  COutput::logCustom("ENGINE", "Initializing engine...");
+  COutput::Log("ENGINE", "Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-      COutput::logError("SDL_Init failed");
-      COutput::logSDLError();
+      COutput::LogError("ENGINE", "SDL_Init failed");
+      COutput::LogSDLError();
     } 
   }
   if (TTF_WasInit() == 0) {
     if (!TTF_Init()) {
-      COutput::logError("failed to start TTF");
-      COutput::logSDLError();
+      COutput::LogError("ENGINE", "failed to start TTF");
+      COutput::LogSDLError();
     }
   }
 
@@ -66,7 +66,7 @@ bool Engine::init(int width, int height, std::string name) {
     COutput::logSDLError();
   }
   if (Engine::options.renderingAPI == RenderingAPIs::openGL) {
-    if (!rend::openGL::Init()) {
+    if (!rend::openGL::Init(width, height)) {
       COutput::logError("failed to init openGL");
     }
   }
@@ -76,6 +76,8 @@ bool Engine::init(int width, int height, std::string name) {
 #ifdef DEBUG
   debug_log("ENGINE", std::format("engine took {}ms to initialize", std::to_string(initTimer.end())));
 #endif
+
+  COutput::logCustom("ENGINE", "Engine Intinalized");
 
   return true;
 }
