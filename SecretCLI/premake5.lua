@@ -16,11 +16,13 @@ project "SecretCLIParser"
 
   filter { "platforms:Windows" }
     system "windows"
+    toolset "msc"
     files { "CLIParser/**", "common/**" }
     removefiles { "CLIParser/**LNX.cpp", "common/**LNX.cpp" }
 
   filter { "platforms:Linux" }
     system "linux"
+    toolset "clang"
     files { "CLIParser/**", "common/**" }
     removefiles { "CLIParser/**WIN.cpp", "common/**WIN.cpp" }
   
