@@ -7,3 +7,4 @@ echo "starting make script..."
 cd build
 make
 wait
+echo "done"
