@@ -22,3 +22,6 @@
 [submodule "engine/vendored/json"]
 	path = engine/vendored/json
 	url = https://github.com/nlohmann/json.git
+[submodule "engine/vendored/Secret-Output-Helper"]
+	path = engine/vendored/Secret-Output-Helper
+	url = https://github.com/111whatblue88/Secret-Output-Helper.git
