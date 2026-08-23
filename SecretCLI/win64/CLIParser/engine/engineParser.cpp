@@ -122,7 +122,7 @@ bool EngineParser::parseArguments() {
 
     locateToEngineRoot();
 
-    fs::current_path(fs::current_path()/"engine/vendored/glew");
+    fs::current_path(fs::current_path()/"engine/vendored/non-git/glew");
     fs::current_path(fs::current_path()/"build"/"cmake");
     filesystem::execCommand("mkdir build");
     fs::current_path(fs::current_path()/"build");

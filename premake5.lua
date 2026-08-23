@@ -21,7 +21,7 @@ project "secret"
     "engine/vendored/SDL/src_image/build",
     "engine/vendored/SDL/src_ttf/build",
     "engine/vendored/SDL/src_mixer/build",
-    "engine/vendored/glew/build/lib",
+    "engine/vendored/non-git/glew/build/lib",
   }
   links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
 
