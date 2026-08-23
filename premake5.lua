@@ -16,10 +16,15 @@ project "secret"
   targetdir "build/secret/lib"
 
   includedirs {
+    "engine/vendored/SDL/src/include", 
+    "engine/vendored/SDL/src_image/include",
+    "engine/vendored/SDL/src_ttf/include",
+    "engine/vendored/SDL/src_mixer/include",
     "engine/vendored/glm"
   }
 
-  libdirs { "engine/vendored/SDL/src/build", 
+  libdirs { 
+    "engine/vendored/SDL/src/build", 
     "engine/vendored/SDL/src_image/build",
     "engine/vendored/SDL/src_ttf/build",
     "engine/vendored/SDL/src_mixer/build",
