@@ -29,7 +29,7 @@ project "secret"
       "engine/vendored/SDL/src_image/build/Debug",
       "engine/vendored/SDL/src_ttf/build/Debug",
       "engine/vendored/SDL/src_mixer/build/Debug",
-      "engine/vendored/non-git/glew/build/cmake/build/bin/Debug",
+      "engine/vendored/non-git/glew/build/cmake/build/lib/Debug",
     }
     links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32","glew", "Secret-Output-Helper" }
 
