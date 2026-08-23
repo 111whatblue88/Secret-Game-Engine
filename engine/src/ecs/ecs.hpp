@@ -1,16 +1,13 @@
 #ifndef _ECS_HPP
 #define _ECS_HPP
 
-#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 #include "../general/general.hpp"
 #include "../audio/audio.hpp"
-#include "../rendering/openGL/GLRendering.hpp"
-#include "../rendering/openGL/vertex.hpp"
-#include "../rendering/openGL/shader.hpp"
-#include "../rendering/openGL/renderer.hpp"
 
-#include <SDL3/SDL_audio.h>
 #include <algorithm>
 #include <cstddef>
 #include <ctime>
@@ -48,16 +45,6 @@ public:
 private:
   std::string m_name;
 };
-
-// base rendering class
-class Rendering {
-public:
-  rend::VertexArray va;
-  rend::VertexBuffer vb;
-  rend::IndexBuffer ib;
-  rend::Shader shader;
-};
-
 
 // physicsBody
 class PhysicsBody {
@@ -109,7 +96,7 @@ class BasicBoxCollider : public Component{
 };
 
 // PrimitiveRendering
-class PrimitiveRenderer : public Component, public Rendering{
+class PrimitiveRenderer : public Component{
 public:
   enum class PrimitiveType {
     square,

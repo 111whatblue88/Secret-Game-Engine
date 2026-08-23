@@ -5,10 +5,8 @@
 #include "../../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 #include "../../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 
-#include "../../../vendored/glm/glm/glm.hpp"
-#include "../../../vendored/glm/glm/gtc/matrix_transform.hpp"
-#include <SDL3/SDL_video.h>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -21,7 +19,7 @@ class openGL {
 public:
 
   openGL();
-  static bool Init(float w, float h);
+  static bool Init();
 
   static SDL_GLContext GLContext;
 
@@ -35,8 +33,7 @@ public:
   static bool errorCheck(std::string file, int line);
   static void errorClear();
 
-
-  static glm::mat4 windowProjection;
+private:
 
 };
 

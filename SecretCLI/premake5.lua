@@ -1,8 +1,6 @@
 -- premake5.lua
 workspace "Secret"
   configurations { "Debug", "Release" }
-  platforms { "Windows", "Linux" }
-
   location "build"
 
 project "SecretCLIParser"
@@ -10,41 +8,43 @@ project "SecretCLIParser"
   language "C++"
   cppdialect "C++20"
   architecture "x86_64"
-
   location "build/SecretCLIParser"
-  targetdir "build/SecretCLIParser/bin"
 
-  filter { "platforms:Windows" }
-    system "windows"
-    toolset "msc"
-    files { "CLIParser/**", "common/**" }
-    removefiles { "CLIParser/**LNX.cpp", "common/**LNX.cpp" }
+  targetdir "build/SecretCLIParser/bin/%{cfg.buildcfg}"
+  objdir "build/SecretCLIParser/obj/%{cfg.buildcfg}"
 
-  filter { "platforms:Linux" }
-    system "linux"
-    toolset "clang"
-    files { "CLIParser/**", "common/**" }
-    removefiles { "CLIParser/**WIN.cpp", "common/**WIN.cpp" }
-  
+  filter "system:windows"
+    systemversion "latest"
+    defines { "PLATFORM_WINDOWS" }
+    links { "user32" }
+    files { "win64/CLIParser/**", "win64/common/**" }
+
+  filter "system:linux"
+    defines { "PLATFORM_LINUX" }
+    links { "pthread" }
+    files { "linux/CLIParser/**", "linux/common/**" }
 
 project "SecretCLI"
   kind "ConsoleApp"
   language "C++"
   cppdialect "C++20"
   architecture "x86_64"
-
   location "build/SecretCLI"
-  targetdir "./"
 
-  filter { "platforms:Windows" }
-    system "windows"
-    files { "CLIParser/**", "common/**" }
-    removefiles { "CLI/**WIN.cpp", "common/**WIN.cpp" }
+  dependson {
+    "SecretCLIParser"
+  }
 
-  filter { "platforms:Linux" }
-    system "linux"
-    files { "CLI/**", "common/**" }
-    removefiles { "CLI/**WIN.cpp", "common/**WIN.cpp" }
+  targetdir "build/SecretCLI/bin/%{cfg.buildcfg}"
+  objdir "build/SecretCLI/obj/%{cfg.buildcfg}"
 
+  filter "system:windows"
+    systemversion "latest"
+    defines { "PLATFORM_WINDOWS" }
+    links { "user32" }
+    files { "win64/CLI/**", "win64/common/**" }
 
-
+  filter "system:linux"
+    defines { "PLATFORM_LINUX" }
+    links { "pthread" }
+    files { "linux/CLI/**", "linux/common/**" }

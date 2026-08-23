@@ -2,9 +2,9 @@
 cd ..
 echo starting premake script...
 START /wait premake5 vs2022
-echo building VS solution..
+echo building visual studio solution...
 cd build
-START /wait MSBuild.exe Secret.sln
-echo copying CLI executable...
-COPY SecretCLI\bin\Debug\SecretCLI.exe ..\
-echo done
+START /wait MSBuild.exe ./Secret.sln
+cd ..
+echo copying executable to main directory...
+COPY build\SecretCLI\bin\Debug\SecretCLI.exe .\

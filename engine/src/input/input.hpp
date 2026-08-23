@@ -2,7 +2,10 @@
 #define _INPUT_HPP
 
 #include "../general/general.hpp"
-#include <SDL3/SDL_events.h>
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 namespace secret {
 namespace input {
 

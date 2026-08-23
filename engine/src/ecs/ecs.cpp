@@ -1,13 +1,12 @@
 #include "ecs.hpp"
 #include "../secret.hpp"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 
 #include <format>
-#include <SDL3/SDL_audio.h>
-#include <SDL3/SDL_oldnames.h>
 #include <cmath>
-#include <SDL3/SDL_gpu.h>
 #include <algorithm>
 #include <cstdint>
 #include <cstdlib>
@@ -90,43 +89,14 @@ this->secondLinePoint = p2;
 }
 
 PrimitiveRenderer::PrimitiveRenderer(Color color, bool fill, Rect rect) {
-  this->SetName("defaultName");
-  this->type = PrimitiveType::square;
-  this->fill = fill;
-  this->color = color;
-  this->rect = rect;
-  this->circle = {{0,0},0};
-  this->firstLinePoint = {0,0};
-  this->secondLinePoint = {0,0};
-
-  if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
-    float verticies[] {
-
-      0, 0,               // 1
-      rect.width, 0,      // 2
-      0, -rect.height,    // 3
-      rect.width, -rect.height, // 4
-
-    };
-    int indices[] {
-      1,2,3,
-      2,4,3
-    };
-
-    vb.fillData(verticies, 8);
-    ib.fillData(indices, 6);
-
-    rend::VertexBufferLayout layout;
-    layout.Push(2, GL_FLOAT, false);
-
-    va.AddLayout(vb, layout);
-
-    shader.loadShader("engine/assets/shaders/basic.shader");
-
-    shader.setUniformMat4f("u_MVP", openGL::windowProjection);
-    shader.setUniform4f("u_Color", Vec4(color.r, color.b, color.b, 1.0f));
-  }
-
+this->SetName("defaultName");
+this->type = PrimitiveType::square;
+this->fill = fill;
+this->color = color;
+this->rect = rect;
+this->circle = {{0,0},0};
+this->firstLinePoint = {0,0};
+this->secondLinePoint = {0,0};
 }
 PrimitiveRenderer::PrimitiveRenderer(std::string name, Color color, bool fill, Rect rect) {
 this->SetName(name);
@@ -472,48 +442,12 @@ bool EntitySys::update() {
         switch (PR.second.type) {
           case ecs::PrimitiveRenderer::PrimitiveType::square: {
             if (PR.second.fill) {
-
-              // GET THIS WORKING WITH OPENGL
-
-
-              if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
-                // OPENGL
-                
-                PR.second.vb.Bind();
-                PR.second.shader.Bind();
-                PR.second.va.Bind();
-
-                float verticies[] {
-                  E.second.TransformComp.pos.x, E.second.TransformComp.pos.y,               // 1
-                  E.second.TransformComp.pos.x+PR.second.rect.width, E.second.TransformComp.pos.y,      // 2
-                  E.second.TransformComp.pos.x, E.second.TransformComp.pos.y+(-PR.second.rect.height),    // 3
-                  E.second.TransformComp.pos.x+PR.second.rect.width, E.second.TransformComp.pos.y+(-PR.second.rect.height), // 4
-                };
-
-                PR.second.vb.fillData(verticies, 8);
-
-                rend::VertexBufferLayout layout;
-                layout.Push(2, GL_FLOAT, false);
-
-                PR.second.va.AddLayout(PR.second.vb, layout);
-
-                RenderSys::CallList.push_back(RenderSys::RenderCall{
-                  RenderSys::CallType::GENERAL_VERTEX_RENDER,
-                  RenderSys::PositionalData{},
-                  RenderSys::SizeData{},
-                  RenderSys::RenderingData{},
-                  RenderSys::GeometryDataOLD{},
-                  RenderSys::GeometryDataGL{PR.second.va, PR.second.ib, PR.second.shader}
-                });
-
-              } else {
-                RenderSys::CallList.push_back(RenderSys::RenderCall{
-                  RenderSys::CallType::SDL_RBOXFILL,
-                  RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
-                  RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
-                  RenderSys::RenderingData{PR.second.color}
-                });
-              }
+              RenderSys::CallList.push_back(RenderSys::RenderCall{
+                RenderSys::CallType::SDL_RBOXFILL,
+                RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
+                RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
+                RenderSys::RenderingData{PR.second.color}
+              });
             } else {
               RenderSys::CallList.push_back(RenderSys::RenderCall{
                 RenderSys::CallType::SDL_RBOX,

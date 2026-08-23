@@ -11,8 +11,7 @@ using namespace secret;
 using namespace filesystem;
 
 void filesystem::execCommand(const char* cmd) {
-  std::string command = std::format("stdbuf -oL {} 2>&1", cmd);
-    FILE* pipe = popen(command.c_str(), "r");
+    FILE* pipe = _popen(cmd, "r");
     if (!pipe) {
         return;
     }
@@ -24,7 +23,7 @@ void filesystem::execCommand(const char* cmd) {
         std::cout.flush();
     }
 
-    int status = pclose(pipe);
+    int status = _pclose(pipe);
 
     return;
 }

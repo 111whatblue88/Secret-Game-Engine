@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <GL/glew.h>
+#include "../../../vendored/glew/include/GL/glew.h"
 #include <string>
 #include <unordered_map>
 

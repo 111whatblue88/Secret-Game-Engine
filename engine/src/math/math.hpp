@@ -5,7 +5,7 @@
 
 namespace secret {
 namespace math {
-
+  
   float vectorLength(Vec2 a);
   float vectorDistance(Vec2 a, Vec2 b);
 

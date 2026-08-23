@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <GL/glew.h>
+#include "../../../vendored/glew/include/GL/glew.h"
 #include <string>
 #include <unordered_map>
 
@@ -23,8 +23,6 @@ public:
 
   Shader();
   Shader(const std::string& shaderPath);
-
-  void loadShader(const std::string& shaderPath);
 
   void Bind();
   void Unbind();

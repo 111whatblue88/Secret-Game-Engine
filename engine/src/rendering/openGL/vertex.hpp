@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <GL/glew.h>
+#include "../../../vendored/glew/include/GL/glew.h"
 
 namespace secret {
 namespace rend {
@@ -12,10 +12,7 @@ class VertexBuffer {
 
   public:
 
-  VertexBuffer();
   VertexBuffer(const void* data, const unsigned int dataSize);
-
-  void fillData(const void* data, const unsigned int dataSize);
 
   void Bind() const;
   void Unbind() const;

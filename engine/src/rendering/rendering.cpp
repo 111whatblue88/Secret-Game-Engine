@@ -1,14 +1,13 @@
 #include "../secret.hpp"
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 #include "openGL/GLRendering.hpp"
 #include "openGL/renderer.hpp"
 #include "openGL/vertex.hpp"
 #include "openGL/shader.hpp"
 
-#include <SDL3/SDL_init.h>
-#include <SDL3/SDL_oldnames.h>
-#include <SDL3/SDL_render.h>
 #include <format>
 #include <cstddef>
 #include <cstdint>
@@ -43,9 +42,9 @@ bool RenderSys::renderGL() {
         break;
       case CallType::GENERAL_VERTEX_RENDER:
         Renderer::Draw(
-          CallList[i].GDGL.va,
-          CallList[i].GDGL.ib,
-          CallList[i].GDGL.shader
+          CallList[i].GD.va,
+          CallList[i].GD.ib,
+          CallList[i].GD.shader
         );
         break;
 
@@ -142,22 +141,12 @@ bool RenderSys::renderSDL() {
           CallList[i].GDOLD.indices, 
           CallList[i].GDOLD.numIndices
       );
-      break;
       case CallType::SDL_RPOINTS:
         m_SDL.renderPoints(
           CallList[i].GDOLD.points,
           CallList[i].GDOLD.numPoints
       );
       break;
-
-      // modern calls
-
-      case CallType::GENERAL_VERTEX_RENDER:
-      
-      //TODO: implement this god damn SDL actually sucks
-
-      break;
-
     }
   }  
   CallList.clear();

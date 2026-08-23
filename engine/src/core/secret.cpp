@@ -1,8 +1,11 @@
 #include "../secret.hpp"
 
+#include "../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
+
 #include <format>
-#include <SDL3/SDL_stdinc.h>
-#include <SDL3/SDL_timer.h>
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -36,7 +39,7 @@ void Engine::exit() {
   engineExit = true;
 }
 void Engine::earlyExit(std::string msg) {
-  COutput::LogWarning("ENGINE", std::format("Exiting early on next cycle. Exit message: \"{}\"", msg), OH::Color::YELLOW);
+  COutput::logWarning(std::format("Exiting early on next cycle. Exit message: \"{}\"", msg));
 
   engineExit = true;
 };
@@ -46,18 +49,18 @@ bool Engine::init(int width, int height, std::string name) {
   Timer initTimer;
   initTimer.start();
 #endif
-  COutput::Log("ENGINE", "Initializing engine...");
+  COutput::logCustom("ENGINE", "Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-      COutput::LogError("ENGINE", "SDL_Init failed");
-      COutput::LogSDLError();
+      COutput::logError("SDL_Init failed");
+      COutput::logSDLError();
     } 
   }
   if (TTF_WasInit() == 0) {
     if (!TTF_Init()) {
-      COutput::LogError("ENGINE", "failed to start TTF");
-      COutput::LogSDLError();
+      COutput::logError("failed to start TTF");
+      COutput::logSDLError();
     }
   }
 
@@ -66,7 +69,7 @@ bool Engine::init(int width, int height, std::string name) {
     COutput::logSDLError();
   }
   if (Engine::options.renderingAPI == RenderingAPIs::openGL) {
-    if (!rend::openGL::Init(width, height)) {
+    if (!rend::openGL::Init()) {
       COutput::logError("failed to init openGL");
     }
   }
@@ -76,8 +79,6 @@ bool Engine::init(int width, int height, std::string name) {
 #ifdef DEBUG
   debug_log("ENGINE", std::format("engine took {}ms to initialize", std::to_string(initTimer.end())));
 #endif
-
-  COutput::logCustom("ENGINE", "Engine Intinalized");
 
   return true;
 }

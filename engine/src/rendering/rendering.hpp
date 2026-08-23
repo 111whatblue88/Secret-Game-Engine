@@ -5,6 +5,7 @@
 #include "../../vendored/SDL/src/include/SDL3/SDL.h"
 #include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 #include "SDL/SDLRendering.hpp"
 #include "openGL/GLRendering.hpp"
 #include "openGL/vertex.hpp"
@@ -43,7 +44,7 @@ public:
     GL_TESTTRIANGLE,
     GL_TRIANGLE,
 
-    // NEW CALLS
+    // NEW CALLS   
 
     GENERAL_VERTEX_RENDER
 
@@ -73,16 +74,11 @@ public:
     SDL_FPoint* points;
     int numPoints;
   };
-  // all of the above will be deprecated data types
-  struct GeometryDataGL {
+  // all of the above will be depracted data types
+  struct GeometryData {
     VertexArray va;
     IndexBuffer ib;
     Shader shader;
-  };
-  struct GeometryDataSDL {
-    float* va;
-    int* ib;
-    int indexCount;
   };
 
   struct RenderCall {
@@ -91,8 +87,7 @@ public:
     SizeData SD;
     RenderingData RD;
     GeometryDataOLD GDOLD;
-    GeometryDataGL GDGL;
-    GeometryDataSDL GDSDL;
+    GeometryData GD;
   };
 
   static SDL m_SDL;

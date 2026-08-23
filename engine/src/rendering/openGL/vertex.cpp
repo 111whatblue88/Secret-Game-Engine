@@ -1,14 +1,8 @@
 #include "GLRendering.hpp"
 #include "../../secret.hpp"
-#include "../../../vendored/SDL/src/include/SDL3/SDL.h"
-#include "../../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "vertex.hpp"
 
-#include <GL/glew.h>
-#include <SDL3/SDL_init.h>
-#include <SDL3/SDL_oldnames.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_video.h>
+#include "../../../vendored/glew/include/GL/glew.h"
 #include <filesystem>
 #include <format>
 #include <cstddef>
@@ -33,16 +27,6 @@ void VertexBuffer::VertexBuffer::Bind() const {
 }
 void VertexBuffer::VertexBuffer::Unbind() const {
   GLCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
-}
-
-VertexBuffer::VertexBuffer() {
-
-}
-
-void VertexBuffer::fillData(const void* data, const unsigned int dataSize) {
-  GLCheck(glGenBuffers(1, &ID));
-  GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
-  GLCheck(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW));
 }
 
 IndexBuffer::IndexBuffer(const void* data, const unsigned int count) {
