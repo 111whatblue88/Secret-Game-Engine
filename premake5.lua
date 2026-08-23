@@ -26,10 +26,10 @@ project "secret"
     "engine/vendored/non-git/glew/build/lib",
   }
 
-  filter { "systems:windows" }
+  filter { "system:windows" }
     links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32","glew", "Secret-Output-Helper" }
 
-  filter { "systems:linux" }
+  filter { "system:linux" }
     links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
 
   filter "configurations:Debug"
