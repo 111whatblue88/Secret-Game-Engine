@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <iostream>
 #include <memory>
-#include <nlohmann/json_fwd.hpp>
+#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
 #include <stdexcept>
 #include <string>
 #include <array>
@@ -14,7 +14,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <nlohmann/json.hpp>
 #include <iostream>
 #include <filesystem>
 

@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 
+#include "../../engine/vendored/json/single_include/nlohmann/json.hpp"
 #include "filesystem/fs.hpp"
 #include "output/output.hpp"
 
