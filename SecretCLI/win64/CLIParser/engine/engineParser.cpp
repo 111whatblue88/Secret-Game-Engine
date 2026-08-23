@@ -124,9 +124,9 @@ bool EngineParser::parseArguments() {
 
     fs::current_path(fs::current_path()/"engine/vendored");
 
-    filesystem::execCommand("curl -L -O https://github.com/nigels-com/glew/releases/download/glew-2.3.1/glew-2.3.1.zip");
-    filesystem::execCommand("tar -xf glew-2.3.1.zip");
-    filesystem::execCommand("del glew-2.3.1.zip");
+    filesystem::execCommand("curl -L -o glew.zip https://github.com/nigels-com/glew/releases/download/glew-2.3.1/glew-2.3.1.zip");
+    filesystem::execCommand("tar -xf glew.zip");
+    filesystem::execCommand("del glew.zip");
     filesystem::execCommand("ren glew-2.3.1 glew");
 
     fs::current_path(fs::current_path()/"glew");
