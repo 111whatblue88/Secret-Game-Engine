@@ -9,6 +9,8 @@ project "secret"
 
   kind "SharedLib"
   language "C++"
+  cppdialect "C++20"
+  architecture "x86_64"
 
   location "build/secret" 
   targetdir "build/secret/lib"
@@ -23,7 +25,12 @@ project "secret"
     "engine/vendored/SDL/src_mixer/build",
     "engine/vendored/non-git/glew/build/lib",
   }
-  links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
+
+  filter { "systems:windows" }
+    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32","glew", "Secret-Output-Helper" }
+
+  filter { "systems:linux" }
+    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
 
   filter "configurations:Debug"
     defines { "DEBUG" }
