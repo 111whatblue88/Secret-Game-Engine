@@ -91,6 +91,11 @@ bool EngineParser::parseArguments() {
     filesystem::execCommand("cmake ..");
     filesystem::execCommand("MSBuild.exe ALL_BUILD.vcxproj");
 
+    // install SDL3 to system as other SDL subsystem installations require it
+    printColor("installing SDL3 to system, this will not work if SecretCLI was not run as administrator", color::white);
+    filesystem::execCommand("timout 3");
+    filesystem::execCommand("MSBuild.exe INSTALL.vcxproj");
+
     locateToEngineRoot();
 
     fs::current_path(fs::current_path()/"engine/vendored/SDL/src_ttf");
