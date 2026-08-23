@@ -122,7 +122,15 @@ bool EngineParser::parseArguments() {
 
     locateToEngineRoot();
 
-    fs::current_path(fs::current_path()/"engine/vendored/non-git/glew");
+    fs::current_path(fs::current_path()/"engine/vendored");
+
+    filesystem::execCommand("curl -L -O https://github.com/nigels-com/glew/releases/download/glew-2.3.1/glew-2.3.1.zip");
+    filesystem::execCommand("tar -xf glew-2.3.1.zip");
+    filesystem::execCommand("rm glew-2.3.1.zip");
+    filesystem::execCommand("mv glew-2.3.1 glew");
+
+    fs::current_path(fs::current_path()/"glew");
+
     fs::current_path(fs::current_path()/"build"/"cmake");
     filesystem::execCommand("mkdir build");
     fs::current_path(fs::current_path()/"build");

@@ -3,4 +3,6 @@ projects/**
 SecretCLI/build/**
 SecretCLI/SecretCLI
 
+engine/vendored/glew/**
+
 build/**

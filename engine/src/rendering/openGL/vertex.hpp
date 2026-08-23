@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../../../vendored/non-git/glew/include/GL/glew.h"
+#include "../../../vendored/glew/include/GL/glew.h"
 
 namespace secret {
 namespace rend {

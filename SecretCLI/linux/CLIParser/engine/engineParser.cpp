@@ -1,11 +1,11 @@
-#include "../../../engine/vendored/argparse/include/argparse/argparse.hpp"
+#include "../../../../engine/vendored/json/single_include/nlohmann/json.hpp"
+#include "../../../../engine/vendored/argparse/include/argparse/argparse.hpp"
 
 #include <algorithm>
 #include <complex>
 #include <cstdio>
 #include <iostream>
 #include <memory>
-#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
 #include <stdexcept>
 #include <string>
 #include <array>
@@ -117,7 +117,15 @@ bool EngineParser::parseArguments() {
 
     locateToEngineRoot();
 
-    fs::current_path(fs::current_path()/"engine/vendored/glew");
+    fs::current_path(fs::current_path()/"engine/vendored");
+
+    filesystem::execCommand("curl -L -O https://github.com/nigels-com/glew/releases/download/glew-2.3.1/glew-2.3.1.zip");
+    filesystem::execCommand("unzip glew-2.3.1.zip");
+    filesystem::execCommand("rm glew-2.3.1.zip");
+    filesystem::execCommand("mv glew-2.3.1 glew");
+
+    fs::current_path(fs::current_path()/"glew");
+
     filesystem::execCommand("make extensions");
     filesystem::execCommand("make");
     filesystem::execCommand("sudo make install");

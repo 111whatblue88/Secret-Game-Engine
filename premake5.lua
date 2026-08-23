@@ -29,9 +29,12 @@ project "secret"
       "engine/vendored/SDL/src_image/build/Debug",
       "engine/vendored/SDL/src_ttf/build/Debug",
       "engine/vendored/SDL/src_mixer/build/Debug",
-      "engine/vendored/non-git/glew/build/cmake/build/lib/Debug",
+      "engine/vendored/glew/build/cmake/build/lib/Debug",
     }
     links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32", "glew32d", "Secret-Output-Helper:static" }
+
+    files { "engine/src/**.hpp", "engine/src/**.cpp" }
+    removefiles { "engine/src/**LNX.cpp" }
 
   filter { "system:linux" }
     libdirs { 
@@ -39,16 +42,17 @@ project "secret"
       "engine/vendored/SDL/src_image/build",
       "engine/vendored/SDL/src_ttf/build",
       "engine/vendored/SDL/src_mixer/build",
-      "engine/vendored/non-git/glew/build/lib",
+      "engine/vendored/glew/build/lib",
     }
     links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
 
+    files { "engine/src/**.hpp", "engine/src/**.cpp" }
+    removefiles { "engine/src/**WIN.cpp" }
+
   filter "configurations:Debug"
     defines { "DEBUG" }
-    files { "engine/src/**.hpp", "engine/src/**.cpp" }
 
   filter "configurations:Release"
     defines { "NDEBUG" }
     optimize "On"
-    files { "engine/src/**.hpp", "engine/src/**.cpp" }
 

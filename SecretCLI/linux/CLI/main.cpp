@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include <functional>
-#include "../../engine/vendored/json/single_include/nlohmann/json.hpp"
+#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
 
 using namespace secret;
 using namespace output;
@@ -18,7 +18,7 @@ int main() {
   std::string input = "";
 
   locateToEngineRoot();
-  filesystem::execCommand("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser context clear");
+  filesystem::execCommand("SecretCLI/build/SecretCLIParser/bin/Debug/SecretCLIParser context clear");
 
   clearTerm();
   printSplash(color::blue);
@@ -41,7 +41,7 @@ int main() {
     }
 
     if (input == "context clear") {
-      filesystem::execCommand("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser context clear");
+      filesystem::execCommand("SecretCLI/build/SecretCLIParser/bin/Debug/SecretCLIParser context clear");
       continue;
     }
 
@@ -49,12 +49,12 @@ int main() {
     json contextInfo = json::parse(contextFile);
 
     if (contextInfo["context"]["project"] == "") {
-      filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser {}", input).c_str());
+      filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/Debug/SecretCLIParser {}", input).c_str());
       continue;
     } 
 
     std::string projectContext = contextInfo["context"]["project"];
-    filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/SecretCLIParser project {} {}", input, projectContext).c_str());
+    filesystem::execCommand(std::format("SecretCLI/build/SecretCLIParser/bin/Debug/SecretCLIParser project {} {}", input, projectContext).c_str());
 
   }
   

@@ -1,27 +1,26 @@
-[submodule "vendored/SDL/src_ttf"]
-	path = vendored/SDL/src_ttf
-	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "engine/vendored/SDL/src"]
+	path = engine/vendored/SDL/src
+	url = https://github.com/libsdl-org/SDL
 [submodule "engine/vendored/SDL/src_ttf"]
 	path = engine/vendored/SDL/src_ttf
 	url = https://github.com/libsdl-org/SDL_ttf.git
-[submodule "engine/src/vendored"]
-	path = engine/src/vendored
-	url = https://github.com/libsdl-org/SDL_image.git
 [submodule "engine/vendored/SDL/src_image"]
 	path = engine/vendored/SDL/src_image
 	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "engine/vendored/SDL/src_mixer"]
+	path = engine/vendored/SDL/src_mixer
+  url = https://github.com/libsdl-org/SDL_mixer.git
+
 [submodule "engine/vendored/argparse"]
 	path = engine/vendored/argparse
 	url = https://github.com/p-ranav/argparse.git
-[submodule "engine/vendored/SDL/src_mixer"]
-	path = engine/vendored/SDL/src_mixer
-	url = https://github.com/libsdl-org/SDL_mixer.git
 [submodule "engine/vendored/glm"]
 	path = engine/vendored/glm
 	url = https://github.com/g-truc/glm.git
 [submodule "engine/vendored/json"]
 	path = engine/vendored/json
-	url = https://github.com/nlohmann/json.git
+  url = https://github.com/nlohmann/json.git
+
 [submodule "engine/vendored/Secret-Output-Helper"]
 	path = engine/vendored/Secret-Output-Helper
 	url = https://github.com/111whatblue88/Secret-Output-Helper.git

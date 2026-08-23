@@ -7,3 +7,5 @@ echo "starting make script..."
 cd build
 make
 wait
+cd ..
+cp build/SecretCLI/bin/Debug/SecretCLI ./

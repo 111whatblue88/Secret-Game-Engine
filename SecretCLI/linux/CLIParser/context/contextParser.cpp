@@ -1,4 +1,5 @@
-#include "../../../engine/vendored/argparse/include/argparse/argparse.hpp"
+#include "../../../../engine/vendored/json/single_include/nlohmann/json.hpp"
+#include "../../../../engine/vendored/argparse/include/argparse/argparse.hpp"
 
 #include <algorithm>
 #include <complex>
@@ -15,7 +16,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
 #include <iostream>
 #include <filesystem>
 

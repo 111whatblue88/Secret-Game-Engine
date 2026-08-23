@@ -13,7 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
+#include "../../../../engine/vendored/json/single_include/nlohmann/json.hpp"
 #include <iostream>
 #include <filesystem>
 
@@ -26,7 +26,7 @@ using namespace filesystem;
 
 void filesystem::execCommandQuiet(const char* cmd) {
   std::string command = std::format("{} 2>&1", cmd);
-    FILE* pipe = _popen(command.c_str(), "r");
+    FILE* pipe = popen(command.c_str(), "r");
     if (!pipe) {
         return;
     }
@@ -37,13 +37,13 @@ void filesystem::execCommandQuiet(const char* cmd) {
 
     }
 
-    int status = _pclose(pipe);
+    int status = pclose(pipe);
 
     return;
 }
 
 void filesystem::execCommand(const char* cmd) {
-    FILE* pipe = _popen(cmd, "r");
+    FILE* pipe = popen(cmd, "r");
     if (!pipe) {
         return;
     }
@@ -55,7 +55,7 @@ void filesystem::execCommand(const char* cmd) {
         std::cout.flush();
     }
 
-    int status = _pclose(pipe);
+    int status = pclose(pipe);
 
     return;
 }

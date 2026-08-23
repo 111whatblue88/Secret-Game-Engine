@@ -1,4 +1,4 @@
-#include "../../../engine/vendored/argparse/include/argparse/argparse.hpp"
+#include "../../../../engine/vendored/argparse/include/argparse/argparse.hpp"
 
 #include <algorithm>
 #include <complex>
@@ -15,7 +15,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
+#include "../../../../engine/vendored/json/single_include/nlohmann/json.hpp"
 #include <iostream>
 #include <filesystem>
 
@@ -217,22 +217,33 @@ bool ProjectParser::parseArguments() {
 
     fs::current_path(fs::current_path()/projectName);
 
+
     
     if (projectBuild["clean"] == true) {
       if (fs::exists(fs::current_path()/"build")) {
         fs::remove_all(fs::current_path()/"build");
       }
     }
-
     filesystem::execCommand("premake5 gmake");
     fs::current_path(fs::current_path()/"build");
+    filesystem::execCommand("ls");
     if (projectBuild["--release"] == true) {
       filesystem::execCommand("make config=release");
     } else {
-    filesystem::execCommand("make config=debug");
+      filesystem::execCommand("make config=debug");
     }
 
     printColor("Project built\n", color::green);
+
+    printColor("Copying runtimes dependencies...\n", color::green);
+
+    fs::current_path(fs::current_path()/"bin");
+
+    filesystem::execCommand("cp ../../../../engine/vendored/SDL/src/build/libSDL3.so.0 ./");
+    filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_ttf/build/libSDL3_ttf.so.0 ./");
+    filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_image/build/libSDL3_image.so.0 ./");
+    filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_mixer/build/libSDL3_mixer.so.0 ./");
+    filesystem::execCommand("cp ../../../../engine/vendored/glew/build/lib/libGLEW.so ./");
 
   } 
   if (projectParser.is_subcommand_used("run")) {

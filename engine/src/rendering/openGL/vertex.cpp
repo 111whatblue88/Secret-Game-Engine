@@ -2,7 +2,7 @@
 #include "../../secret.hpp"
 #include "vertex.hpp"
 
-#include "../../../vendored/non-git/glew/include/GL/glew.h"
+#include "../../../vendored/glew/include/GL/glew.h"
 #include <filesystem>
 #include <format>
 #include <cstddef>

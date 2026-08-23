@@ -3,7 +3,7 @@
 #include "vertex.hpp"
 #include "shader.hpp"
 
-#include "../../../vendored/non-git/glew/include/GL/glew.h"
+#include "../../../vendored/glew/include/GL/glew.h"
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_render.h>
