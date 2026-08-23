@@ -7,7 +7,7 @@ include "engine/vendored/Secret-Output-Helper"
 
 project "secret"
 
-  kind "SharedLib"
+  kind "StaticLib"
   language "C++"
   cppdialect "C++20"
   architecture "x86_64"
@@ -31,7 +31,7 @@ project "secret"
       "engine/vendored/SDL/src_mixer/build/Debug",
       "engine/vendored/non-git/glew/build/cmake/build/lib/Debug",
     }
-    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32", "glew32d", "Secret-Output-Helper" }
+    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32", "glew32d", "Secret-Output-Helper:static" }
 
   filter { "system:linux" }
     libdirs { 
