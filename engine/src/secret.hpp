@@ -14,7 +14,7 @@
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 
-#include "../vendored/glew/include/GL/glew.h"
+#include "../vendored/non-git/glew/include/GL/glew.h"
 #include <GL/gl.h>
 
 #include <chrono>
