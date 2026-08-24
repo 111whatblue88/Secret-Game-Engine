@@ -36,6 +36,13 @@ project "secret"
     files { "engine/src/**.hpp", "engine/src/**.cpp" }
     removefiles { "engine/src/**LNX.cpp" }
 
+    filter "configurations:Debug"
+      defines { "DEBUG" }
+
+    filter "configurations:Release"
+      defines { "NDEBUG" }
+      optimize "On"
+
   filter { "system:linux" }
     libdirs { 
       "engine/vendored/SDL/src/build", 

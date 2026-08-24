@@ -38,6 +38,13 @@ project "{{NAME}}"
     files { "src/**.cpp" }
     removefiles { "src/**LNX.cpp" }
 
+    filter "configurations:Debug"
+      defines { "DEBUG" }
+
+    filter "configurations:Release"
+      defines { "NDEBUG" }
+      optimize "On"
+
   filter "system:linux"
     systemversion "latest"
     defines { "PLATFORM_LINUX" }
@@ -55,5 +62,12 @@ project "{{NAME}}"
 
     files { "src/**.cpp" }
     removefiles { "src/**WIN.cpp" }
+
+    filter "configurations:Debug"
+      defines { "DEBUG" }
+
+    filter "configurations:Release"
+      defines { "NDEBUG" }
+      optimize "On"
 
 
