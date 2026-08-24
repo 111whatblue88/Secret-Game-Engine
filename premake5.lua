@@ -15,6 +15,8 @@ project "secret"
   location "build/secret" 
   targetdir "build/secret/lib"
 
+  dependson "Secret-Output-Helper"
+
   includedirs {
     "engine/vendored/SDL/src/include", 
     "engine/vendored/SDL/src_image/include",
@@ -50,8 +52,9 @@ project "secret"
       "engine/vendored/SDL/src_ttf/build",
       "engine/vendored/SDL/src_mixer/build",
       "engine/vendored/glew/build/lib",
+      "engine/vendoredSecret-Output-Helper/build/lib"
     }
-    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper:static" }
+    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
 
     files { "engine/src/**.hpp", "engine/src/**.cpp" }
     removefiles { "engine/src/**WIN.cpp" }
