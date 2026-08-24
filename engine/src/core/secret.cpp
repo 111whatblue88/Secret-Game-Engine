@@ -50,6 +50,8 @@ bool Engine::init(int width, int height, std::string name) {
   Timer initTimer;
   initTimer.start();
 #endif
+  OH::EnableConsoleProcessing();
+  
   COutput::Log("ENGINE", "Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
