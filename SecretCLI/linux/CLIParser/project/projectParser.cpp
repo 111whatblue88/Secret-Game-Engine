@@ -119,6 +119,7 @@ bool ProjectParser::parseArguments() {
     fs::create_directory(fs::current_path()/"projects"/"template");
     fs::rename(fs::current_path()/"projects"/"template", fs::current_path()/"projects"/projectName);
     fs::create_directory(fs::current_path()/"projects"/projectName/"engine");
+    fs::create_directory(fs::current_path()/"projects"/projectName/"assets");
     fs::create_directory(fs::current_path()/"projects"/projectName/"engine"/"assets");
     
     printColor("copying template files...\n", color::white);

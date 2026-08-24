@@ -119,6 +119,7 @@ bool ProjectParser::parseArguments() {
     fs::create_directory(fs::current_path()/"projects"/"template");
     fs::rename(fs::current_path()/"projects"/"template", fs::current_path()/"projects"/projectName);
     fs::create_directory(fs::current_path()/"projects"/projectName/"engine");
+    fs::create_directory(fs::current_path()/"projects"/projectName/"assets");
     fs::create_directory(fs::current_path()/"projects"/projectName/"engine"/"assets");
     
     printColor("copying template files...\n", color::white);
@@ -355,6 +356,8 @@ bool ProjectParser::parseArguments() {
       printColor("Packaged files already exist, overwriting...\n", color::red);
       fs::remove_all(fs::current_path()/projectFormalName);
     }
+
+    std::cout << "gothere" << std::endl;
 
     fs::create_directory(fs::current_path()/projectFormalName);
     fs::current_path(fs::current_path()/projectFormalName);
