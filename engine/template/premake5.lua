@@ -31,18 +31,23 @@ project "{{NAME}}"
       "../../engine/vendored/SDL/src_image/build/Debug",
 			"../../engine/vendored/glew/build/cmake/build/lib/Debug",
       "../../build/secret/lib", 
-			}
+		}
 		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "user32", "glew32d", "Secret-Output-Helper", "secret" }
 
     files { "src/**.cpp" }
     removefiles { "src/**LNX.cpp" }
 
-    filter "configurations:Debug"
-      defines { "DEBUG" }
+  filter "configurations:debug"
+    defines "DEBUG"
+    runtime "Debug"
+    symbols "On"
 
-    filter "configurations:Release"
-      defines { "NDEBUG" }
-      optimize "On"
+  filter "configurations:release"
+    defines "NDEBUG"
+    runtime "Release"
+    symbols "Off"
+
+
 
   filter "system:linux"
     systemversion "latest"
@@ -62,11 +67,15 @@ project "{{NAME}}"
     files { "src/**.cpp" }
     removefiles { "src/**WIN.cpp" }
 
-    filter "configurations:Debug"
-      defines { "DEBUG" }
+  filter "configurations:debug"
+    defines "DEBUG"
+    runtime "Debug"
+    symbols "On"
 
-    filter "configurations:Release"
-      defines { "NDEBUG" }
-      optimize "On"
+  filter "configurations:release"
+    defines "NDEBUG"
+    runtime "Release"
+    symbols "Off"
+
 
 

@@ -56,10 +56,13 @@ project "secret"
     files { "engine/src/**.hpp", "engine/src/**.cpp" }
     removefiles { "engine/src/**WIN.cpp" }
 
-  filter "configurations:Debug"
-    defines { "DEBUG" }
+  filter "configurations:debug"
+    defines "DEBUG"
+    runtime "Debug"
+    symbols "On"
 
-  filter "configurations:Release"
-    defines { "NDEBUG" }
-    optimize "On"
+  filter "configurations:release"
+    defines "NDEBUG"
+    runtime "Release"
+    symbols "Off"
 
