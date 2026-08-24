@@ -30,7 +30,8 @@ void filesystem::execCommand(const char* cmd) {
 
 void filesystem::locateToEngineRoot() {
   while (true) {
-    if (fs::current_path().filename() == "Secret-Game-Engine") {
+    if (std::filesystem::exists("engine")) {
+      fs::current_path(fs::current_path()/"engine");
       return;
     }
     fs::current_path("..");

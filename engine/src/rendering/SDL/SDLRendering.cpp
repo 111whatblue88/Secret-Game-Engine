@@ -1,14 +1,10 @@
 #include "../../secret.hpp"
-#include <SDL3/SDL.h>
-#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
-#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
-#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
+#include "../../../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 #include "SDLRendering.hpp"
 
-#include <SDL3/SDL_init.h>
-#include <SDL3/SDL_oldnames.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_video.h>
 #include <format>
 #include <cstddef>
 #include <cstdint>
@@ -32,38 +28,38 @@ bool SDL::init(int width, int height, std::string name) {
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-      COutput::logCustom("FATAL ERROR", "SDL failed to start", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("SDL FATAL", "SDL failed to start");
+      COutput::LogSDLError();
       return false;
     } 
   }
   if (TTF_WasInit() == 0) {
     if (!TTF_Init()) {
-      COutput::logCustom("FATAL ERROR", "SDL TTF failed to start", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("TTF FATAL", "SDL TTF failed to start");
+      COutput::LogSDLError();
       return false;
     }
   }
   if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
     m_window = SDL_CreateWindow(name.c_str(), width, height, SDL_WINDOW_OPENGL);
     if (!m_window) {
-      COutput::logCustom("FATAL ERROR", "Window creation failed", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("SDL FATAL", "Window creation failed");
+      COutput::LogSDLError();
       core::Engine::earlyExit("No window");
       return false; 
     }
   } else {
     m_window = SDL_CreateWindow(name.c_str(), width, height, 0);
     if (!m_window) {
-      COutput::logCustom("FATAL ERROR", "Window creation failed", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("SDL FATAL", "Window creation failed");
+      COutput::LogSDLError();
       core::Engine::earlyExit("No window");
       return false; 
     }
     m_renderer = SDL_CreateRenderer(m_window, NULL);
     if (!m_renderer) {
-      COutput::logCustom("FATAL ERROR", "Renderer creation failed", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("SDL FATAL", "Renderer creation failed");
+      COutput::LogSDLError();
       core::Engine::earlyExit("No renderer");
       return false;
     }
@@ -74,14 +70,14 @@ bool SDL::init(int width, int height, std::string name) {
   if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
     openGL::GLContext = SDL_GL_CreateContext(m_window);
     if (!openGL::GLContext) {
-      COutput::logCustom("FATAL ERROR", "openGL context creation failed", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("OPENGL FATAL", "openGL context creation failed");
+      COutput::LogSDLError();
       core::Engine::earlyExit("No renderer");
       return false;
     }
     if (!SDL_GL_MakeCurrent(m_window, openGL::GLContext)) {
-      COutput::logCustom("FATAL ERROR", "openGL context creation failed", COutput::MsgColor::red);
-      COutput::logSDLError();
+      COutput::LogError("OPENGL FATAL", "openGL context creation failed");
+      COutput::LogSDLError();
       core::Engine::earlyExit("No renderer");
       return false;
     };
@@ -228,19 +224,19 @@ SDL_Texture* texture;
 texture = IMG_LoadTexture(m_renderer, location.c_str());
 if (!texture) {
 
-  COutput::logError(std::format("loading texture failed, given file location was \"{}\", loading fallback", location));
-  COutput::logSDLError();
+  COutput::LogWarning("RENDERER", std::format("loading texture failed, given file location was \"{}\", loading fallback", location));
+  COutput::LogSDLError();
 
   filesystem::locateToEngineRoot();
   texture = IMG_LoadTexture(
       m_renderer, 
-      "engine/assets/fallbacks/textures/default.png"
+      "assets/fallbacks/textures/default.png"
   );
   if (!texture) {
-    COutput::logError("loading fallback texture failed!");
-    COutput::logSDLError();
+    COutput::LogError("RENDERER", "loading fallback texture failed!");
+    COutput::LogSDLError();
   } else {
-    COutput::logCustom("ENGINE","loaded fallback texture successfully");
+    COutput::Log("RENDERER","loaded fallback texture successfully");
   }
 }
 return texture;
@@ -250,11 +246,11 @@ SDL_Texture* SDL::textureFromFont(std::string fontLocation, int fontSize, Color 
 
 if (fontLocation == "default") {
   filesystem::locateToEngineRoot();
-  TTF_Font* font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+  TTF_Font* font = TTF_OpenFont("assets/fallbacks/fonts/jetbrains.ttf", fontSize);
   
   if (!font) {
-    COutput::logError("loading default font failed!");
-    COutput::logSDLError();
+    COutput::LogError("RENDERER", "loading default font failed!");
+    COutput::LogSDLError();
   }
 
   SDL_Surface* surface = TTF_RenderText_Solid(
@@ -268,15 +264,15 @@ if (fontLocation == "default") {
 
 TTF_Font* font = TTF_OpenFont(fontLocation.c_str(), fontSize);
 if (!font) {
-  COutput::logError(std::format("loading font failed, given file location was \"{}\", loading fallback", fontLocation));
-  COutput::logSDLError();
+  COutput::LogWarning("RENDERER", std::format("loading font failed, given file location was \"{}\", loading fallback", fontLocation));
+  COutput::LogSDLError();
   filesystem::locateToEngineRoot();
-  font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+  font = TTF_OpenFont("assets/fallbacks/fonts/jetbrains.ttf", fontSize);
   if (!font) {
-    COutput::logError("loading fallback font failed!");
-    COutput::logSDLError();
+    COutput::LogError("RENDERER", "loading fallback font failed!");
+    COutput::LogSDLError();
   } else {
-    COutput::logCustom("ENGINE","loaded fallback font successfully");
+    COutput::Log("RENDERER","loaded fallback font successfully");
   }
 }
 
@@ -306,11 +302,11 @@ TTF_Font* SDL::createFont(std::string location, int fontSize) {
 
 if (location == "default") {
   filesystem::locateToEngineRoot();
-  TTF_Font* font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+  TTF_Font* font = TTF_OpenFont("assets/fallbacks/fonts/jetbrains.ttf", fontSize);
   
   if (!font) {
-    COutput::logError("loading default font failed!");
-    COutput::logSDLError();
+    COutput::LogError("RENDERER", "loading default font failed!");
+    COutput::LogSDLError();
   }
 
   return font;
@@ -318,15 +314,15 @@ if (location == "default") {
 
 TTF_Font* font = TTF_OpenFont(location.c_str(), fontSize);
 if (!font) {
-  COutput::logError(std::format("loading font failed, given file location was \"{}\", loading fallback", location));
-  COutput::logSDLError();
+  COutput::LogWarning("RENDERER", std::format("loading font failed, given file location was \"{}\", loading fallback", location));
+  COutput::LogSDLError();
   filesystem::locateToEngineRoot();
-  font = TTF_OpenFont("engine/assets/fallbacks/fonts/jetbrains.ttf", fontSize);
+  font = TTF_OpenFont("assets/fallbacks/fonts/jetbrains.ttf", fontSize);
   if (!font) {
-    COutput::logError("loading fallback font failed!");
-    COutput::logSDLError();
+    COutput::LogError("RENDERER", "loading fallback font failed!");
+    COutput::LogSDLError();
   } else {
-    COutput::logCustom("ENGINE","loaded fallback font successfully");
+    COutput::Log("RENDERER","loaded fallback font successfully");
   }
 }
 return font;

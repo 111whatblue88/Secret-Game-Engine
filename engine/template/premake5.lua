@@ -3,6 +3,8 @@ workspace "{{NAME}}"
   configurations { "Debug", "Release" }
   location "build"
 
+include "../../engine/vendored/Secret-Output-Helper/premake5.lua"
+
 project "{{NAME}}"
   kind "ConsoleApp"
   language "C++"
@@ -29,8 +31,9 @@ project "{{NAME}}"
       "../../engine/vendored/SDL/src_image/build/Debug",
 			"../../engine/vendored/glew/build/cmake/build/lib/Debug",
       "../../build/secret/lib", 
+      "../../engine/vendored/Secret-Output-Helper/build/lib",
 			}
-		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "user32", "glew32d", "opengl32", "secret" }
+		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "user32", "glew32d", "opengl32", "secret", "Secret-Output-Helper" }
 
     files { "src/**.cpp" }
     removefiles { "src/**LNX.cpp" }
@@ -45,8 +48,9 @@ project "{{NAME}}"
       "../../engine/vendored/SDL/src_mixer/build",
       "../../engine/vendored/glew/build/lib",
       "../../build/secret/lib", 
+      "../../engine/vendored/Secret-Output-Helper/build/lib",
     }
-		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GLEW", "GL", "secret:static" }
+		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GLEW", "GL", "Secret-Output-Helper:static", "secret:static" }
     linkoptions { "-Wl,-rpath=./" }
 
     files { "src/**.cpp" }

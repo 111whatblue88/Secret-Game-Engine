@@ -9,10 +9,12 @@
 #include "console/COutput.hpp"
 #include "filesystem/filesystem.hpp"
 
-#include "../../vendored/SDL/src/include/SDL3/SDL.h"
-#include "../../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
-#include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
-#include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
+#include "../vendored/Secret-Output-Helper/outputHelper/src/OH.hpp"
+
+#include "../vendored/SDL/src/include/SDL3/SDL.h"
+#include "../vendored/SDL/src_image/include/SDL3_image/SDL_image.h"
+#include "../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
+#include "../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 
 #include "../vendored/glew/include/GL/glew.h"
 #include <GL/gl.h>
@@ -26,7 +28,7 @@
 // macros
 
 #ifdef DEBUG
-#define debug_log(x, y) console::COutput::logCustom(std::format("DEBUG_{}", x), y, console::COutput::MsgColor::gray)
+#define debug_log(x, y) console::COutput::Log(std::format("DEBUG_{}", x), y)
 #else
 #define debug_log(x, y)
 #endif

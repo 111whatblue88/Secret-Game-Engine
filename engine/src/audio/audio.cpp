@@ -15,15 +15,15 @@ MIX_Mixer* AudioSys::mixer = NULL;
 bool AudioSys::Init() {
 
   if (!MIX_Init()) {
-    console::COutput::logCustom("AUDIO ERROR", "failed to start SDL_mixer");
-    console::COutput::logSDLError();
+    console::COutput::LogError("AUDIO", "failed to start SDL_mixer");
+    console::COutput::LogSDLError();
     return false;
   } 
 
   mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
   if (!mixer) {
-    console::COutput::logCustom("AUDIO ERROR", "failed to create audio mixer");
-    console::COutput::logSDLError();
+    console::COutput::LogError("AUDIO", "failed to create audio mixer");
+    console::COutput::LogSDLError();
     return false;
   }
 
@@ -33,8 +33,8 @@ bool AudioSys::Init() {
   MIX_Track* AudioSys::createAudioTrack() {
     MIX_Track* track = MIX_CreateTrack(mixer);
     if (!track) {
-      console::COutput::logCustom("AUDIO ERROR", "failed to create audio mixer");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to create audio mixer");
+      console::COutput::LogSDLError();
     }
     return track;
   }
@@ -43,8 +43,8 @@ bool AudioSys::Init() {
     if (MIX_ResumeTrack(track)) {
       return true;
     } else {
-      console::COutput::logCustom("AUDIO ERROR", "failed to resume audio track");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to resume audio track");
+      console::COutput::LogSDLError();
       return false;
     }
   }
@@ -52,8 +52,8 @@ bool AudioSys::Init() {
     if (MIX_PlayTrack(track, 0)) {
       return true;
     } else {
-      console::COutput::logCustom("AUDIO ERROR", "failed to play audio track");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to play audio track");
+      console::COutput::LogSDLError();
       return false;
     }
   }
@@ -61,8 +61,8 @@ bool AudioSys::Init() {
     if (MIX_PauseTrack(track)) {
       return true;
     } else {
-      console::COutput::logCustom("AUDIO ERROR", "failed to pause audio track");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to pause audio track");
+      console::COutput::LogSDLError();
       return false;
     }
   }
@@ -70,8 +70,8 @@ bool AudioSys::Init() {
     if (MIX_SetTrackPlaybackPosition(track, 1)) {
       return true;
     } else {
-      console::COutput::logCustom("AUDIO ERROR", "failed to restart audio track");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to restart audio track");
+      console::COutput::LogSDLError();
       return false;
     }
   }
@@ -79,13 +79,13 @@ bool AudioSys::Init() {
 
     MIX_Audio* audio = MIX_LoadAudio(mixer, audioFileLocation.c_str(), true);
     if (!audio) {
-      console::COutput::logCustom("AUDIO ERROR", "failed to load audio file");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to load audio file");
+      console::COutput::LogSDLError();
       return false;
     }
     if (!MIX_SetTrackAudio(track, audio)) {
-      console::COutput::logCustom("AUDIO ERROR", "failed to set audio track");
-      console::COutput::logSDLError();
+      console::COutput::LogError("AUDIO", "failed to set audio track");
+      console::COutput::LogSDLError();
       return false;
     }
     return true;

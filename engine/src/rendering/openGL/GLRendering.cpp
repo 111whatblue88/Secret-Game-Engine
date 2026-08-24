@@ -8,10 +8,6 @@
 #include "shader.hpp"
 
 #include <GL/gl.h>
-#include <SDL3/SDL_init.h>
-#include <SDL3/SDL_oldnames.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_video.h>
 #include <filesystem>
 #include <format>
 #include <cstddef>
@@ -96,30 +92,30 @@ bool openGL::errorCheck(std::string file, int line) {
   while (GLenum error = glGetError()) {
     switch (error) {
       case GL_INVALID_ENUM:
-        COutput::logCustom("OPENGL ERROR", std::format("(invalid enum) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "invalid enum");
         break;
       case GL_INVALID_VALUE:
-        COutput::logCustom("OPENGL ERROR", std::format("(invalid value) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "invalid value");
         break;
       case GL_INVALID_OPERATION:
-        COutput::logCustom("OPENGL ERROR", std::format("(invalid operation) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "invalid operation");
         break;
       case GL_INVALID_FRAMEBUFFER_OPERATION:
-        COutput::logCustom("OPENGL ERROR", std::format("(invalid framebuffer operation) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "invalid framebuffer operation");
         break;
       case GL_OUT_OF_MEMORY:
-        COutput::logCustom("OPENGL ERROR", std::format("(out of memory) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "out of memory");
         break;
       case GL_STACK_UNDERFLOW:
-        COutput::logCustom("OPENGL ERROR", std::format("(stack underflow) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "stack underflow");
         break;
       case GL_STACK_OVERFLOW:
-        COutput::logCustom("OPENGL ERROR", std::format("(stack overflow) (file:{}) (line:{})", file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "stack overflow");
       case GL_NO_ERROR:
         return false;
         break;
       default:
-        COutput::logCustom("OPENGL ERROR", std::format("(unknown error: {}) (file:{}) (line:{})",error, file, line), COutput::MsgColor::red);
+        COutput::LogError("OPENGL", "unknown error");
         break;
     }
   }

@@ -34,7 +34,8 @@ ProjectParser::ProjectParser():
   projectCreate("create", " "),
   projectRemove("remove", " "),
   projectList("list", " "),
-  projectBuild("build", " ")
+  projectBuild("build", " "),
+  projectPackage("package", " ")
 {
 
   projectParser.add_description("for managing user projects");
@@ -44,8 +45,11 @@ ProjectParser::ProjectParser():
   projectRemove.add_description("removes the given project");
   projectList.add_description("lists the projects available");
   projectBuild.add_description("builds the given project");
+  projectPackage.add_description("package project in a easy to distribute state");
 
   projectBuild.add_argument("projectName");
+
+  projectPackage.add_argument("projectName");
 
   projectBuild.add_argument("--release")
   .default_value(false)
@@ -77,6 +81,7 @@ ProjectParser::ProjectParser():
   projectParser.add_subparser(projectBuild);
   projectParser.add_subparser(projectRun);
   projectParser.add_subparser(projectInfo);
+  projectParser.add_subparser(projectPackage);
 
 }
 
@@ -113,11 +118,23 @@ bool ProjectParser::parseArguments() {
     printColor("created template directory, renaming to project name...\n", color::white);
     fs::create_directory(fs::current_path()/"projects"/"template");
     fs::rename(fs::current_path()/"projects"/"template", fs::current_path()/"projects"/projectName);
+    fs::create_directory(fs::current_path()/"projects"/projectName/"engine");
+    fs::create_directory(fs::current_path()/"projects"/projectName/"engine"/"assets");
     
     printColor("copying template files...\n", color::white);
     fs::copy(
       fs::current_path()/"engine/template",
       fs::current_path()/"projects"/projectName,
+      fs::copy_options::recursive
+    );
+    fs::copy(
+      fs::current_path()/"engine/assets",
+      fs::current_path()/"projects"/projectName/"engine"/"assets",
+      fs::copy_options::recursive
+    );
+    fs::copy(
+      fs::current_path()/"engine/engineInfo.json",
+      fs::current_path()/"projects"/projectName/"engine",
       fs::copy_options::recursive
     );
 
@@ -244,6 +261,7 @@ bool ProjectParser::parseArguments() {
     filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_image/build/libSDL3_image.so.0 ./");
     filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_mixer/build/libSDL3_mixer.so.0 ./");
     filesystem::execCommand("cp ../../../../engine/vendored/glew/build/lib/libGLEW.so ./");
+    filesystem::execCommand("cp ../../../../engine/vendored/Secret-Output-Helper/build/lib/libSecret-Output-Helper.so ./");
 
   } 
   if (projectParser.is_subcommand_used("run")) {
@@ -297,6 +315,70 @@ bool ProjectParser::parseArguments() {
     printColor(std::format("Name: {}\n" ,name), color::white);
     printColor(std::format("Description: {}\n" ,desc), color::white);
     printColor(std::format("Version: {}\n" ,ver), color::white);
+  } 
+
+  if (projectParser.is_subcommand_used("package")) {
+    locateToEngineRoot();
+    std::string projectName = projectPackage.get<std::string>("projectName");
+
+    if (!fs::exists(fs::current_path()/"projects")) {
+      printColor("No projects.. Use \"project create {NAME}\" to create a project\n", color::red);
+      return 1;
+    }
+    fs::current_path(fs::current_path()/"projects");
+    if (!fs::exists(fs::current_path()/projectName)) {
+      printColor("Given project does not exist\n", color::red);
+      return 1;
+    }
+    fs::current_path(fs::current_path()/projectName);
+    if (!fs::exists(fs::current_path()/"build"/"bin")) {
+      printColor("Project exists, but required build directories/files do not exist\n", color::red);
+      return 1;
+    }
+
+    std::ifstream f("projectInfo.json");
+    nlohmann::json projectInfo = nlohmann::json::parse(f);
+    std::string ver = projectInfo["ver"];
+
+    std::string projectFormalName = std::format("{}-{}", projectName, ver);
+
+    printColor("Packaging project...\n", color::white);
+
+    if (!fs::exists(fs::current_path()/"packaged")) {
+      printColor("Creating packaged directory...\n", color::white);
+      fs::create_directory(fs::current_path()/"packaged");
+    }
+    fs::current_path(fs::current_path()/"packaged");
+
+    if (fs::exists(fs::current_path()/projectFormalName)) {
+      printColor("Packaged files already exist, overwriting...\n", color::red);
+      fs::remove_all(fs::current_path()/projectFormalName);
+    }
+
+    fs::create_directory(fs::current_path()/projectFormalName);
+    fs::current_path(fs::current_path()/projectFormalName);
+
+    fs::create_directory(fs::current_path()/"assets");
+    fs::create_directory(fs::current_path()/"engine");
+
+    printColor("copying project files...\n", color::white);
+    fs::copy(
+      fs::current_path()/"../../engine",
+      fs::current_path()/"engine",
+      fs::copy_options::recursive
+    );
+    fs::copy(
+      fs::current_path()/"../../assets",
+      fs::current_path()/"assets",
+      fs::copy_options::recursive
+    );
+    fs::copy(
+      fs::current_path()/"../../build/bin",
+      fs::current_path(),
+      fs::copy_options::recursive
+    );
+
+    printColor("done.\n", color::green);
   } 
 
   return true;

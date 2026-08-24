@@ -77,7 +77,7 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
     GLCheck(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
     char* message = (char*)alloca(length*sizeof(char));
     GLCheck(glGetShaderInfoLog(id, length, &length, message));
-    console::COutput::logCustom("SHADER", message);
+    console::COutput::Log("SHADER", message);
     GLCheck(glDeleteShader(id));
     return 0;
   }

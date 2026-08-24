@@ -5,6 +5,7 @@
 #include "../../vendored/SDL/src_ttf/include/SDL3_ttf/SDL_ttf.h"
 #include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 
+#include <filesystem>
 #include <format>
 #include <cstdint>
 #include <functional>
@@ -39,7 +40,7 @@ void Engine::exit() {
   engineExit = true;
 }
 void Engine::earlyExit(std::string msg) {
-  COutput::logWarning(std::format("Exiting early on next cycle. Exit message: \"{}\"", msg));
+  COutput::LogWarning("ENGINE", std::format("Exiting early on next cycle. Exit message: \"{}\"", msg));
 
   engineExit = true;
 };
@@ -49,28 +50,28 @@ bool Engine::init(int width, int height, std::string name) {
   Timer initTimer;
   initTimer.start();
 #endif
-  COutput::logCustom("ENGINE", "Initializing engine...");
+  COutput::Log("ENGINE", "Initializing engine...");
 
   if (!SDL_WasInit(SDL_INIT_VIDEO)) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-      COutput::logError("SDL_Init failed");
-      COutput::logSDLError();
+      COutput::LogError("ENGINE", "SDL_Init failed");
+      COutput::LogSDLError();
     } 
   }
   if (TTF_WasInit() == 0) {
     if (!TTF_Init()) {
-      COutput::logError("failed to start TTF");
-      COutput::logSDLError();
+      COutput::LogError("ENGINE", "failed to start TTF");
+      COutput::LogSDLError();
     }
   }
 
   if (!rend::RenderSys::m_SDL.init(width, height, name)) {
-    COutput::logError("failed init SDL");
-    COutput::logSDLError();
+    COutput::LogError("ENGINE", "failed init SDL");
+    COutput::LogSDLError();
   }
   if (Engine::options.renderingAPI == RenderingAPIs::openGL) {
     if (!rend::openGL::Init()) {
-      COutput::logError("failed to init openGL");
+      COutput::LogError("ENGINE", "failed to init openGL");
     }
   }
 
@@ -86,45 +87,42 @@ bool Engine::init(int width, int height, std::string name) {
 bool Engine::run() {
 
   if (!rend::RenderSys::m_SDL.wasInit()) {
-    COutput::logCustom("FATAL ERROR", 
-      "Renderer and window do not exist. Maybe the init function was not called?",
-      COutput::MsgColor::red
-    );
+    COutput::LogError("ENGINE FATAL", "Renderer and window do not exist. Maybe the init function was not called?");
     earlyExit("No renderer or window");
   }
 
   if (!engineExit) {
-    COutput::logCustom("ENGINE", "Starting...");
+    COutput::Log("ENGINE", "Starting...");
     
     filesystem::locateToEngineRoot();
-    std::ifstream f("engine/engineInfo.json");
+    std::ifstream f("engineInfo.json");
     json engineInfo = json::parse(f);
-    COutput::logCustom("ENGINE", engineInfo["releaseName"]);
-    COutput::logCustom("ENGINE", engineInfo["description"]);
+    COutput::Log("ENGINE", engineInfo["releaseName"]);
+    COutput::Log("ENGINE", engineInfo["description"]);
     std::string version = engineInfo["ver"];
 #ifdef DEBUG
-    COutput::logCustom("ENGINE", std::format("Ver.({}): {}", "DEBUG", version));
+    COutput::Log("ENGINE", std::format("Ver.({}): {}", "DEBUG", version));
 #else
-    COutput::logCustom("ENGINE", std::format("Ver.({}): {}", "RELEASE", version));
+    COutput::Log("ENGINE", std::format("Ver.({}): {}", "RELEASE", version));
 #endif
 
     switch (options.renderingAPI) {
       case secret::core::RenderingAPIs::SDL: 
-        COutput::logCustom("ENGINE", "Rendering API: SDL3");
+        COutput::Log("ENGINE", "Rendering API: SDL3");
         break;
       case secret::core::RenderingAPIs::openGL: 
-        COutput::logCustom("ENGINE", "Rendering API: openGL");
+        COutput::Log("ENGINE", "Rendering API: openGL");
         break;
     } 
 
   } else {
-    COutput::logCustom("ENGINE", "Exit request detected, aborting startup...", COutput::MsgColor::yellow);
+    COutput::LogWarning("ENGINE", "Exit request detected, aborting startup...");
   }
 
   uint32_t lastFrameTime = SDL_GetTicks();
   while (!engineExit) {
 
-    COutput::logSDLError();
+    COutput::LogSDLError();
 
     uint32_t currentFrameTime = SDL_GetTicks();
     m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
@@ -146,7 +144,7 @@ bool Engine::run() {
     
   }
 
-  COutput::logCustom("ENGINE", "Exiting...");
+  COutput::Log("ENGINE", "Exiting...");
 
   return true;
 

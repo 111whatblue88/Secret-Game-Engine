@@ -55,7 +55,7 @@ bool InputSys::Input() {
     switch (m_input.type) {
     
       case SDL_EVENT_QUIT: {
-        console::COutput::logCustom("INPUT", "OS quit key given, exiting");
+        console::COutput::Log("INPUT", "OS quit key given, exiting");
         core::Engine::exit();
         break;
       }

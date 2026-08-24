@@ -55,7 +55,6 @@ bool RenderSys::renderGL() {
   m_SDL.renderPresentGL();
   return true;  
 };
-
 bool RenderSys::renderSDL() {
 
   m_SDL.setRenderColor(Color{0,0,0});

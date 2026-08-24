@@ -35,6 +35,7 @@ public:
   argparse::ArgumentParser projectParser;
 
   argparse::ArgumentParser projectBuild;
+  argparse::ArgumentParser projectPackage;
   argparse::ArgumentParser projectRun;
   argparse::ArgumentParser projectInfo;
   argparse::ArgumentParser projectCreate;

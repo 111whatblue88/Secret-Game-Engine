@@ -44,7 +44,7 @@ project "secret"
       "engine/vendored/SDL/src_mixer/build",
       "engine/vendored/glew/build/lib",
     }
-    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper" }
+    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GL", "GLU", "GLEW", "Secret-Output-Helper:static" }
 
     files { "engine/src/**.hpp", "engine/src/**.cpp" }
     removefiles { "engine/src/**WIN.cpp" }
