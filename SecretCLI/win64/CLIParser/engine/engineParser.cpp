@@ -73,9 +73,9 @@ bool EngineParser::parseArguments() {
       filesystem::execCommand("premake5 vs2022");
       fs::current_path(fs::current_path()/"build");
       if (engineBuild["--release"] == true) {
-        filesystem::execCommand("MSBuild.exe Secret.sln");
+        filesystem::execCommand("MSBuild.exe secret.sln /p:Configuration=Release" );
       } else {
-        filesystem::execCommand("MSBuild.exe Secret.sln");
+        filesystem::execCommand("MSBuild.exe secret.sln /p:Configuration=Debug" );
       }
 
       return 0;
@@ -147,7 +147,11 @@ bool EngineParser::parseArguments() {
 
     filesystem::execCommand("premake5 vs2022");
     fs::current_path(fs::current_path()/"build");
-    filesystem::execCommand("MSBuild.exe Secret.sln");
+    if (engineBuild["--release"] == true) {
+      filesystem::execCommand("MSBuild.exe secret.sln /p:Configuration=Release" );
+    } else {
+      filesystem::execCommand("MSBuild.exe secret.sln /p:Configuration=Debug" );
+    }
 
   } 
   if (engineParser.is_subcommand_used("info")) {

@@ -244,9 +244,9 @@ bool ProjectParser::parseArguments() {
     filesystem::execCommand("premake5 vs2022");
     fs::current_path(fs::current_path()/"build");
     if (projectBuild["--release"] == true) {
-      filesystem::execCommand(std::format("MSBuild.exe {}.sln", projectName).c_str());
+      filesystem::execCommand(std::format("MSBuild.exe {}.sln /p:Configuration=Release", projectName).c_str());
     } else {
-      filesystem::execCommand(std::format("MSBuild.exe {}.sln", projectName).c_str());
+      filesystem::execCommand(std::format("MSBuild.exe {}.sln /p:Configuration=Debug", projectName).c_str());
     }
 
     printColor("Project built\n", color::green);
