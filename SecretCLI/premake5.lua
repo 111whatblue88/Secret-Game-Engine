@@ -17,12 +17,15 @@ project "SecretCLIParser"
     systemversion "latest"
     defines { "PLATFORM_WINDOWS" }
     links { "user32" }
-    files { "win64/CLIParser/**", "win64/common/**" }
+    files { "common/**.cpp", "CLIParser/**.cpp" }
+    removefiles { "common/**LNX.cpp", "CLIParser/**LNX.cpp" }
 
   filter "system:linux"
     defines { "PLATFORM_LINUX" }
     links { "pthread" }
-    files { "linux/CLIParser/**", "linux/common/**" }
+    files { "common/**.cpp", "CLIParser/**.cpp" }
+    removefiles { "common/**WIN.cpp", "CLIParser/**WIN.cpp" }
+
 
 project "SecretCLI"
   kind "ConsoleApp"
@@ -42,9 +45,13 @@ project "SecretCLI"
     systemversion "latest"
     defines { "PLATFORM_WINDOWS" }
     links { "user32" }
-    files { "win64/CLI/**", "win64/common/**" }
+    files { "common/**.cpp", "CLI/**.cpp" }
+    removefiles { "common/**LNX.cpp", "CLI/**LNX.cpp" }
 
   filter "system:linux"
     defines { "PLATFORM_LINUX" }
     links { "pthread" }
-    files { "linux/CLI/**", "linux/common/**" }
+    files { "common/**.cpp", "CLI/**.cpp" }
+    removefiles { "common/**WIN.cpp", "CLI/**WIN.cpp" }
+
+
