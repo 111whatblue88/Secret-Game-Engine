@@ -122,8 +122,6 @@ bool Engine::run() {
   uint32_t lastFrameTime = SDL_GetTicks();
   while (!engineExit) {
 
-    COutput::LogSDLError();
-
     uint32_t currentFrameTime = SDL_GetTicks();
     m_deltaTime = (currentFrameTime-lastFrameTime)/1000.0;
     lastFrameTime = currentFrameTime;
