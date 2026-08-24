@@ -1,34 +1,33 @@
-#include "../common.hpp"
 
-#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp"
+#include "../common.hpp" 
+#include "../../../engine/vendored/json/single_include/nlohmann/json.hpp" 
 
-using namespace secret;
-using namespace output;
-
+using namespace secret; 
+using namespace output; 
 using json = nlohmann::json;
 
 void output::printColor(std::string string, color color) {
   switch (color) {
     case color::red: {
-      std::cout << "\033[1;31m" << string << "\033[0m";
+      std::cout << "Esc[30m" << string << "Esc[0m";
       break;
     }
     case color::green: {
-      std::cout << "\033[1;32m" << string << "\033[0m";
+      std::cout << "Esc[32m" << string << "Esc[0m";
       break;
     }
     case color::blue: {
-      std::cout << "\033[1;34m" << string << "\033[0m";
+      std::cout << "Esc[34m" << string << "Esc[0m";
       break;
     }
     case color::white: {
-      std::cout << "\033[1;37m" << string << "\033[0m";
+      std::cout << "Esc[97m" << string << "Esc[0m";
       break;
     }
   }
 }
 void output::clearTerm() {
-  std::cout << "\033[2J\033[H";
+  std::cout << "ESC[2JESC[H";
 }
 void output::printSplash(color color) {
 
