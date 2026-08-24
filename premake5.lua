@@ -31,7 +31,7 @@ project "secret"
       "engine/vendored/SDL/src_mixer/build/Debug",
       "engine/vendored/glew/build/cmake/build/lib/Debug",
     }
-    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32", "glew32d", "Secret-Output-Helper:static" }
+    links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "opengl32", "glew32d", "Secret-Output-Helper" }
 
     files { "engine/src/**.hpp", "engine/src/**.cpp" }
     removefiles { "engine/src/**LNX.cpp" }
