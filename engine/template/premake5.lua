@@ -31,7 +31,6 @@ project "{{NAME}}"
       "../../engine/vendored/SDL/src_image/build/Debug",
 			"../../engine/vendored/glew/build/cmake/build/lib/Debug",
       "../../build/secret/lib", 
-      "../../engine/vendored/Secret-Output-Helper/build/lib",
 			}
 		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "user32", "glew32d", "Secret-Output-Helper", "secret" }
 
