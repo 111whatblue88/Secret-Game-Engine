@@ -33,7 +33,7 @@ project "{{NAME}}"
       "../../build/secret/lib", 
       "../../engine/vendored/Secret-Output-Helper/build/lib",
 			}
-		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "user32", "glew32d", "Secret-Output-Helper", "secret:static" }
+		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "user32", "glew32d", "Secret-Output-Helper", "secret" }
 
     files { "src/**.cpp" }
     removefiles { "src/**LNX.cpp" }
