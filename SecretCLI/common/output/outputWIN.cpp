@@ -9,25 +9,25 @@ using json = nlohmann::json;
 void output::printColor(std::string string, color color) {
   switch (color) {
     case color::red: {
-      std::cout << "Esc[30m" << string << "Esc[0m";
+      std::cout << "\x1b[31m" << string << "\x1b[0m";
       break;
     }
     case color::green: {
-      std::cout << "Esc[32m" << string << "Esc[0m";
+      std::cout << "\x1b[32m" << string << "\x1b[0m";
       break;
     }
     case color::blue: {
-      std::cout << "Esc[34m" << string << "Esc[0m";
+      std::cout << "\x1b[34m" << string << "\x1b[0m";
       break;
     }
     case color::white: {
-      std::cout << "Esc[97m" << string << "Esc[0m";
+      std::cout << "\x1b[37m" << string << "\x1b[0m";
       break;
     }
   }
 }
 void output::clearTerm() {
-  std::cout << "ESC[2JESC[H";
+  std::cout << "\x1b[2J\x1b[H";
 }
 void output::printSplash(color color) {
 
