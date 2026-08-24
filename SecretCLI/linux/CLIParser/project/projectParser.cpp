@@ -262,7 +262,6 @@ bool ProjectParser::parseArguments() {
     filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_image/build/libSDL3_image.so.0 ./");
     filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_mixer/build/libSDL3_mixer.so.0 ./");
     filesystem::execCommand("cp ../../../../engine/vendored/glew/build/lib/libGLEW.so ./");
-    filesystem::execCommand("cp ../../../../engine/vendored/Secret-Output-Helper/build/lib/libSecret-Output-Helper.so ./");
 
   } 
   if (projectParser.is_subcommand_used("run")) {

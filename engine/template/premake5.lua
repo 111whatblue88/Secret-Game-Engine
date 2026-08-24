@@ -61,7 +61,7 @@ project "{{NAME}}"
       "../../build/secret/lib", 
       "../../engine/vendored/Secret-Output-Helper/build/lib",
     }
-		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GLEW", "GL", "Secret-Output-Helper", "secret:static" }
+		links { "SDL3", "SDL3_ttf", "SDL3_image", "SDL3_mixer", "GLEW", "GL", "Secret-Output-Helper:static", "secret:static" }
     linkoptions { "-Wl,-rpath=./" }
 
     files { "src/**.cpp" }

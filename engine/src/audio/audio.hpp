@@ -12,23 +12,23 @@
 namespace secret {
 namespace audio {
 
-  class AudioSys {
-  public:
+class AudioSys {
+public:
 
-    static bool Init();
-  
-    static MIX_Track* createAudioTrack();
-    static bool playTrack(MIX_Track* track);
-    static bool resumeTrack(MIX_Track* track);
-    static bool pauseTrack(MIX_Track* track);
-    static bool restartTrack(MIX_Track* track);
+  static bool Init();
 
-    static bool loadTrackAudio(MIX_Track* track, std::string audioFileLocation);
+  static MIX_Track* createAudioTrack();
+  static bool playTrack(MIX_Track* track);
+  static bool resumeTrack(MIX_Track* track);
+  static bool pauseTrack(MIX_Track* track);
+  static bool restartTrack(MIX_Track* track);
+
+  static bool loadTrackAudio(MIX_Track* track, std::string audioFileLocation);
 
 
-  private:
-    static MIX_Mixer* mixer; 
-  };
+private:
+  static MIX_Mixer* mixer; 
+};
 
 }
 }
