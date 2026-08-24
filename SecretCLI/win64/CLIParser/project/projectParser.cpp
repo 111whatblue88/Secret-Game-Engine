@@ -376,17 +376,19 @@ bool ProjectParser::parseArguments() {
       fs::current_path()/"engine",
       fs::copy_options::recursive
     );
-    if (!fs::is_empty(fs::current_path()/"../../assets")) {
-      fs::copy(
-        fs::current_path()/"../../assets",
-        fs::current_path()/"assets",
-        fs::copy_options::recursive
-      );
-    }
+    std::cout << "4" << std::endl;
     if (!fs::is_empty(fs::current_path()/"../../build/bin")) {
       fs::copy(
         fs::current_path()/"../../build/bin",
         fs::current_path(),
+        fs::copy_options::recursive
+      );
+    }
+    std::cout << "5" << std::endl;
+    if (!fs::is_empty(fs::current_path()/"../../assets")) {
+      fs::copy(
+        fs::current_path()/"../../assets",
+        fs::current_path()/"assets",
         fs::copy_options::recursive
       );
     }
