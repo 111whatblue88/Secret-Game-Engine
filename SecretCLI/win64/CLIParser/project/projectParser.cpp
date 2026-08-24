@@ -260,7 +260,7 @@ bool ProjectParser::parseArguments() {
     filesystem::execCommand("COPY ..\\..\\..\\..\\engine\\vendored\\SDL\\src_ttf\\build\\Debug\\SDL3_ttf.dll .\\");
     filesystem::execCommand("COPY ..\\..\\..\\..\\engine\\vendored\\SDL\\src_mixer\\build\\Debug\\SDL3_mixer.dll .\\");
     filesystem::execCommand("COPY ..\\..\\..\\..\\engine\\vendored\\glew\\build\\cmake\\build\\bin\\Debug\\glew32d.dll .\\");
-    filesystem::execCommand("COPY ..\\..\\..\\..\\engine\\vendored\\Secret-Output-Helper\\build\\bin\\Debug\\Secret-Output-Helper.dll .\\");
+    filesystem::execCommand("COPY ..\\..\\..\\..\\engine\\vendored\\Secret-Output-Helper\\build\\lib\\Secret-Output-Helper.dll .\\");
 
     printColor("DLLs copied\n", color::green);
 
