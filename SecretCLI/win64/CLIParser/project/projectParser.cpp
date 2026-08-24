@@ -357,13 +357,18 @@ bool ProjectParser::parseArguments() {
       fs::remove_all(fs::current_path()/projectFormalName);
     }
 
-    std::cout << "gothere" << std::endl;
+    std::cout << "1" << std::endl;
 
     fs::create_directory(fs::current_path()/projectFormalName);
     fs::current_path(fs::current_path()/projectFormalName);
 
+    std::cout << "2" << std::endl;
+
+
     fs::create_directory(fs::current_path()/"assets");
     fs::create_directory(fs::current_path()/"engine");
+
+    std::cout << "3" << std::endl;
 
     printColor("copying project files...\n", color::white);
     fs::copy(
@@ -371,16 +376,19 @@ bool ProjectParser::parseArguments() {
       fs::current_path()/"engine",
       fs::copy_options::recursive
     );
+    std::cout << "4" << std::endl;
     fs::copy(
       fs::current_path()/"../../assets",
       fs::current_path()/"assets",
       fs::copy_options::recursive
     );
+    std::cout << "5" << std::endl;
     fs::copy(
       fs::current_path()/"../../build/bin",
       fs::current_path(),
       fs::copy_options::recursive
     );
+    std::cout << "6" << std::endl;
 
     printColor("done.\n", color::green);
   } 
