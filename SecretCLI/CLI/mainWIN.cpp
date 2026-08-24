@@ -1,5 +1,7 @@
 #include "../common/common.hpp"
 
+#include <windows.h>
+#include <cstdio>
 #include <format>
 #include <string>
 #include <vector>
@@ -16,6 +18,17 @@ using json = nlohmann::json;
 int main() {
 
   std::string input = "";
+
+  DWORD mode;
+
+  HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+  if (GetConsoleMode(hOut, &mode)) {
+    SetConsoleMode(
+      hOut,
+      mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    );
+  }
 
   locateToEngineRoot();
   filesystem::execCommand("SecretCLI\\build/SecretCLIParser\\bin\\Debug\\SecretCLIParser.exe context clear");
