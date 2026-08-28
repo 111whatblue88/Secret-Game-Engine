@@ -1,3 +1,5 @@
+#pragma once
+
 #include "general/general.hpp"
 #include "rendering/rendering.hpp"
 #include "rendering/openGL/GLRendering.hpp"

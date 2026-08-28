@@ -1,5 +1,4 @@
-#ifndef _RENDERING_HPP
-#define _RENDERING_HPP
+#pragma once
 
 #include "../general/general.hpp"
 #include <SDL3/SDL.h>
@@ -98,8 +97,6 @@ public:
   static std::vector<RenderCall> CallList;
 
 };
-
-#endif
 
 }
 }

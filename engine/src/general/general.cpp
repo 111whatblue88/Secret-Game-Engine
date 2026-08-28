@@ -70,7 +70,7 @@ Circle::Circle() {
   this->pos = {0,0};
 }
 Circle::Circle(Vec2 pos, float radius) {
-  this->pos = {0,0};
+  this->pos = pos;
   this->radius = radius;
 }
 
