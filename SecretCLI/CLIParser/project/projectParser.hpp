@@ -40,6 +40,7 @@ public:
   argparse::ArgumentParser projectRemove;
   argparse::ArgumentParser projectList;
   argparse::ArgumentParser projectPackage;
+  argparse::ArgumentParser projectUpdate;
 
   bool parseArguments();
 

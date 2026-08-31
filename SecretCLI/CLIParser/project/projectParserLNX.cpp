@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <complex>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -35,7 +36,8 @@ ProjectParser::ProjectParser():
   projectRemove("remove", " "),
   projectList("list", " "),
   projectBuild("build", " "),
-  projectPackage("package", " ")
+  projectPackage("package", " "),
+  projectUpdate("update", " ")
 {
 
   projectParser.add_description("for managing user projects");
@@ -46,10 +48,13 @@ ProjectParser::ProjectParser():
   projectList.add_description("lists the projects available");
   projectBuild.add_description("builds the given project");
   projectPackage.add_description("package project in a easy to distribute state");
+  projectUpdate.add_description("updates the projects local engine files to match that of the installed engine files");
 
   projectBuild.add_argument("projectName");
 
   projectPackage.add_argument("projectName");
+
+  projectUpdate.add_argument("projectName");
 
   projectBuild.add_argument("--release")
   .default_value(false)
@@ -82,6 +87,7 @@ ProjectParser::ProjectParser():
   projectParser.add_subparser(projectRun);
   projectParser.add_subparser(projectInfo);
   projectParser.add_subparser(projectPackage);
+  projectParser.add_subparser(projectUpdate);
 
 }
 
@@ -98,6 +104,41 @@ bool ProjectParser::parseArguments() {
 
     fs::current_path(fs::current_path()/"projects");
     filesystem::execCommand("ls");
+
+  }
+  if (projectParser.is_subcommand_used("update")) {
+
+    std::string projectName = projectUpdate.get<std::string>("projectName");
+
+    if (!fs::exists(fs::current_path()/"projects")) {
+      printColor("No projects.. Use \"project create {NAME}\" to create a project\n", color::red);
+      return 1;
+    }
+    if (!fs::exists(fs::current_path()/"projects"/projectName)) {
+      printColor("Given project does not exist\n", color::red);
+      return 1;
+    }
+
+    printColor("Updating project...\n", color::green);
+
+    fs::remove_all(fs::current_path()/"projects"/projectName/"engine");
+
+    fs::create_directory(fs::current_path()/"projects"/projectName/"engine");
+    fs::create_directory(fs::current_path()/"projects"/projectName/"assets");
+    fs::create_directory(fs::current_path()/"projects"/projectName/"engine"/"assets");
+
+    fs::copy(
+      fs::current_path()/"engine/assets",
+      fs::current_path()/"projects"/projectName/"engine"/"assets",
+      fs::copy_options::recursive
+    );
+    fs::copy(
+      fs::current_path()/"engine/engineInfo.json",
+      fs::current_path()/"projects"/projectName/"engine",
+      fs::copy_options::recursive
+    );
+
+    printColor("Done.\n", color::green);
 
   }
   if (projectParser.is_subcommand_used("create")) {
@@ -230,12 +271,32 @@ bool ProjectParser::parseArguments() {
       printColor("Given project does not exist\n", color::red);
       return 1;
     }
+    fs::current_path(fs::current_path()/projectName);
+    if (!fs::exists(fs::current_path()/"engine")) {
+      printColor("Engine files do not exist in project\n", color::red);
+      return 1;
+    }
+
+    printColor("Checking versions...\n", color::green);
+
+    std::ifstream localEngineInfoFile("engine/engineInfo.json");
+    nlohmann::json localEngineInfo= nlohmann::json::parse(localEngineInfoFile);
+    std::string localEngineVer = localEngineInfo["ver"];
+
+    std::ifstream engineInfoFile("../../engine/engineInfo.json");
+    nlohmann::json engineInfo= nlohmann::json::parse(engineInfoFile);
+    std::string engineVer = engineInfo["ver"];
+
+    if (std::strcmp(engineVer.c_str(), localEngineVer.c_str())) {
+      printColor("Project engine version and installed engine versions do not match!\n", color::red);
+      printColor(std::format("local: {} does not match installed: {}\n", localEngineVer, engineVer), color::red);
+      printColor(std::format("Run \"project update {}\" to update this project to the correct engine version\n", projectName), color::red);
+      return 1;
+    }
+
+    printColor("Versions match\n", color::green);
 
     printColor("Building project...\n", color::green);
-
-    fs::current_path(fs::current_path()/projectName);
-
-
     
     if (projectBuild["clean"] == true) {
       if (fs::exists(fs::current_path()/"build")) {
@@ -262,6 +323,8 @@ bool ProjectParser::parseArguments() {
     filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_image/build/libSDL3_image.so.0 ./");
     filesystem::execCommand("cp ../../../../engine/vendored/SDL/src_mixer/build/libSDL3_mixer.so.0 ./");
     filesystem::execCommand("cp ../../../../engine/vendored/glew/build/lib/libGLEW.so ./");
+
+    printColor("Done.\n", color::green);
 
   } 
   if (projectParser.is_subcommand_used("run")) {

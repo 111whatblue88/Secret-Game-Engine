@@ -127,13 +127,6 @@ shader.Bind();
 
 //TODO: projection set to static 500,500 for testing
 
-glm::mat4 proj = glm::ortho(0.0f, 500.0f, 500.0f, 0.0f, -1.0f, 1.0f);
-glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(rect.pos.x, rect.pos.y,0 ));
-
-glm::mat4 mvp = proj*view*model;
-
-shader.setUniformMat4f("u_MVP", mvp);
 shader.setUniform4f("u_Color", Vec4{color.r, color.g, color.b, 1.0});
 
 }
@@ -483,7 +476,20 @@ bool EntitySys::update() {
             if (PR.second.fill) {
               if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
                 // render filled square openGL
-                
+
+                float x = E.second.TransformComp.pos.x + PR.second.rect.pos.x;
+                float y = E.second.TransformComp.pos.y + PR.second.rect.pos.y;
+
+                PR.second.shader.Bind();
+
+                glm::mat4 proj = glm::ortho(0.0f, 500.0f, 500.0f, 0.0f, -1.0f, 1.0f);
+                glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y,0 ));
+
+                glm::mat4 mvp = proj*view*model;
+
+                PR.second.shader.setUniformMat4f("u_MVP", mvp);
+
                 RenderSys::CallList.push_back(RenderSys::RenderCall{
                   RenderSys::CallType::GENERAL_VERTEX_RENDER,
                   RenderSys::PositionalData{},
