@@ -7,6 +7,9 @@
 #include "../../vendored/SDL/src_mixer/include/SDL3_mixer/SDL_mixer.h"
 #include "../general/general.hpp"
 #include "../audio/audio.hpp"
+#include "../rendering/openGL/GLRendering.hpp"
+#include "../rendering/openGL/vertex.hpp"
+#include "../rendering/openGL/renderer.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -125,6 +128,16 @@ public:
 
   Vec2 firstLinePoint;
   Vec2 secondLinePoint;
+
+
+  //openGL implementaion
+
+  rend::VertexBuffer vb;
+  rend::IndexBuffer ib;
+
+  rend::VertexArray va;
+  rend::Shader shader;
+
 
 };
 

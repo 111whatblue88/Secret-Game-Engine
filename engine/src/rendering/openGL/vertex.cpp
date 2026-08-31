@@ -21,6 +21,14 @@ VertexBuffer::VertexBuffer(const void* data, const unsigned int dataSize) {
   GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
   GLCheck(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW));
 }
+VertexBuffer::VertexBuffer() {
+
+}
+void VertexBuffer::FillData(const void* data, const unsigned int dataSize) {
+  GLCheck(glGenBuffers(1, &ID));
+  GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
+  GLCheck(glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW));
+}
 
 void VertexBuffer::VertexBuffer::Bind() const {
   GLCheck(glBindBuffer(GL_ARRAY_BUFFER, ID));
@@ -40,7 +48,7 @@ IndexBuffer::IndexBuffer() {
   count=0;
 }
 
-void IndexBuffer::fillData(const void* data, const unsigned int count) {
+void IndexBuffer::FillData(const void* data, const unsigned int count) {
   this->count=count;
   GLCheck(glGenBuffers(1, &ID));
   GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID));
@@ -54,7 +62,7 @@ void IndexBuffer::Unbind() const {
   GLCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
-unsigned int IndexBuffer::getCount() const {
+unsigned int IndexBuffer::GetCount() const {
   return count;
 }
 

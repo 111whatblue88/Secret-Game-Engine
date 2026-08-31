@@ -10,6 +10,7 @@ class COutput {
 public:
 
   static void LogError(std::string system, std::string errMsg);
+  static void LogError(std::string system, std::string errMsg, const char* file, const int line);
   static void LogWarning(std::string system, std::string warMsg);
   static void Log(std::string system, std::string msg);
 

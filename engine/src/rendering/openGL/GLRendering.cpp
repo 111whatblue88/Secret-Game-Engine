@@ -62,13 +62,17 @@ void openGL::renderTriangleTest() {
 
   filesystem::locateToEngineRoot();
 
-  Shader shader("engine/assets/shaders/basic.shader");
+  Shader shader("assets/shaders/basic.shader");
   
   shader.Bind();
 
   glm::mat4 proj = glm::ortho(-225.0f, 225.0f, -255.0f, 255.0f, -1.0f, 1.0f);
+  glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+  glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0,100,0 ));
 
-  shader.setUniformMat4f("u_MVP", proj);
+  glm::mat4 mvp = proj*view*model;
+
+  shader.setUniformMat4f("u_MVP", mvp);
   shader.setUniform4f("u_Color", Vec4{1.0, 0.0, 0.0, 1.0});
 
   RenderSys::CallList.push_back(
@@ -88,34 +92,34 @@ void openGL::renderTriangle() {
 
 }
 
-bool openGL::errorCheck(std::string file, int line) {
+bool openGL::errorCheck(const char* file, const int line) {
   while (GLenum error = glGetError()) {
     switch (error) {
       case GL_INVALID_ENUM:
-        COutput::LogError("OPENGL", "invalid enum");
+        COutput::LogError("OPENGL", "invalid enum", file, line);
         break;
       case GL_INVALID_VALUE:
-        COutput::LogError("OPENGL", "invalid value");
+        COutput::LogError("OPENGL", "invalid value", file, line);
         break;
       case GL_INVALID_OPERATION:
-        COutput::LogError("OPENGL", "invalid operation");
+        COutput::LogError("OPENGL", "invalid operation", file, line);
         break;
       case GL_INVALID_FRAMEBUFFER_OPERATION:
-        COutput::LogError("OPENGL", "invalid framebuffer operation");
+        COutput::LogError("OPENGL", "invalid framebuffer operation", file, line);
         break;
       case GL_OUT_OF_MEMORY:
-        COutput::LogError("OPENGL", "out of memory");
+        COutput::LogError("OPENGL", "out of memory", file, line);
         break;
       case GL_STACK_UNDERFLOW:
-        COutput::LogError("OPENGL", "stack underflow");
+        COutput::LogError("OPENGL", "stack underflow", file, line);
         break;
       case GL_STACK_OVERFLOW:
-        COutput::LogError("OPENGL", "stack overflow");
+        COutput::LogError("OPENGL", "stack overflow", file, line);
       case GL_NO_ERROR:
         return false;
         break;
       default:
-        COutput::LogError("OPENGL", "unknown error");
+        COutput::LogError("OPENGL", "unknown error", file, line);
         break;
     }
   }

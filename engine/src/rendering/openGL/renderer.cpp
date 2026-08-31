@@ -24,5 +24,11 @@ void Renderer::Clear() {
   GLCheck(glClear(GL_COLOR_BUFFER_BIT));
 }
 void Renderer::Draw(VertexArray va, IndexBuffer ib, Shader shader) {
-  GLCheck(glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr));
+  va.Bind();
+  shader.Bind();
+  ib.Bind();
+  GLCheck(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+  va.Unbind();
+  shader.Unbind();
+  ib.Unbind();
 }

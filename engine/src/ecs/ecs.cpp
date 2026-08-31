@@ -97,6 +97,45 @@ this->rect = rect;
 this->circle = {{0,0},0};
 this->firstLinePoint = {0,0};
 this->secondLinePoint = {0,0};
+
+float triangle[] = {
+  -rect.width/2, -rect.height/2,
+   rect.width/2, -rect.height/2,
+  rect.width/2, rect.height/2,
+  -rect.width/2, rect.height/2,
+
+};
+unsigned int indices[] = {
+  0, 1, 2,
+  2, 3, 0
+};
+
+
+
+vb.FillData(triangle, 8*sizeof(float));
+ib.FillData(indices, 6*sizeof(unsigned int));
+
+VertexBufferLayout layout;
+layout.Push(2, GL_FLOAT, false);
+va.AddLayout(vb, layout);
+
+filesystem::locateToEngineRoot();
+
+shader.InitShader("assets/shaders/basic.shader");
+
+shader.Bind();
+
+//TODO: projection set to static 500,500 for testing
+
+glm::mat4 proj = glm::ortho(0.0f, 500.0f, 500.0f, 0.0f, -1.0f, 1.0f);
+glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(rect.pos.x, rect.pos.y,0 ));
+
+glm::mat4 mvp = proj*view*model;
+
+shader.setUniformMat4f("u_MVP", mvp);
+shader.setUniform4f("u_Color", Vec4{color.r, color.g, color.b, 1.0});
+
 }
 PrimitiveRenderer::PrimitiveRenderer(std::string name, Color color, bool fill, Rect rect) {
 this->SetName(name);
@@ -442,12 +481,29 @@ bool EntitySys::update() {
         switch (PR.second.type) {
           case ecs::PrimitiveRenderer::PrimitiveType::square: {
             if (PR.second.fill) {
-              RenderSys::CallList.push_back(RenderSys::RenderCall{
-                RenderSys::CallType::SDL_RBOXFILL,
-                RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
-                RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
-                RenderSys::RenderingData{PR.second.color}
-              });
+              if (core::Engine::options.renderingAPI == core::RenderingAPIs::openGL) {
+                // render filled square openGL
+                
+                RenderSys::CallList.push_back(RenderSys::RenderCall{
+                  RenderSys::CallType::GENERAL_VERTEX_RENDER,
+                  RenderSys::PositionalData{},
+                  RenderSys::SizeData{},
+                  RenderSys::RenderingData{},
+                  RenderSys::GeometryDataOLD{},
+                  RenderSys::GeometryData{
+                    PR.second.va,
+                    PR.second.ib,
+                    PR.second.shader
+                  }
+                });
+              } else {
+                RenderSys::CallList.push_back(RenderSys::RenderCall{
+                  RenderSys::CallType::SDL_RBOXFILL,
+                  RenderSys::PositionalData{E.second.TransformComp.pos+PR.second.rect.pos},
+                  RenderSys::SizeData{PR.second.rect.width, PR.second.rect.height},
+                  RenderSys::RenderingData{PR.second.color}
+                });
+              }
             } else {
               RenderSys::CallList.push_back(RenderSys::RenderCall{
                 RenderSys::CallType::SDL_RBOX,

@@ -116,6 +116,13 @@ Shader::Shader() {
   ID=0;
 }
 
+void Shader::InitShader(const std::string& shaderPath) {
+  shaderSource = shaderPath;
+  ShaderFileSources source = parseShader(shaderSource);
+  ID = createShader(source.vertexSource, source.fragmentSource);
+  uniformLocationCache = {};
+}
+
 unsigned int Shader::GetUniformLocation(const std::string& name) {
   if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
     return uniformLocationCache["name"];

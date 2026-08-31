@@ -24,6 +24,8 @@ public:
   Shader();
   Shader(const std::string& shaderPath);
 
+  void InitShader(const std::string& shaderPath);
+
   void Bind();
   void Unbind();
 

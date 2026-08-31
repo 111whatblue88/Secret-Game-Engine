@@ -30,7 +30,7 @@ public:
 
   // error
 
-  static bool errorCheck(std::string file, int line);
+  static bool errorCheck(const char* file, const int line);
   static void errorClear();
 
 private:

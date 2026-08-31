@@ -14,6 +14,10 @@ void COutput::LogError(std::string system, std::string errMsg) {
   std::time_t time = std::time(NULL);
   OH::OutputLog(std::format("{} ERROR", system), errMsg, OH::Color::RED);
 }
+void COutput::LogError(std::string system, std::string errMsg, const char* file, const int line) { 
+  std::time_t time = std::time(NULL);
+  OH::OutputLog(std::format("{} ERROR", system), errMsg, OH::Color::RED, file, line);
+}
 void COutput::LogDescriptive(std::string system, std::string msg) {
 
 }
